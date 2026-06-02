@@ -1,9 +1,9 @@
-# ============================================================
-# cPanel Node.js App Entry Point — Frontend (Next.js)
-# ============================================================
-# cPanel's "Setup Node.js App" looks for an index.js or app.js
-# by default. This script starts the Next.js production server.
-# ============================================================
+// ============================================================
+// cPanel Node.js App Entry Point — Frontend (Next.js)
+// ============================================================
+// cPanel's "Setup Node.js App" looks for an index.js or app.js
+// by default. This script starts the Next.js production server.
+// ============================================================
 
 const { createServer } = require('http');
 const { parse } = require('url');
