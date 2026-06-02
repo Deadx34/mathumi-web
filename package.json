@@ -6,8 +6,8 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
-    "cpanel:build": "cross-env NODE_ENV=production next build --webpack",
-    "cpanel:start": "cross-env NODE_ENV=production node index.js",
+    "cpanel:build": "node scripts/cpanel-build.js",
+    "cpanel:start": "node scripts/cpanel-start.js",
     "lint": "eslint"
   },
   "dependencies": {
@@ -21,7 +21,6 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "cross-env": "^7.0.3",
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
     "tailwindcss": "^4",
