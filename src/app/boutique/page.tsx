@@ -82,7 +82,7 @@ export default function BoutiquePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/sarees')
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/sarees`)
       .then(res => res.json())
       .then(data => {
         setSareesList(data);

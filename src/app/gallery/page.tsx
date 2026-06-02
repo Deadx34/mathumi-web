@@ -90,7 +90,7 @@ export default function GalleryPage() {
   }, [activeCategory]);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/gallery')
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/gallery`)
       .then(res => {
         if (!res.ok) throw new Error("Failed to fetch gallery database");
         return res.json();

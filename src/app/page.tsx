@@ -7,7 +7,7 @@ export default async function Home() {
   let services = [];
   let courses = [];
   try {
-    const servicesRes = await fetch('http://localhost:5000/api/salon-services', { cache: 'no-store' });
+    const servicesRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/salon-services`, { cache: 'no-store' });
     if (servicesRes.ok) {
       services = await servicesRes.json();
     }
@@ -16,7 +16,7 @@ export default async function Home() {
   }
 
   try {
-    const coursesRes = await fetch('http://localhost:5000/api/academy-courses', { cache: 'no-store' });
+    const coursesRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/academy-courses`, { cache: 'no-store' });
     if (coursesRes.ok) {
       courses = await coursesRes.json();
     }
