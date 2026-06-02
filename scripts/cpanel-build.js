@@ -2,7 +2,8 @@ const { spawnSync } = require('child_process');
 
 process.env.NODE_ENV = 'production';
 
-const result = spawnSync(process.platform === 'win32' ? 'npx.cmd' : 'npx', ['next', 'build', '--webpack'], {
+const nextCli = require.resolve('next/dist/bin/next');
+const result = spawnSync(process.execPath, [nextCli, 'build', '--webpack'], {
   stdio: 'inherit',
   env: process.env,
 });
