@@ -1,26 +1,183 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fdf5eb; /* Light peach/cream */
+  --foreground: #4a2511; /* Dark brown/maroon */
+  --color-primary: #800020; /* Maroon/Burgundy */
+  --color-secondary: #cba135; /* Gold */
+  --color-accent: #e5c07b; /* Light Gold */
+  --color-surface: #f4e8d3; /* Slightly darker peach for cards */
+  --color-border: #d4af37; /* Gold border */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-primary: var(--color-primary);
+  --color-secondary: var(--color-secondary);
+  --color-accent: var(--color-accent);
+  --color-surface: var(--color-surface);
+  --color-border-gold: var(--color-border);
+  --font-serif: var(--font-cinzel);
+  --font-sans: var(--font-lato);
 }
 
 body {
-  background: var(--background);
+  background-color: #e6ceaa; /* Fallback color */
+  background-image: url('/bg-pattern.png');
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  border: 8px solid transparent;
+  border-image: url('/wood-frame.png') 30 stretch;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6);
+}
+
+@media (min-width: 768px) {
+  body {
+    border: 28px solid transparent;
+    border-image: url('/wood-frame.png') 30 stretch;
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8);
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
+}
+
+/* Custom scrollbar to match the royal theme */
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  background: #d8b888;
+  border-left: 2px solid #a37c35;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #d4af37, #8b5a2b);
+  border-radius: 0px;
+  border: 1px solid #fdf5eb;
+}
+
+/* Custom button styles to match the mockup */
+.gold-button {
+  display: inline-block;
+  text-align: center;
+  background: linear-gradient(to bottom, #f3db9e, #c79532 40%, #a37c35 100%);
+  color: #3e1b09;
+  font-weight: 800;
+  padding: 0.5rem 2.5rem;
+  border-radius: 9999px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3), inset 0 2px 3px rgba(255,255,255,0.6), inset 0 -2px 3px rgba(0,0,0,0.3);
+  border: 1px solid #7a5420;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  text-shadow: 0 1px 1px rgba(255,255,255,0.4);
+}
+
+.gold-button:hover {
+  background: linear-gradient(to bottom, #fdf1c2, #d4af37 40%, #b58c42 100%);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.4), inset 0 2px 3px rgba(255,255,255,0.8);
+  transform: translateY(-1px);
+}
+
+.gold-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.4), inset 0 2px 5px rgba(0,0,0,0.5);
+}
+
+/* Gold panel with traditional double borders */
+.gold-panel {
+  background: linear-gradient(135deg, #fdf5eb 0%, #ebd4ad 100%);
+  border: 2px solid #9e7539;
+  outline: 1px solid #d4af37;
+  outline-offset: -8px;
+  border-radius: 6px;
+  box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.25), inset 0 0 30px rgba(212, 175, 55, 0.15);
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 1.5rem;
+}
+
+.gold-panel:hover {
+  transform: translateY(-2px);
+  box-shadow: 12px 12px 25px rgba(0, 0, 0, 0.3), inset 0 0 30px rgba(212, 175, 55, 0.25);
+}
+
+/* Corner ornaments for panels */
+.gold-panel::before, .gold-panel::after {
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #9e7539;
+  pointer-events: none;
+}
+
+.gold-panel::before {
+  top: 6px;
+  left: 6px;
+  border-right: none;
+  border-bottom: none;
+  border-top-left-radius: 4px;
+}
+
+.gold-panel::after {
+  bottom: 6px;
+  right: 6px;
+  border-left: none;
+  border-top: none;
+  border-bottom-right-radius: 4px;
+}
+
+/* Custom traditional dividers */
+.kolam-separator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  width: 100%;
+}
+
+.kolam-line {
+  height: 1px;
+  flex-grow: 1;
+  background: linear-gradient(to right, transparent, #d4af37 50%, transparent);
+}
+
+.kolam-ornament {
+  color: #d4af37;
+  font-size: 1.25rem;
+  animation: pulse-slow 3s infinite ease-in-out;
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+/* Float animation for decorative feel */
+.float-traditional {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spin-slow {
+  animation: spin-slow 180s linear infinite;
 }
