@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Allow images from localhost (dev) and production API server
   images: {
     remotePatterns: [
       {
@@ -9,8 +10,23 @@ const nextConfig: NextConfig = {
         port: '5000',
         pathname: '/uploads/**',
       },
+      {
+        // Production: your backend domain (e.g. api.yourdomain.com)
+        protocol: 'https',
+        hostname: '**.yourdomain.com',
+        pathname: '/uploads/**',
+      },
     ],
   },
+
+  // Expose NEXT_PUBLIC_ env vars to the client
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000',
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+  },
+
+  // Enable standalone output for cPanel Node.js App deployment
+  output: 'standalone',
 };
 
 export default nextConfig;

@@ -6,6 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "cpanel:build": "NODE_ENV=production next build",
+    "cpanel:start": "NODE_ENV=production node server.js",
     "lint": "eslint"
   },
   "dependencies": {
