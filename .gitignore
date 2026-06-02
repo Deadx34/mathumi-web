@@ -15,10 +15,10 @@
 
 # next.js
 
-/out/
+# (Allow committing local build output) - removed `/out/`
 
 # production
-/build
+# (Allow committing production build output) - removed `/build`
 
 # misc
 .DS_Store
