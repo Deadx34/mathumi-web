@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --background: #fdf5eb; /* Light peach/cream */
@@ -8,18 +10,6 @@
   --color-accent: #e5c07b; /* Light Gold */
   --color-surface: #f4e8d3; /* Slightly darker peach for cards */
   --color-border: #d4af37; /* Gold border */
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-primary: var(--color-primary);
-  --color-secondary: var(--color-secondary);
-  --color-accent: var(--color-accent);
-  --color-surface: var(--color-surface);
-  --color-border-gold: var(--color-border);
-  --font-serif: var(--font-cinzel);
-  --font-sans: var(--font-lato);
 }
 
 body {
