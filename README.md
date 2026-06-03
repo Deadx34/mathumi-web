@@ -34,3 +34,14 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Deploy on cPanel
+
+Do not start the app with `npm run cpanel:start` inside cPanel. On some hosts, npm tries to spawn `sh` and can fail with `EAGAIN` before Node even starts.
+
+Use cPanel's Node.js App setup instead:
+
+1. Set Application Root to the project directory.
+2. Set Application Startup File to `app.js` or `index.js`.
+3. Restart the app from the cPanel UI.
+4. Run `npm run cpanel:build` only for the build step, not as the runtime entry point.

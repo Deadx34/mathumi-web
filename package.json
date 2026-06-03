@@ -4,10 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build --webpack",
+    "build": "next build",
     "start": "next start",
-    "cpanel:build": "node scripts/cpanel-build.js",
-    "cpanel:start": "node scripts/cpanel-start.js",
     "lint": "eslint"
   },
   "dependencies": {
