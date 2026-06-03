@@ -36,9 +36,9 @@ async function main() {
 		const fallbackPort = await resolveFallbackPort(3000, 25);
 		process.env.PORT = String(fallbackPort);
 		if (fallbackPort === 3000) {
-			console.warn('[cpanel:start] No cPanel port env detected; using local fallback port 3000.');
+			console.log('[cpanel:start] No cPanel port env detected; using local fallback port 3000.');
 		} else {
-			console.warn(`[cpanel:start] No cPanel port env detected; using fallback port ${fallbackPort}.`);
+			console.log(`[cpanel:start] No cPanel port env detected; using fallback port ${fallbackPort}.`);
 		}
 	}
 
