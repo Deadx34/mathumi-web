@@ -797,7 +797,7 @@ export default function AdminDashboard() {
             <img 
               src="/logo.jpeg" 
               alt="Mathumi Logo" 
-              className="object-cover h-10 w-10 rounded-full border border-[#d4af37]" 
+              className="object-cover h-14 w-14 rounded-full border-2 border-[#d4af37]" 
             />
             <h1 className="text-lg md:text-xl font-bold font-serif tracking-wider">Admin Panel</h1>
           </div>
