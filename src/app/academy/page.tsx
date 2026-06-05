@@ -2,9 +2,44 @@
 import React, { useState } from 'react';
 import Image from "next/image";
 import { useCourses } from "@/context/CourseContext";
+import { useToast } from '@/components/Toast';
+
+function CourseImageSlider({ images, fallback, title }: { images?: string[], fallback: string, title: string }) {
+  const [idx, setIdx] = useState(0);
+  const imgs = Array.isArray(images) && images.length > 0 ? images : (fallback ? [fallback] : ['/academy_class1.png']);
+
+  if (imgs.length <= 1) {
+    return <img src={imgs[0]} alt={title} className="absolute inset-0 w-full h-full object-cover object-top img-luxury-hover" />;
+  }
+  return (
+    <div className="relative w-full h-full group/slider">
+      <img src={imgs[idx]} alt={`${title} - ${idx + 1}`} className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-500" />
+      <button
+        onClick={(e) => { e.stopPropagation(); setIdx(i => (i === 0 ? imgs.length - 1 : i - 1)); }}
+        className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-[#6e1224] text-white rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all z-10 border border-white/10 shadow-md"
+        aria-label="Previous"
+      >
+        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3.5" d="M15 19l-7-7 7-7" /></svg>
+      </button>
+      <button
+        onClick={(e) => { e.stopPropagation(); setIdx(i => (i === imgs.length - 1 ? 0 : i + 1)); }}
+        className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-[#6e1224] text-white rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all z-10 border border-white/10 shadow-md"
+        aria-label="Next"
+      >
+        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3.5" d="M9 5l7 7-7 7" /></svg>
+      </button>
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex space-x-2 z-10 bg-black/25 backdrop-blur-[2px] px-2.5 py-1 rounded-full">
+        {imgs.map((_, i) => (
+          <button key={i} onClick={(e) => { e.stopPropagation(); setIdx(i); }} className={`w-1.5 h-1.5 rounded-full transition-all ${i === idx ? 'bg-[#c2a670] scale-125' : 'bg-white/60'}`} />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function AcademyPage() {
   const { courses, loading, error } = useCourses();
+  const { showToast, ToastElement } = useToast();
   const [formData, setFormData] = useState({
     fullName: '',
     address: '',
@@ -29,14 +64,26 @@ export default function AcademyPage() {
         })
       });
       if (res.ok) {
-        alert("Your registration has been successfully submitted! Our team will contact you shortly.");
+        showToast(
+          'Registration Submitted!',
+          'success',
+          'Your student registration has been received. Our academy coordinator will contact you shortly with enrollment details.'
+        );
         setFormData({ fullName: '', address: '', nic: '', dob: '', contact: '' });
       } else {
-        alert("Failed to submit student registration. Please try again.");
+        showToast(
+          'Submission Failed',
+          'error',
+          'We could not submit your registration. Please check your details and try again.'
+        );
       }
     } catch (err) {
       console.error(err);
-      alert("Network error. Failed to submit student registration.");
+      showToast(
+        'Network Error',
+        'error',
+        'Unable to reach our servers. Please check your internet connection and try again.'
+      );
     }
   };
 
@@ -45,7 +92,9 @@ export default function AcademyPage() {
   };
 
   return (
-    <div className="flex flex-col w-full z-10 pb-20 text-[#1c1512]">
+    <>
+      {ToastElement}
+      <div className="flex flex-col w-full z-10 pb-20 text-[#1c1512]">
       
       {/* Hero Intro */}
       <div className="relative w-full h-[450px] md:h-[55vh] flex flex-col items-center justify-center text-center">
@@ -147,12 +196,12 @@ export default function AcademyPage() {
               {courses.map((course, index) => (
                 <div key={course._id} className="gold-panel bg-white rounded overflow-hidden shadow-sm flex flex-col group border border-[#c2a670]/15 hover:border-[#6e1224]/30 transition-all duration-500">
                   <div className="relative w-full h-52 sm:h-72 md:h-80 overflow-hidden">
-                    <img 
-                      src={course.image || '/academy_class1.png'} 
-                      alt={course.title} 
-                      className="absolute inset-0 w-full h-full object-cover object-top img-luxury-hover" 
+                    <CourseImageSlider
+                      images={course.images}
+                      fallback={course.image || '/academy_class1.png'}
+                      title={course.title}
                     />
-                    {index === 0 && <div className="absolute top-4 left-4 bg-[#6e1224] text-white text-[9px] font-bold px-3 py-1.5 uppercase tracking-widest rounded-full">POPULAR</div>}
+                    {index === 0 && <div className="absolute top-4 left-4 bg-[#6e1224] text-white text-[9px] font-bold px-3 py-1.5 uppercase tracking-widest rounded-full z-20">POPULAR</div>}
                   </div>
                   <div className="p-8 flex flex-col flex-grow">
                     <h3 className="text-2xl font-serif font-bold text-[#1c1512] mb-6 border-b border-[#c2a670]/15 pb-4 uppercase tracking-wide">{course.title}</h3>
@@ -172,13 +221,17 @@ export default function AcademyPage() {
                       </div>
                     </div>
                     
-                    {course.syllabus && course.syllabus.length > 0 && (
+                    {course.syllabus && (
                       <>
                         <h4 className="font-bold text-[#1c1512] mb-3 uppercase text-[10px] tracking-widest flex items-center font-sans">
                           <span className="text-[#c2a670] mr-2">✓</span> Skills Covered:
                         </h4>
                         <ul className="text-xs text-[#1c1512]/85 mb-8 space-y-2.5 font-medium flex-grow font-sans leading-relaxed">
-                          {course.syllabus.slice(0, 4).map((skill, idx) => (
+                          {((typeof course.syllabus === 'string'
+                            ? (course.syllabus as string).split('\n')
+                            : (Array.isArray(course.syllabus) ? course.syllabus : [])) as string[]
+                          ).filter((s: string) => s && s.trim() !== '')
+                          .slice(0, 4).map((skill: string, idx: number) => (
                             <li key={idx}>• {skill}</li>
                           ))}
                         </ul>
@@ -311,5 +364,6 @@ export default function AcademyPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

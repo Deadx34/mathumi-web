@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cinzel, Lato } from "next/font/google";
+import { Cinzel, Lato, Playfair_Display } from "next/font/google";
 import LayoutWrapper from "@/components/LayoutWrapper";
 import { CartProvider } from "@/context/CartContext";
 import { CourseProvider } from "@/context/CourseContext";
@@ -17,6 +17,13 @@ const lato = Lato({
   weight: ["300", "400", "700"],
 });
 
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
+  subsets: ["latin"],
+  style: ["italic", "normal"],
+  weight: ["400", "500", "600", "700"],
+});
+
 export const metadata: Metadata = {
   title: "Mathumi Bridal Boutique & Salon",
   description: "Tradition and Beauty, Woven and Taught. Pure Kaanchipuram sarees, beauty salon, and academy in Colombo, Sri Lanka.",
@@ -30,7 +37,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${cinzel.variable} ${lato.variable} h-full antialiased`}
+      className={`${cinzel.variable} ${lato.variable} ${playfair.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col relative" suppressHydrationWarning>

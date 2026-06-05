@@ -1,8 +1,10 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { useToast } from '@/components/Toast';
 
 export default function BookingPage() {
+  const { showToast, ToastElement } = useToast();
   const [formData, setFormData] = useState({
     fullName: '',
     contactNumber: '',
@@ -36,7 +38,11 @@ export default function BookingPage() {
         body: JSON.stringify(formData)
       });
       if (res.ok) {
-        alert("Your booking request has been successfully submitted! Our team will contact you shortly.");
+        showToast(
+          'Your Request Has Been Sent!',
+          'success',
+          'Thank you for reaching out to Mathumi. Our team will personally contact you within 24 hours to confirm your appointment.'
+        );
         setFormData({
           fullName: '',
           contactNumber: '',
@@ -46,13 +52,25 @@ export default function BookingPage() {
           message: ''
         });
       } else if (res.status === 409) {
-        alert("This time slot is already booked for this service. Please choose another date or time slot!");
+        showToast(
+          'Time Slot Already Booked',
+          'warning',
+          'This time slot is already reserved. Please select a different date or time slot to continue.'
+        );
       } else {
-        alert("Failed to submit booking request. Please verify your details or try again later.");
+        showToast(
+          'Submission Failed',
+          'error',
+          'We could not process your request at this time. Please verify your details and try again.'
+        );
       }
     } catch (err) {
       console.error(err);
-      alert("Connection error: We were unable to reach our server. Please check your internet connection, or contact us directly at +94 77 123 4567 to book your service!");
+      showToast(
+        'Connection Error',
+        'error',
+        'Unable to reach our server. Please check your internet connection or contact us directly at +94 77 123 4567.'
+      );
     }
   };
 
@@ -66,7 +84,9 @@ export default function BookingPage() {
   };
 
   return (
-    <div className="flex-grow flex flex-col items-center py-16 px-4 sm:px-8 md:px-12 relative z-10 w-full max-w-7xl mx-auto text-[#1c1512]">
+    <>
+      {ToastElement}
+      <div className="flex-grow flex flex-col items-center py-16 px-4 sm:px-8 md:px-12 relative z-10 w-full max-w-7xl mx-auto text-[#1c1512]">
       
       {/* Page Header */}
       <span className="text-[#6e1224] font-sans font-bold text-[10px] sm:text-xs tracking-[0.25em] uppercase mb-2">
@@ -394,6 +414,7 @@ export default function BookingPage() {
         </div>
 
       </div>
-    </div>
+      </div>
+    </>
   );
 }

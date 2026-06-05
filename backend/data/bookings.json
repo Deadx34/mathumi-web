@@ -1,0 +1,60 @@
+[
+  {
+    "fullName": "Test Student",
+    "contactNumber": "test",
+    "serviceRequested": "Bridal Package Consultation",
+    "preferredDate": "2026-06-12",
+    "timeSlot": "09:00 AM - 11:00 AM",
+    "message": "test",
+    "_id": "hfl5inumq0ggdjr",
+    "status": "Cancelled",
+    "createdAt": "2026-06-05T04:59:48.759Z"
+  },
+  {
+    "fullName": "Test Student",
+    "contactNumber": "9888800000",
+    "serviceRequested": "Saree Draping Consultation",
+    "preferredDate": "2026-06-26",
+    "timeSlot": "09:00 AM - 11:00 AM",
+    "message": "test",
+    "_id": "y8aio4imq0iq3vh",
+    "status": "Completed",
+    "createdAt": "2026-06-05T06:03:22.013Z",
+    "updatedAt": "2026-06-05T06:03:35.510Z"
+  },
+  {
+    "fullName": "Test Student",
+    "contactNumber": "test",
+    "serviceRequested": "Bridal Package Consultation",
+    "preferredDate": "2026-06-26",
+    "timeSlot": "09:00 AM - 11:00 AM",
+    "message": "test",
+    "_id": "u31uyz4mq0iy5fu",
+    "status": "Cancelled",
+    "createdAt": "2026-06-05T06:09:37.290Z",
+    "updatedAt": "2026-06-05T06:09:49.417Z"
+  },
+  {
+    "fullName": "Test Student",
+    "contactNumber": "223344",
+    "serviceRequested": "Academy Enrollment",
+    "preferredDate": "2026-06-05",
+    "timeSlot": "Standard Course Timing",
+    "message": "NIC: 5677 | DOB: 2026-06-17 | Address: 123 Admin Lane",
+    "_id": "ct3eaohmq0jdq2s",
+    "status": "Pending",
+    "createdAt": "2026-06-05T06:21:43.876Z"
+  },
+  {
+    "fullName": "Test Student finl",
+    "contactNumber": "io9000000",
+    "serviceRequested": "Bridal Package Consultation",
+    "preferredDate": "2026-07-03",
+    "timeSlot": "09:00 AM - 11:00 AM",
+    "message": "test",
+    "_id": "lc21b1bmq0mos44",
+    "status": "Cancelled",
+    "createdAt": "2026-06-05T07:54:18.580Z",
+    "updatedAt": "2026-06-05T07:54:32.299Z"
+  }
+]

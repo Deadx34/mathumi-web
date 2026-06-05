@@ -41,6 +41,62 @@ const fallbackServices: Record<string, any[]> = {
   ]
 };
 
+function ServiceCard({ service }: { service: any }) {
+  const images = service.images && service.images.length > 0 ? service.images : (service.image ? service.image.split(',') : ['/salon-service.png']);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const nextImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setCurrentIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const prevImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  };
+
+  return (
+    <div className="gold-panel flex flex-col sm:flex-row rounded overflow-hidden bg-white border border-[#c2a670]/15 shadow-sm group hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
+      <div className="relative w-full sm:w-[40%] h-56 sm:h-auto bg-[#faf7f2] flex-shrink-0">
+        <img src={images[currentIndex]} alt={`${service.title} - ${currentIndex + 1}`} className="absolute inset-0 w-full h-full object-cover img-luxury-hover transition-opacity duration-300" />
+        
+        {images.length > 1 && (
+          <>
+            <button 
+              onClick={prevImage}
+              className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white w-8 h-8 flex items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-10"
+            >
+              &#10094;
+            </button>
+            <button 
+              onClick={nextImage}
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white w-8 h-8 flex items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-10"
+            >
+              &#10095;
+            </button>
+            <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-10">
+              {images.map((_: any, idx: number) => (
+                <div 
+                  key={idx} 
+                  className={`w-2 h-2 rounded-full border border-white transition-all ${idx === currentIndex ? 'bg-white scale-110' : 'bg-transparent'}`}
+                />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+      <div className="p-6 flex flex-col justify-center flex-grow">
+        <h3 className="text-lg font-serif font-bold text-[#1c1512] mb-1 uppercase tracking-wide leading-tight">{service.title}</h3>
+        <p className="text-xs text-[#1c1512]/75 mb-6 leading-relaxed font-sans">{service.description}</p>
+        
+        <Link href="/booking" className="gold-button rounded-full text-[9px] tracking-[0.15em] font-sans font-bold w-max cursor-pointer mt-auto">
+          BOOK SERVICE
+        </Link>
+      </div>
+    </div>
+  );
+}
+
 export default function CategoryPage({ params }: { params: any }) {
   const { category: categoryKey } = React.use(params) as any;
   const [meta, setMeta] = useState<any>(null);
@@ -149,19 +205,7 @@ export default function CategoryPage({ params }: { params: any }) {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {services.map((service) => (
-                <div key={service._id} className="gold-panel flex flex-col sm:flex-row rounded overflow-hidden bg-white border border-[#c2a670]/15 shadow-sm group hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
-                  <div className="relative w-full sm:w-[40%] h-56 sm:h-auto bg-[#faf7f2] flex-shrink-0">
-                    <img src={service.image || '/salon-service.png'} alt={service.title} className="absolute inset-0 w-full h-full object-cover img-luxury-hover" />
-                  </div>
-                  <div className="p-6 flex flex-col justify-center flex-grow">
-                    <h3 className="text-lg font-serif font-bold text-[#1c1512] mb-1 uppercase tracking-wide leading-tight">{service.title}</h3>
-                    <p className="text-xs text-[#1c1512]/75 mb-6 leading-relaxed font-sans">{service.description}</p>
-                    
-                    <Link href="/booking" className="gold-button rounded-full text-[9px] tracking-[0.15em] font-sans font-bold w-max cursor-pointer">
-                      BOOK SERVICE
-                    </Link>
-                  </div>
-                </div>
+                <ServiceCard key={service._id} service={service} />
               ))}
             </div>
           )}

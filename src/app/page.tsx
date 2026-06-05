@@ -83,40 +83,40 @@ export default async function Home() {
       {/* ----------------- SECTION 1: HERO & CORE PILLARS (Mockup 2) ----------------- */}
       <div className="w-full flex flex-col lg:flex-row items-stretch justify-between gap-8 lg:gap-12 mb-12 mt-4 relative overflow-hidden">
         
-        {/* Left: Hero Text Content */}
-        <div className="w-full lg:w-[48%] flex flex-col items-center lg:items-start justify-center text-center lg:text-left px-4 lg:px-0 py-6 z-20">
-          <span className="text-[#6e1224]/80 font-sans font-bold tracking-[0.3em] uppercase text-[9px] sm:text-[10px] mb-2 block">
-            BATTICALOA & COLOMBO, SRI LANKA
+        {/* Left: Hero Text Content with Creative Copywriting */}
+        <div className="w-full lg:w-[48%] flex flex-col items-center lg:items-start justify-center text-center lg:text-left px-4 lg:px-0 py-1 z-20">
+          <span className="text-[#6e1224]/80 font-sans font-bold tracking-[0.3em] uppercase text-[9px] sm:text-[10px] mb-1 block">
+            A PRESTIGE SYNERGY · BATTICALOA & COLOMBO, SRI LANKA
           </span>
-          <span className="text-[#d4af37] font-serif italic text-lg sm:text-xl md:text-2xl tracking-wide mb-3 block font-medium">
-            Welcome to Mathumi Bridal Care
+          <span className="text-[#d4af37] font-cursive text-xl sm:text-2xl lg:text-3xl block font-normal leading-tight mb-1">
+            Welcome to the Sanctuary of Mathumi Bridal Care
           </span>
           
-          <h1 className="text-5xl sm:text-6xl lg:text-[72px] font-serif font-extrabold text-[#4a2511] tracking-[0.18em] leading-none uppercase mb-2">
-            MATHUMI
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-cursive text-[#4a2511] leading-none mb-1 font-normal">
+            Mathumi
           </h1>
-          <span className="text-[#6e1224] font-serif font-semibold text-xs sm:text-sm md:text-base tracking-[0.2em] uppercase mb-6 block">
-            TRADITION AND BEAUTY, WOVEN AND TAUGHT.
+          <span className="text-[#6e1224] font-cursive text-base sm:text-lg lg:text-xl block leading-normal mb-2">
+            Where the sacred threads of tradition meet the delicate grace of bridal beauty—exquisitely woven in silk, and masterfully taught to inspire generations.
           </span>
           
-          <div className="kolam-separator justify-center lg:justify-start w-full max-w-[260px] mx-auto lg:mx-0 mt-2 mb-6">
+          <div className="kolam-separator justify-center lg:justify-start w-full max-w-[260px] mx-auto lg:mx-0 mt-1 mb-2">
             <div className="kolam-line"></div>
             <div className="kolam-ornament font-light tracking-[0.3em] text-[#d4af37]">✧</div>
             <div className="kolam-line"></div>
           </div>
 
-          <p className="text-[#6e1224] font-sans font-bold text-[10px] sm:text-xs tracking-[0.15em] uppercase mb-3">
+          <p className="text-[#6e1224] font-sans font-bold text-[10px] sm:text-xs tracking-[0.15em] uppercase mb-1.5">
             Bespoke Bridal Styling • Pure Kanchipuram Silks • Professional Academy
           </p>
-          <p className="text-[#1c1512]/80 font-sans text-sm sm:text-base md:text-lg font-medium max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed">
+          <p className="text-[#1c1512]/80 font-sans text-xs sm:text-sm font-medium max-w-xl mx-auto lg:mx-0 mb-3 leading-relaxed">
             Your journey to elegance starts here. Explore our exquisite collections and cultivate professional beauty mastery in Batticaloa.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 w-full justify-center lg:justify-start mt-2">
-            <Link href="/booking" className="gold-button rounded-full text-center py-3.5 px-10 text-[10px] sm:text-xs tracking-[0.2em] font-sans font-bold shadow-md uppercase block w-[220px] sm:w-auto mx-auto lg:mx-0 transition-transform duration-300 hover:scale-105 active:scale-95">
+          <div className="flex flex-col sm:flex-row gap-4 w-full justify-center lg:justify-start mt-1">
+            <Link href="/booking" className="gold-button rounded-full text-center py-3 px-8 text-[10px] sm:text-xs tracking-[0.2em] font-sans font-bold shadow-md uppercase block w-[220px] sm:w-auto mx-auto lg:mx-0 transition-transform duration-300 hover:scale-105 active:scale-95">
               BOOK NOW
             </Link>
-            <Link href="/boutique" className="px-10 py-3.5 border-2 border-[#d4af37] text-[#4a2511] font-sans font-bold text-[10px] sm:text-xs tracking-[0.2em] uppercase bg-transparent hover:bg-[#6e1224] hover:text-white hover:border-[#6e1224] transition-all rounded-full text-center cursor-pointer block w-[220px] sm:w-auto mx-auto lg:mx-0 transition-transform duration-300 hover:scale-105 active:scale-95">
+            <Link href="/boutique" className="px-8 py-3 border-2 border-[#d4af37] text-[#4a2511] font-sans font-bold text-[10px] sm:text-xs tracking-[0.2em] uppercase bg-transparent hover:bg-[#6e1224] hover:text-white hover:border-[#6e1224] transition-all rounded-full text-center cursor-pointer block w-[220px] sm:w-auto mx-auto lg:mx-0 transition-transform duration-300 hover:scale-105 active:scale-95">
               THE COLLECTION
             </Link>
           </div>
@@ -128,18 +128,12 @@ export default async function Home() {
           <div className="relative w-full max-w-[480px] h-[280px] sm:h-[380px] md:h-[430px] lg:h-[480px]">
 
             {/* === CARD 1: Main Background Card (large, top-left) === */}
-            <div className="absolute top-0 left-6 w-[75%] h-[85%] rounded-2xl overflow-hidden border-4 border-[#d4af37] bg-[#fdf5eb] shadow-[0_16px_40px_rgba(74,37,17,0.18)] transition-all duration-500 ease-out hover:-translate-y-4 hover:scale-[1.03] hover:shadow-[0_28px_55px_rgba(74,37,17,0.28)] z-10 hover:z-30 cursor-pointer group">
+            <div className="absolute top-0 left-6 w-[75%] h-[85%] transition-all duration-500 ease-out hover:-translate-y-4 hover:scale-[1.03] z-10 hover:z-30 cursor-pointer group">
               <img
                 src="/home_header.png"
                 alt="Mathumi Bride"
                 className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
               />
-              {/* Gold inner border */}
-              <div className="absolute inset-2 border border-[#d4af37]/30 rounded-xl pointer-events-none z-10" />
-              {/* Subtle label */}
-              <div className="absolute bottom-3 left-3 bg-[#1c1512]/60 backdrop-blur-sm rounded-full px-3 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <span className="text-[#d4af37] font-sans font-bold text-[8px] tracking-[0.2em] uppercase">Bridal Look</span>
-              </div>
             </div>
 
             {/* === CARD 2: Bottom-Left Offset Card === */}
@@ -172,22 +166,6 @@ export default async function Home() {
             <div className="absolute top-[78%] left-[68%] text-[#d4af37] text-2xl z-30 pointer-events-none animate-pulse select-none drop-shadow">✧</div>
 
           </div>
-        </div>
-
-        {/* Floating Traditional Social Media Column (Absolute relative to Section 1 container) */}
-        <div className="absolute bottom-6 right-2 lg:-right-4 hidden sm:flex flex-col gap-3 z-30">
-          <a href="https://www.instagram.com/mathumi_bridal_boutique/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border-2 border-[#d4af37] bg-[#fdf5eb] shadow-[0_6px_12px_rgba(74,37,17,0.15)] flex items-center justify-center text-[#4a2511] hover:bg-[#6e1224] hover:text-white hover:border-[#6e1224] transition-all duration-300 hover:scale-110 cursor-pointer" title="Instagram">
-            <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-          </a>
-          <a href="https://www.tiktok.com/@mathumithayaparan_mua/video/7628283485739814164" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border-2 border-[#d4af37] bg-[#fdf5eb] shadow-[0_6px_12px_rgba(74,37,17,0.15)] flex items-center justify-center text-[#4a2511] hover:bg-[#6e1224] hover:text-white hover:border-[#6e1224] transition-all duration-300 hover:scale-110 cursor-pointer" title="TikTok">
-            <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.06-2.89-.52-4.06-1.47-.77-.63-1.4-1.43-1.81-2.33v8.32c-.02 2.23-.71 4.54-2.43 6.02-1.8 1.6-4.39 2.23-6.71 1.68-2.63-.58-4.92-2.65-5.32-5.35-.61-3.65 1.71-7.44 5.33-8.22 1.01-.22 2.06-.21 3.07.03V13c-1.3-.4-2.77-.28-3.95.45-1.57.94-2.43 2.81-2.28 4.62.15 1.94 1.5 3.73 3.39 4.19 1.84.48 3.97-.09 5.09-1.63.78-1.04 1.02-2.41 1.01-3.69V.02z"/></svg>
-          </a>
-          <a href="https://www.facebook.com/Thayamathumi" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border-2 border-[#d4af37] bg-[#fdf5eb] shadow-[0_6px_12px_rgba(74,37,17,0.15)] flex items-center justify-center text-[#4a2511] hover:bg-[#6e1224] hover:text-white hover:border-[#6e1224] transition-all duration-300 hover:scale-110 cursor-pointer" title="Facebook">
-            <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-          </a>
-          <a href="https://wa.me/94771234567" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border-2 border-[#d4af37] bg-[#fdf5eb] shadow-[0_6px_12px_rgba(74,37,17,0.15)] flex items-center justify-center text-[#4a2511] hover:bg-[#6e1224] hover:text-white hover:border-[#6e1224] transition-all duration-300 hover:scale-110 cursor-pointer" title="WhatsApp">
-            <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.5-5.729-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.859-4.42 9.863-9.864.002-2.637-1.023-5.118-2.884-6.98-1.862-1.862-4.343-2.887-6.984-2.889-5.439 0-9.863 4.42-9.867 9.864-.001 1.73.457 3.41 1.32 4.933l-.994 3.635 3.723-.975zM17.95 14.65c-.327-.164-1.93-.953-2.227-1.062-.297-.11-.513-.164-.73.164-.216.328-.838 1.063-1.027 1.28-.19.219-.378.247-.705.082-.328-.164-1.385-.511-2.637-1.633-.973-.869-1.63-1.944-1.822-2.272-.19-.328-.02-.505.143-.669.147-.148.328-.378.492-.569.164-.189.218-.328.327-.546.11-.219.055-.41-.027-.573-.082-.164-.73-1.758-.999-2.408-.262-.63-.53-.54-.73-.55-.19-.01-.406-.01-.622-.01-.216 0-.568.082-.865.41-.297.328-1.135 1.109-1.135 2.703 0 1.594 1.162 3.133 1.324 3.352.162.219 2.287 3.491 5.54 4.896.774.334 1.38.533 1.85.682.779.247 1.488.212 2.05.128.625-.094 1.93-.79 2.2-1.514.271-.723.271-1.344.19-1.472-.083-.129-.297-.203-.625-.367z"/></svg>
-          </a>
         </div>
 
       </div>

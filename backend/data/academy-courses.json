@@ -1,0 +1,40 @@
+[
+  {
+    "_id": "ac1",
+    "title": "Professional Bridal Makeup Course",
+    "duration": "3 Months",
+    "price": "Rs. 45,000",
+    "image": "/hero-saree.png",
+    "syllabus": "Day & Night Makeup\nBridal Draping\nHairstyling Basics\nProduct Knowledge"
+  },
+  {
+    "title": "test",
+    "duration": "5",
+    "price": "56000",
+    "image": "http://localhost:5000/uploads/1780635802900-906520279.webp",
+    "syllabus": [
+      "test"
+    ],
+    "_id": "stibjo1mq0gkzjp",
+    "images": [
+      "http://localhost:5000/uploads/1780635802900-906520279.webp",
+      "http://localhost:5000/uploads/1780640179766-652453408.webp",
+      "http://localhost:5000/uploads/1780640186110-533129176.webp"
+    ],
+    "updatedAt": "2026-06-05T06:16:32.244Z"
+  },
+  {
+    "title": "test",
+    "duration": "4 month",
+    "price": "6700",
+    "image": "http://localhost:5000/uploads/1780640450589-760152332.png",
+    "images": [
+      "http://localhost:5000/uploads/1780640450589-760152332.png",
+      "http://localhost:5000/uploads/1780640450627-871242474.png"
+    ],
+    "syllabus": [
+      "test"
+    ],
+    "_id": "0waotx7mq0jcm1n"
+  }
+]

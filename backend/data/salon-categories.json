@@ -1,0 +1,73 @@
+[
+  {
+    "_id": "c1",
+    "name": "Hair Styling",
+    "description": "Transform your look with our professional hair styling, organic conditioning, and treatments.",
+    "image": "/salon_hair.png",
+    "images": [
+      "/salon_hair.png",
+      "/lookbook/sa2.webp",
+      "/lookbook/sa16.webp"
+    ]
+  },
+  {
+    "_id": "c2",
+    "name": "Skin Care",
+    "description": "Rejuvenate your skin with our customized treatments and advanced clinical facials.",
+    "image": "/salon_facial.png",
+    "images": [
+      "/salon_facial.png",
+      "/lookbook/sa4.webp",
+      "/lookbook/sa11.webp"
+    ]
+  },
+  {
+    "_id": "c3",
+    "name": "Makeup Artistry",
+    "description": "Professional bridal, party, and photoshoot makeup services by certified artists.",
+    "image": "/hero_bride.png",
+    "images": [
+      "/hero_bride.png",
+      "/lookbook/sa22.webp",
+      "/lookbook/sa15.webp"
+    ]
+  },
+  {
+    "name": "test",
+    "description": "test",
+    "image": "http://localhost:5000/uploads/1780635878165-855561847.webp",
+    "images": [
+      "http://localhost:5000/uploads/1780635878165-855561847.webp"
+    ],
+    "_id": "zqmn70lmq0gmlki"
+  },
+  {
+    "name": "Hasitha saloon",
+    "description": "test 123\n67yuiik\n0089\niiuu",
+    "image": "http://localhost:5000/uploads/1780637255258-509724713.webp",
+    "images": [
+      "http://localhost:5000/uploads/1780637255258-509724713.webp",
+      "http://localhost:5000/uploads/1780637258971-99822693.png"
+    ],
+    "_id": "xtbuoskmq0hg8oo"
+  },
+  {
+    "name": "test",
+    "description": "test",
+    "image": "http://localhost:5000/uploads/1780640561669-43332975.webp",
+    "images": [
+      "http://localhost:5000/uploads/1780640561669-43332975.webp",
+      "http://localhost:5000/uploads/1780640566761-787026834.webp"
+    ],
+    "_id": "gp3bz42mq0jf31j"
+  },
+  {
+    "name": "hinew",
+    "description": "new",
+    "image": "http://localhost:5000/uploads/1780644419735-196725575.webp",
+    "images": [
+      "http://localhost:5000/uploads/1780644419735-196725575.webp"
+    ],
+    "_id": "z24k71umq0lpocq"
+  }
+]

@@ -1,0 +1,25 @@
+[
+  {
+    "name": "hasitha",
+    "address": "jkkkkk",
+    "mobile": "98007",
+    "whatsapp": "09887",
+    "nic": "67899",
+    "dob": "2026-06-10",
+    "photo": "http://localhost:5000/uploads/1780644339661-688062353.webp",
+    "role": "Beauty Therapist",
+    "_id": "jh7kqzemq0lnyy3",
+    "updatedAt": "2026-06-05T07:26:03.244Z"
+  },
+  {
+    "name": "hasitha",
+    "address": "yyy",
+    "mobile": "88900",
+    "whatsapp": "99000",
+    "nic": "789000",
+    "dob": "2026-06-04",
+    "photo": "http://localhost:5000/uploads/1780646118799-930455448.png",
+    "role": "Nail Technician",
+    "_id": "qjvtoi7mq0mq3s0"
+  }
+]

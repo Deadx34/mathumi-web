@@ -2,8 +2,79 @@
 import React, { useState, useEffect } from 'react';
 import Image from "next/image";
 import Link from 'next/link';
+import { useToast } from '@/components/Toast';
+
+function CategoryCard({ cat, slug, serviceCount }: { cat: any, slug: string, serviceCount: number }) {
+  const images = cat.images && cat.images.length > 0 ? cat.images : (cat.image ? cat.image.split(',') : ['/salon-service.png']);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const nextImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const prevImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  };
+
+  return (
+    <div className="gold-panel flex flex-col rounded overflow-hidden bg-white border border-[#c2a670]/15 shadow-sm group hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
+      <div className="relative w-full h-[220px] sm:h-[260px] md:h-[280px] flex flex-col bg-[#faf7f2]">
+        <Link href={`/salon/${slug}`} className="relative flex-grow min-h-0 block">
+          <img src={images[currentIndex]} alt={`${cat.name} - ${currentIndex + 1}`} className="absolute inset-0 w-full h-full object-cover object-center img-luxury-hover transition-all duration-500" />
+        </Link>
+        
+        {images.length > 1 && (
+          <>
+            <button 
+              onClick={prevImage}
+              className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-[#6e1224] text-white rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all z-10 cursor-pointer border border-white/10 shadow-md"
+              aria-label="Previous image"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3.5" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button 
+              onClick={nextImage}
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-[#6e1224] text-white rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all z-10 cursor-pointer border border-white/10 shadow-md"
+              aria-label="Next image"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3.5" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex space-x-2 z-10 bg-black/25 backdrop-blur-[2px] px-2.5 py-1 rounded-full">
+              {images.map((_: any, idx: number) => (
+                <button 
+                  key={idx} 
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); setCurrentIndex(idx); }}
+                  className={`w-1.5 h-1.5 rounded-full transition-all cursor-pointer ${idx === currentIndex ? 'bg-[#c2a670] scale-125' : 'bg-white/60'}`}
+                />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+      <div className="p-6 flex flex-col flex-grow text-center items-center">
+        <h3 className="text-lg font-serif font-bold text-[#1c1512] mb-3 uppercase tracking-wide">{cat.name}</h3>
+        <p className="text-xs text-[#1c1512]/75 mb-4 leading-relaxed max-w-xs font-sans">
+          {cat.description}
+        </p>
+        <span className="text-[#6e1224] text-[10px] font-sans font-bold tracking-wider mb-4">{serviceCount} SERVICES</span>
+        <Link href={`/salon/${slug}`} className="mt-auto py-2 px-6 rounded-full font-sans font-bold border border-[#c2a670]/40 text-[#1c1512] hover:bg-[#6e1224] hover:text-white hover:border-[#6e1224] transition-all uppercase tracking-widest text-[9px]">
+          VIEW TREATMENTS
+        </Link>
+      </div>
+    </div>
+  );
+}
 
 export default function SalonPage() {
+  const { showToast, ToastElement } = useToast();
   const [salonServices, setSalonServices] = useState<any[]>([]);
   const [salonCategories, setSalonCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -47,16 +118,32 @@ export default function SalonPage() {
         })
       });
       if (res.ok) {
-        alert("Your reservation request has been successfully submitted! Our team will contact you shortly.");
+        showToast(
+          'Reservation Request Sent!',
+          'success',
+          'Your treatment booking has been received. Our beauty team will contact you shortly to confirm your appointment.'
+        );
         setFormData({ fullName: '', phone: '', service: '', date: '', time: '' });
       } else if (res.status === 409) {
-        alert("This time slot is already booked for this treatment. Please select a different date or time!");
+        showToast(
+          'Time Slot Unavailable',
+          'warning',
+          'This time slot is already booked for this treatment. Please select a different date or time.'
+        );
       } else {
-        alert("Failed to submit reservation. Please try again.");
+        showToast(
+          'Submission Failed',
+          'error',
+          'We could not process your reservation at this time. Please try again or contact us on WhatsApp.'
+        );
       }
     } catch (err) {
       console.error(err);
-      alert("Network error. Failed to request reservation.");
+      showToast(
+        'Network Error',
+        'error',
+        'Unable to reach our servers. Please check your connection or contact us directly.'
+      );
     }
   };
 
@@ -65,7 +152,9 @@ export default function SalonPage() {
   };
 
   return (
-    <div className="flex flex-col w-full z-10 pb-20 text-[#1c1512]">
+    <>
+      {ToastElement}
+      <div className="flex flex-col w-full z-10 pb-20 text-[#1c1512]">
       
       {/* Hero Intro */}
       <div className="relative w-full h-[450px] md:h-[55vh] flex flex-col items-center justify-center text-center">
@@ -143,23 +232,7 @@ export default function SalonPage() {
                 const desc = cat.description;
                 const serviceCount = salonServices.filter((s: any) => s.category === catName).length;
 
-                return (
-                  <Link key={catName} href={`/salon/${slug}`} className="gold-panel flex flex-col rounded overflow-hidden bg-white border border-[#c2a670]/15 shadow-sm group hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
-                    <div className="relative w-full h-[220px] sm:h-[260px] md:h-[280px] overflow-hidden bg-[#faf7f2]">
-                      <img src={heroImage} alt={catName} className="absolute inset-0 w-full h-full object-cover object-center img-luxury-hover" />
-                    </div>
-                    <div className="p-6 flex flex-col flex-grow text-center items-center">
-                      <h3 className="text-lg font-serif font-bold text-[#1c1512] mb-3 uppercase tracking-wide">{catName}</h3>
-                      <p className="text-xs text-[#1c1512]/75 mb-4 leading-relaxed max-w-xs font-sans">
-                        {desc}
-                      </p>
-                      <span className="text-[#6e1224] text-[10px] font-sans font-bold tracking-wider mb-4">{serviceCount} SERVICES</span>
-                      <span className="mt-auto py-2 px-6 rounded-full font-sans font-bold border border-[#c2a670]/40 text-[#1c1512] hover:bg-[#6e1224] hover:text-white hover:border-[#6e1224] transition-all uppercase tracking-widest text-[9px]">
-                        VIEW TREATMENTS
-                      </span>
-                    </div>
-                  </Link>
-                );
+                return <CategoryCard key={catName} cat={cat} slug={slug} serviceCount={serviceCount} />;
               })}
 
             </div>
@@ -257,6 +330,7 @@ export default function SalonPage() {
 
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

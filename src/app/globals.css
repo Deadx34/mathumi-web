@@ -171,3 +171,8 @@ h1, h2, h3, h4, h5, h6 {
 .spin-slow {
   animation: spin-slow 180s linear infinite;
 }
+
+.font-cursive {
+  font-family: var(--font-playfair), serif;
+  font-style: italic;
+}

@@ -4,6 +4,72 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 
+function SareeImageSlider({ images, fallbackImage, name }: { images?: string[], fallbackImage: string, name: string }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const imageList = Array.isArray(images) && images.length > 0 ? images : [fallbackImage];
+
+  const handlePrev = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setCurrentIndex((prev) => (prev === 0 ? imageList.length - 1 : prev - 1));
+  };
+
+  const handleNext = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setCurrentIndex((prev) => (prev === imageList.length - 1 ? 0 : prev + 1));
+  };
+
+  if (imageList.length <= 1) {
+    return (
+      <img 
+        src={imageList[0]} 
+        alt={name} 
+        className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105" 
+      />
+    );
+  }
+
+  return (
+    <div className="relative w-full h-full group/slider">
+      <img 
+        src={imageList[currentIndex]} 
+        alt={`${name} - view ${currentIndex + 1}`} 
+        className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-500" 
+      />
+      {/* Navigation arrows */}
+      <button 
+        onClick={handlePrev} 
+        className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-[#6e1224] text-white rounded-full p-2 z-10 transition-all opacity-0 group-hover/slider:opacity-100 cursor-pointer flex items-center justify-center border border-white/10 shadow-md"
+        aria-label="Previous image"
+      >
+        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3.5" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      <button 
+        onClick={handleNext} 
+        className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-[#6e1224] text-white rounded-full p-2 z-10 transition-all opacity-0 group-hover/slider:opacity-100 cursor-pointer flex items-center justify-center border border-white/10 shadow-md"
+        aria-label="Next image"
+      >
+        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3.5" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+      {/* Dot Indicators */}
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex space-x-2 z-10 bg-black/25 backdrop-blur-[2px] px-2.5 py-1 rounded-full">
+        {imageList.map((_, idx) => (
+          <button
+            key={idx}
+            onClick={(e) => { e.stopPropagation(); e.preventDefault(); setCurrentIndex(idx); }}
+            className={`w-1.5 h-1.5 rounded-full transition-all ${idx === currentIndex ? 'bg-[#c2a670] scale-125' : 'bg-white/60'}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 const sareeItems = [
   { 
     id: 's1', 
@@ -200,7 +266,7 @@ export default function BoutiquePage() {
                 <div key={item._id} className="gold-panel flex flex-col rounded overflow-hidden bg-white border border-[#c2a670]/15 shadow-sm group hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
                   <div className="relative w-full h-[300px] sm:h-[360px] md:h-[380px] overflow-hidden bg-[#faf7f2] p-2">
                     <div className="relative w-full h-full overflow-hidden rounded">
-                      <img src={item.image} alt={item.name} className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105" />
+                      <SareeImageSlider images={item.images} fallbackImage={item.image} name={item.name} />
                     </div>
                   </div>
                   
