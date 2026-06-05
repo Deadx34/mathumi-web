@@ -225,14 +225,14 @@ export default function SalonPage() {
                 { name: 'Hair Styling', description: 'Precision cuts, botanical oil massages, keratin repair, and gorgeous bridal styling designed for exquisite bounce.', image: '/salon_hair.png' },
                 { name: 'Skin Care', description: 'Herbal facials, deep cleansing, and anti-aging therapies customized to elevate your skin\'s organic radiance.', image: '/salon_facial.png' },
                 { name: 'Makeup Artistry', description: 'Professional bridal, party, and photoshoot makeup services by certified artists.', image: '/hero_bride.png' }
-              ]).map((cat: any) => {
+              ]).map((cat: any, idx: number) => {
                 const catName = cat.name;
                 const slug = catName === 'Hair Styling' ? 'hair-care' : catName.toLowerCase().replace(/\s+/g, '-');
                 const heroImage = cat.image || '/salon-service.png';
                 const desc = cat.description;
                 const serviceCount = salonServices.filter((s: any) => s.category === catName).length;
 
-                return <CategoryCard key={catName} cat={cat} slug={slug} serviceCount={serviceCount} />;
+                return <CategoryCard key={slug + '-' + idx} cat={cat} slug={slug} serviceCount={serviceCount} />;
               })}
 
             </div>
