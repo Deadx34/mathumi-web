@@ -30,9 +30,9 @@
     "timeSlot": "09:00 AM - 11:00 AM",
     "message": "test",
     "_id": "u31uyz4mq0iy5fu",
-    "status": "Cancelled",
+    "status": "Completed",
     "createdAt": "2026-06-05T06:09:37.290Z",
-    "updatedAt": "2026-06-05T06:09:49.417Z"
+    "updatedAt": "2026-06-05T09:28:49.219Z"
   },
   {
     "fullName": "Test Student",
@@ -42,8 +42,9 @@
     "timeSlot": "Standard Course Timing",
     "message": "NIC: 5677 | DOB: 2026-06-17 | Address: 123 Admin Lane",
     "_id": "ct3eaohmq0jdq2s",
-    "status": "Pending",
-    "createdAt": "2026-06-05T06:21:43.876Z"
+    "status": "Confirmed",
+    "createdAt": "2026-06-05T06:21:43.876Z",
+    "updatedAt": "2026-06-05T10:16:25.912Z"
   },
   {
     "fullName": "Test Student finl",
@@ -56,5 +57,16 @@
     "status": "Cancelled",
     "createdAt": "2026-06-05T07:54:18.580Z",
     "updatedAt": "2026-06-05T07:54:32.299Z"
+  },
+  {
+    "fullName": "Test Student",
+    "contactNumber": "9888800000",
+    "serviceRequested": "Bridal Package Consultation",
+    "preferredDate": "2026-06-19",
+    "timeSlot": "09:00 AM - 11:00 AM",
+    "message": "test",
+    "_id": "n6dq16pmq0sym3l",
+    "status": "Pending",
+    "createdAt": "2026-06-05T10:49:55.041Z"
   }
 ]

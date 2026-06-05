@@ -9,7 +9,13 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'bookings' | 'inquiries' | 'manageSarees' | 'manageAcademy' | 'manageSalon' | 'manageCategories' | 'manageGallery' | 'manageStaff'>('dashboard');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [bookings, setBookings] = useState<any[]>([]);
+  // State for Booking Details Modal
+  const [selectedBooking, setSelectedBooking] = useState<any>(null);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [inquiries, setInquiries] = useState<any[]>([]);
+  // State for Inquiry Details Modal
+  const [selectedInquiry, setSelectedInquiry] = useState<any>(null);
+  const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
   const [sarees, setSarees] = useState<any[]>([]);
   const [academyCourses, setAcademyCourses] = useState<any[]>([]);
   const [salonServices, setSalonServices] = useState<any[]>([]);
@@ -94,6 +100,9 @@ export default function AdminDashboard() {
 
   // Add/Edit Staff State
   const [isStaffModalOpen, setIsStaffModalOpen] = useState(false);
+  const [openStaffMenuId, setOpenStaffMenuId] = useState<string | null>(null);
+  const [selectedStaff, setSelectedStaff] = useState<any>(null);
+  const [isStaffViewModalOpen, setIsStaffViewModalOpen] = useState(false);
   const [staffForm, setStaffForm] = useState({
     _id: '', name: '', address: '', mobile: '', whatsapp: '', nic: '', dob: '', photo: '', role: 'Beauty Therapist'
   });
@@ -1041,59 +1050,68 @@ export default function AdminDashboard() {
             </div>
           </div>
         ) : activeTab === 'bookings' ? (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="bg-[#f4e8d3] text-[#4a2511]">
-                  <th className="p-3 text-xs">Date Created</th>
-                  <th className="p-3 text-xs">Last Updated</th>
-                  <th className="p-3 text-xs">Name & Contact</th>
-                  <th className="p-3 text-xs">Service</th>
-                  <th className="p-3 text-xs">Scheduled For</th>
-                  <th className="p-3 text-xs">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {bookings.map(b => (
-                  <tr key={b._id} className="border-b hover:bg-[#fdf5eb]">
-                    <td className="p-3">
-                      <p className="text-xs font-medium text-[#4a2511]">{b.createdAt ? new Date(b.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}</p>
-                      <p className="text-[10px] text-gray-500">{b.createdAt ? new Date(b.createdAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) : ''}</p>
-                    </td>
-                    <td className="p-3">
-                      {b.updatedAt ? (
-                        <>
-                          <p className="text-xs font-medium text-[#4a2511]">{new Date(b.updatedAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
-                          <p className="text-[10px] text-gray-500">{new Date(b.updatedAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</p>
-                        </>
-                      ) : <span className="text-[10px] text-gray-400">Not yet updated</span>}
-                    </td>
-                    <td className="p-3">
-                      <p className="font-bold text-[#4a2511] text-sm">{b.fullName}</p>
-                      <p className="text-xs text-gray-600">{b.contactNumber}</p>
-                    </td>
-                    <td className="p-3 font-semibold text-[#800020] text-sm">{b.serviceRequested}</td>
-                    <td className="p-3 text-sm">
-                      <p>{b.preferredDate || 'No Date'}</p>
-                      <p className="text-gray-500">{b.timeSlot || 'No Time'}</p>
-                    </td>
-                    <td className="p-3">
-                      <select 
-                        value={b.status || 'Pending'}
-                        onChange={(e) => handleUpdateBookingStatus(b._id, e.target.value)}
-                        className={`p-1 text-sm rounded font-bold border ${b.status === 'Pending' || !b.status ? 'bg-yellow-100 text-yellow-800 border-yellow-300' : b.status === 'Confirmed' ? 'bg-blue-100 text-blue-800 border-blue-300' : b.status === 'Completed' ? 'bg-green-100 text-green-800 border-green-300' : 'bg-red-100 text-red-800 border-red-300'}`}
-                      >
-                        <option value="Pending">Pending</option>
-                        <option value="Confirmed">Confirmed</option>
-                        <option value="Completed">Completed</option>
-                        <option value="Cancelled">Cancelled</option>
-                      </select>
-                    </td>
-                  </tr>
-                ))}
-                {bookings.length === 0 && <tr><td colSpan={6} className="p-4 text-center">No bookings found</td></tr>}
-              </tbody>
-            </table>
+          <div className="flex flex-col h-full space-y-4">
+            <div className="flex gap-4 overflow-x-auto pb-4 items-start h-[70vh] custom-scrollbar">
+              {['Pending', 'Confirmed', 'Completed', 'Cancelled'].map(status => (
+                <div key={status} className="flex-shrink-0 w-80 bg-[#fdf5eb]/60 rounded-xl border border-[#d4af37]/30 flex flex-col h-full max-h-full shadow-sm">
+                  <div className="p-4 border-b border-[#d4af37]/30 bg-gradient-to-r from-[#4a2511] to-[#6a3519] rounded-t-xl font-bold text-white flex justify-between items-center sticky top-0 z-10 shadow-sm">
+                    <span className="tracking-wide">{status}</span>
+                    <span className="text-xs bg-white/20 px-2.5 py-1 rounded-full font-semibold border border-white/20">
+                      {bookings.filter(b => (b.status || 'Pending') === status).length}
+                    </span>
+                  </div>
+                  <div className="p-3 overflow-y-auto flex-1 space-y-3 custom-scrollbar">
+                    {bookings.filter(b => (b.status || 'Pending') === status).map(b => (
+                      <div key={b._id} className="bg-white p-4 rounded-xl shadow-sm border border-[#d4af37]/20 relative hover:shadow-md transition-all duration-200 group">
+                        <div className="flex justify-between items-start mb-3">
+                          <div className="flex-1 pr-2">
+                            <p className="font-bold text-[#4a2511] text-sm leading-tight">{b.fullName}</p>
+                            <p className="text-[10px] text-gray-500 mt-0.5">{b.contactNumber}</p>
+                          </div>
+                          <button
+                            title="View Details"
+                            onClick={() => { setSelectedBooking(b); setIsDetailsModalOpen(true); }}
+                            className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#fdf5eb] hover:bg-[#d4af37]/20 text-[#4a2511] hover:text-[#800020] transition-all duration-200 border border-[#d4af37]/30 hover:border-[#d4af37] shadow-sm flex-shrink-0"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                              <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                            </svg>
+                          </button>
+                        </div>
+                        <div className="text-xs space-y-1.5 mb-4 bg-gray-50/80 p-2.5 rounded-lg border border-gray-100">
+                          <p className="flex justify-between"><span className="font-semibold text-gray-500">Service:</span> <span className="text-[#800020] font-bold text-right pl-2 truncate">{b.serviceRequested}</span></p>
+                          <p className="flex justify-between"><span className="font-semibold text-gray-500">Date:</span> <span className="text-[#4a2511] font-medium">{b.preferredDate || 'No Date'}</span></p>
+                          <p className="flex justify-between"><span className="font-semibold text-gray-500">Time:</span> <span className="text-[#4a2511] font-medium">{b.timeSlot || 'No Time'}</span></p>
+                        </div>
+                        <div className="relative">
+                          <select 
+                            value={b.status || 'Pending'}
+                            onChange={(e) => handleUpdateBookingStatus(b._id, e.target.value)}
+                            className={`w-full p-2 text-xs rounded-lg font-bold border appearance-none outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#d4af37]/50 transition-colors ${
+                              b.status === 'Pending' || !b.status ? 'bg-yellow-50 text-yellow-800 border-yellow-300' : 
+                              b.status === 'Confirmed' ? 'bg-blue-50 text-blue-800 border-blue-300' : 
+                              b.status === 'Completed' ? 'bg-green-50 text-green-800 border-green-300' : 
+                              'bg-red-50 text-red-800 border-red-300'
+                            }`}
+                          >
+                            <option value="Pending">Move to Pending</option>
+                            <option value="Confirmed">Move to Confirmed</option>
+                            <option value="Completed">Move to Completed</option>
+                            <option value="Cancelled">Move to Cancelled</option>
+                          </select>
+                          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                            <svg className="fill-current h-4 w-4 opacity-60" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    {bookings.filter(b => (b.status || 'Pending') === status).length === 0 && (
+                      <div className="text-center text-xs text-gray-400 py-8 italic border-2 border-dashed border-gray-200 rounded-xl mx-2">No {status.toLowerCase()} bookings</div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         ) : activeTab === 'inquiries' ? (
           <div className="overflow-x-auto">
@@ -1105,6 +1123,7 @@ export default function AdminDashboard() {
                   <th className="p-3 text-xs">Customer</th>
                   <th className="p-3 text-xs">Items Inquired</th>
                   <th className="p-3 text-xs">Status</th>
+                  <th className="p-3 text-xs text-center">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -1151,9 +1170,20 @@ export default function AdminDashboard() {
                         <option value="Closed">Closed</option>
                       </select>
                     </td>
+                    <td className="p-3 text-center">
+                      <button
+                        title="View Details"
+                        onClick={() => { setSelectedInquiry(i); setIsInquiryModalOpen(true); }}
+                        className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#fdf5eb] hover:bg-[#d4af37]/20 text-[#4a2511] hover:text-[#800020] transition-all duration-200 border border-[#d4af37]/30 hover:border-[#d4af37] shadow-sm hover:shadow"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                        </svg>
+                      </button>
+                    </td>
                   </tr>
                 ))}
-                {inquiries.length === 0 && <tr><td colSpan={5} className="p-4 text-center">No inquiries found</td></tr>}
+                {inquiries.length === 0 && <tr><td colSpan={6} className="p-4 text-center">No inquiries found</td></tr>}
               </tbody>
             </table>
           </div>
@@ -1400,9 +1430,41 @@ export default function AdminDashboard() {
                           </p>
                         )}
                       </td>
-                      <td className="p-3 text-right space-x-2 whitespace-nowrap">
-                        <button onClick={() => openEditStaffModal(s)} className="text-blue-600 hover:text-blue-800 font-bold text-xs bg-blue-100 px-2.5 py-1 rounded">Edit</button>
-                        <button onClick={() => handleDeleteStaff(s._id)} className="text-red-600 hover:text-red-800 font-bold text-xs bg-red-100 px-2.5 py-1 rounded">Delete</button>
+                      <td className="p-3 text-right whitespace-nowrap relative">
+                        <button
+                          onClick={() => setOpenStaffMenuId(openStaffMenuId === s._id ? null : s._id)}
+                          className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#fdf5eb] hover:bg-[#d4af37]/20 text-[#4a2511] hover:text-[#800020] transition-all duration-200 border border-[#d4af37]/30 hover:border-[#d4af37] shadow-sm flex-shrink-0"
+                          title="Actions"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                          </svg>
+                        </button>
+                        {openStaffMenuId === s._id && (
+                          <>
+                            <div className="fixed inset-0 z-10" onClick={() => setOpenStaffMenuId(null)}></div>
+                            <div className="absolute right-8 top-10 mt-1 w-32 bg-white rounded-md shadow-lg z-20 border border-gray-200 py-1 overflow-hidden">
+                              <button
+                                onClick={() => { setOpenStaffMenuId(null); setSelectedStaff(s); setIsStaffViewModalOpen(true); }}
+                                className="block w-full text-left px-4 py-2 text-sm text-[#4a2511] font-semibold hover:bg-[#fdf5eb]"
+                              >
+                                View
+                              </button>
+                              <button
+                                onClick={() => { setOpenStaffMenuId(null); openEditStaffModal(s); }}
+                                className="block w-full text-left px-4 py-2 text-sm text-blue-600 font-semibold hover:bg-blue-50"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => { setOpenStaffMenuId(null); handleDeleteStaff(s._id); }}
+                                className="block w-full text-left px-4 py-2 text-sm text-red-600 font-semibold hover:bg-red-50"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -1716,6 +1778,95 @@ export default function AdminDashboard() {
         </div>
       )}
 
+      {/* Staff View Modal */}
+      {isStaffViewModalOpen && selectedStaff && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center" onClick={() => setIsStaffViewModalOpen(false)}>
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+          <div
+            className="relative bg-white rounded-2xl shadow-2xl border border-[#d4af37]/40 w-full max-w-md mx-4 overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="bg-gradient-to-r from-[#4a2511] to-[#800020] px-6 py-4 flex items-center justify-between">
+              <h3 className="text-white font-serif font-bold text-lg tracking-wide">👤 Staff Details</h3>
+              <button
+                onClick={() => setIsStaffViewModalOpen(false)}
+                className="text-white/80 hover:text-white text-2xl leading-none transition-colors"
+              >
+                ×
+              </button>
+            </div>
+            <div className="px-6 py-5 space-y-4 max-h-[70vh] overflow-y-auto">
+              <div className="flex flex-col items-center justify-center mb-6">
+                <img 
+                  src={selectedStaff.photo || '/avatar-placeholder.png'} 
+                  alt={selectedStaff.name} 
+                  className="w-24 h-24 object-cover rounded-full border-2 border-[#d4af37] shadow-md bg-white mb-3" 
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = 'https://api.dicebear.com/7.x/initials/svg?seed=' + encodeURIComponent(selectedStaff.name);
+                  }}
+                />
+                <h2 className="text-xl font-bold text-[#4a2511]">{selectedStaff.name}</h2>
+                <span className="bg-[#d4af37]/10 text-[#3a1f0d] border border-[#d4af37]/35 text-xs font-bold px-3 py-1 mt-1 rounded-full uppercase tracking-wider">
+                  {selectedStaff.role || 'Beauty Therapist'}
+                </span>
+              </div>
+              
+              <hr className="border-[#d4af37]/20" />
+              
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <span className="text-lg">📞</span>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Mobile</p>
+                    <p className="text-[#4a2511] font-bold text-sm">{selectedStaff.mobile || '—'}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-lg">💬</span>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">WhatsApp</p>
+                    <p className="text-[#075e54] font-bold text-sm">{selectedStaff.whatsapp || '—'}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-lg">📍</span>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Address</p>
+                    <p className="text-[#4a2511] font-bold text-sm">{selectedStaff.address || '—'}</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex items-start gap-3">
+                    <span className="text-lg">🪪</span>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">NIC</p>
+                      <p className="text-[#4a2511] font-bold text-sm">{selectedStaff.nic || '—'}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-lg">🎂</span>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Date of Birth</p>
+                      <p className="text-[#4a2511] font-bold text-sm">
+                        {selectedStaff.dob ? new Date(selectedStaff.dob).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="px-6 py-4 bg-[#fdf5eb] border-t border-[#d4af37]/20 flex justify-end">
+              <button
+                onClick={() => setIsStaffViewModalOpen(false)}
+                className="px-6 py-2 bg-gradient-to-r from-[#4a2511] to-[#800020] text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity shadow-md"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Staff Add/Edit Modal */}
       {isStaffModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-[1000] p-4">
@@ -1781,6 +1932,243 @@ export default function AdminDashboard() {
                 {isEditingStaff ? 'Save Changes' : 'Add Staff Member'}
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Inquiry Details Modal */}
+      {isInquiryModalOpen && selectedInquiry && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center" onClick={() => setIsInquiryModalOpen(false)}>
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+          {/* Modal */}
+          <div
+            className="relative bg-white rounded-2xl shadow-2xl border border-[#d4af37]/40 w-full max-w-lg mx-4 overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="bg-gradient-to-r from-[#4a2511] to-[#800020] px-6 py-4 flex items-center justify-between">
+              <h3 className="text-white font-serif font-bold text-lg tracking-wide">🔍 Inquiry Details</h3>
+              <button
+                onClick={() => setIsInquiryModalOpen(false)}
+                className="text-white/80 hover:text-white text-2xl leading-none transition-colors"
+              >
+                ×
+              </button>
+            </div>
+            {/* Body */}
+            <div className="px-6 py-5 space-y-4 max-h-[70vh] overflow-y-auto">
+              {/* Customer Name */}
+              <div className="flex items-start gap-3">
+                <span className="text-lg">👤</span>
+                <div className="flex-1">
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Customer Name</p>
+                  <p className="text-[#4a2511] font-bold text-sm">{selectedInquiry.customerName || 'Guest User'}</p>
+                </div>
+              </div>
+              {/* Contact Number */}
+              <div className="flex items-start gap-3">
+                <span className="text-lg">📞</span>
+                <div className="flex-1">
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Contact Number</p>
+                  <p className="text-[#4a2511] font-bold text-sm">{selectedInquiry.contactNumber || 'No Contact'}</p>
+                </div>
+              </div>
+              <hr className="border-[#d4af37]/20" />
+              {/* Items Inquired */}
+              <div className="flex items-start gap-3">
+                <span className="text-lg">🛍️</span>
+                <div className="flex-1">
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Items Inquired ({selectedInquiry.items?.length || 0})</p>
+                  <div className="mt-2 space-y-2">
+                    {selectedInquiry.items?.map((item: any, idx: number) => (
+                      <div key={item._id || idx} className="flex items-center gap-2 bg-[#fdf5eb] p-2 rounded border border-[#d4af37]/30">
+                        {item.image && <img src={item.image} alt="" className="w-10 h-10 object-cover rounded shadow-sm flex-shrink-0" />}
+                        <div className="truncate">
+                          <p className="font-bold text-[#4a2511] text-xs leading-tight truncate">{item.name || 'Unknown Item'}</p>
+                          <p className="text-[10px] text-gray-500 leading-none mt-1">{item.price || 'No Price'}</p>
+                        </div>
+                      </div>
+                    ))}
+                    {!selectedInquiry.items?.length && <p className="text-xs text-gray-500">No items specified.</p>}
+                  </div>
+                </div>
+              </div>
+              <hr className="border-[#d4af37]/20" />
+              {/* Status */}
+              <div className="flex items-start gap-3">
+                <span className="text-lg">📌</span>
+                <div className="flex-1">
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Status</p>
+                  <span className={`inline-block px-3 py-1 text-xs font-bold rounded-full mt-1 ${
+                    selectedInquiry.status === 'Contacted' ? 'bg-blue-100 text-blue-800' :
+                    selectedInquiry.status === 'Closed' ? 'bg-gray-100 text-gray-800' :
+                    'bg-green-100 text-green-800'
+                  }`}>{selectedInquiry.status || 'New'}</span>
+                </div>
+              </div>
+              {/* Date Created */}
+              <div className="grid grid-cols-2 gap-4 mt-2">
+                <div className="flex items-start gap-2">
+                  <span className="text-sm">🗓️</span>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Date Created</p>
+                    <p className="text-[#4a2511] text-xs font-medium mt-0.5">
+                      {selectedInquiry.createdAt ? new Date(selectedInquiry.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' + new Date(selectedInquiry.createdAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) : '—'}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-sm">🔄</span>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Last Updated</p>
+                    <p className="text-[#4a2511] text-xs font-medium mt-0.5">
+                      {selectedInquiry.updatedAt ? new Date(selectedInquiry.updatedAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' + new Date(selectedInquiry.updatedAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) : 'Not yet updated'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* Footer */}
+            <div className="px-6 py-4 bg-[#fdf5eb] border-t border-[#d4af37]/20 flex justify-end">
+              <button
+                onClick={() => setIsInquiryModalOpen(false)}
+                className="px-6 py-2 bg-gradient-to-r from-[#4a2511] to-[#800020] text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity shadow-md"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Booking Details Modal */}
+      {isDetailsModalOpen && selectedBooking && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center" onClick={() => setIsDetailsModalOpen(false)}>
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+          {/* Modal */}
+          <div
+            className="relative bg-white rounded-2xl shadow-2xl border border-[#d4af37]/40 w-full max-w-lg mx-4 overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="bg-gradient-to-r from-[#4a2511] to-[#800020] px-6 py-4 flex items-center justify-between">
+              <h3 className="text-white font-serif font-bold text-lg tracking-wide">📋 Booking Details</h3>
+              <button
+                onClick={() => setIsDetailsModalOpen(false)}
+                className="text-white/80 hover:text-white text-2xl leading-none transition-colors"
+              >
+                ×
+              </button>
+            </div>
+            {/* Body */}
+            <div className="px-6 py-5 space-y-4 max-h-[70vh] overflow-y-auto">
+              {/* Client Name */}
+              <div className="flex items-start gap-3">
+                <span className="text-lg">👤</span>
+                <div className="flex-1">
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Client Name</p>
+                  <p className="text-[#4a2511] font-bold text-sm">{selectedBooking.fullName || '—'}</p>
+                </div>
+              </div>
+              {/* Contact Number */}
+              <div className="flex items-start gap-3">
+                <span className="text-lg">📞</span>
+                <div className="flex-1">
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Contact Number</p>
+                  <p className="text-[#4a2511] font-bold text-sm">{selectedBooking.contactNumber || '—'}</p>
+                </div>
+              </div>
+              {/* Email */}
+              {selectedBooking.email && (
+                <div className="flex items-start gap-3">
+                  <span className="text-lg">✉️</span>
+                  <div className="flex-1">
+                    <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Email</p>
+                    <p className="text-[#4a2511] font-bold text-sm">{selectedBooking.email}</p>
+                  </div>
+                </div>
+              )}
+              <hr className="border-[#d4af37]/20" />
+              {/* Service Name */}
+              <div className="flex items-start gap-3">
+                <span className="text-lg">💇</span>
+                <div className="flex-1">
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Service Requested</p>
+                  <p className="text-[#800020] font-bold text-sm">{selectedBooking.serviceRequested || '—'}</p>
+                </div>
+              </div>
+              {/* Booking Date */}
+              <div className="flex items-start gap-3">
+                <span className="text-lg">📅</span>
+                <div className="flex-1">
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Booking Date</p>
+                  <p className="text-[#4a2511] font-bold text-sm">{selectedBooking.preferredDate || 'No Date'}</p>
+                </div>
+              </div>
+              {/* Time Slot */}
+              <div className="flex items-start gap-3">
+                <span className="text-lg">🕐</span>
+                <div className="flex-1">
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Time Slot</p>
+                  <p className="text-[#4a2511] font-bold text-sm">{selectedBooking.timeSlot || 'No Time'}</p>
+                </div>
+              </div>
+              {/* Status */}
+              <div className="flex items-start gap-3">
+                <span className="text-lg">📌</span>
+                <div className="flex-1">
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Status</p>
+                  <span className={`inline-block px-3 py-1 text-xs font-bold rounded-full ${
+                    selectedBooking.status === 'Confirmed' ? 'bg-blue-100 text-blue-800' :
+                    selectedBooking.status === 'Completed' ? 'bg-green-100 text-green-800' :
+                    selectedBooking.status === 'Cancelled' ? 'bg-red-100 text-red-800' :
+                    'bg-yellow-100 text-yellow-800'
+                  }`}>{selectedBooking.status || 'Pending'}</span>
+                </div>
+              </div>
+              <hr className="border-[#d4af37]/20" />
+              {/* Notes */}
+              <div className="flex items-start gap-3">
+                <span className="text-lg">📝</span>
+                <div className="flex-1">
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Notes</p>
+                  <p className="text-[#4a2511] text-sm whitespace-pre-wrap">{selectedBooking.notes || selectedBooking.additionalNotes || 'No notes provided'}</p>
+                </div>
+              </div>
+              <hr className="border-[#d4af37]/20" />
+              {/* Date Created */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-start gap-2">
+                  <span className="text-sm">🗓️</span>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Date Created</p>
+                    <p className="text-[#4a2511] text-xs font-medium">
+                      {selectedBooking.createdAt ? new Date(selectedBooking.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' + new Date(selectedBooking.createdAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) : '—'}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-sm">🔄</span>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Last Updated</p>
+                    <p className="text-[#4a2511] text-xs font-medium">
+                      {selectedBooking.updatedAt ? new Date(selectedBooking.updatedAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' + new Date(selectedBooking.updatedAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) : 'Not yet updated'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* Footer */}
+            <div className="px-6 py-4 bg-[#fdf5eb] border-t border-[#d4af37]/20 flex justify-end">
+              <button
+                onClick={() => setIsDetailsModalOpen(false)}
+                className="px-6 py-2 bg-gradient-to-r from-[#4a2511] to-[#800020] text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity shadow-md"
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}
