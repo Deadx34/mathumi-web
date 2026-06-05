@@ -54,7 +54,7 @@ export default function Navbar() {
           {/* Logo Area */}
           <div className="relative flex-shrink-0 transition-all duration-300 hover:scale-105 z-20 flex items-center md:-ml-4">
             <Link href="/">
-              <Image src="/logo.jpeg" alt="Mathumi Bridal Boutique Logo" width={180} height={180} className="object-cover h-20 w-20 md:h-24 md:w-24 drop-shadow-md rounded-full border-2 border-[#d4af37]" />
+              <Image src="/logo.jpeg" alt="Mathumi Bridal Boutique Logo" width={220} height={220} className="object-cover h-24 w-24 md:h-32 md:w-32 drop-shadow-md rounded-full border-2 border-[#d4af37]" />
             </Link>
           </div>
 
@@ -181,9 +181,9 @@ export default function Navbar() {
               <Image 
                 src="/logo.jpeg" 
                 alt="Mathumi Logo" 
-                width={90} 
-                height={90} 
-                className="object-cover h-20 w-20 rounded-full border-2 border-[#d4af37] shadow-md" 
+                width={120} 
+                height={120} 
+                className="object-cover h-24 w-24 rounded-full border-2 border-[#d4af37] shadow-md" 
               />
             </div>
 
