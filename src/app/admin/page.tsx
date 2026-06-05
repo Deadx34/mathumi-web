@@ -2133,8 +2133,8 @@ export default function AdminDashboard() {
               <div className="flex items-start gap-3">
                 <span className="text-lg">📝</span>
                 <div className="flex-1">
-                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Notes</p>
-                  <p className="text-[#4a2511] text-sm whitespace-pre-wrap">{selectedBooking.notes || selectedBooking.additionalNotes || 'No notes provided'}</p>
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Message / Notes</p>
+                  <p className="text-[#4a2511] text-sm whitespace-pre-wrap">{selectedBooking.message || selectedBooking.notes || selectedBooking.additionalNotes || 'No message provided'}</p>
                 </div>
               </div>
               <hr className="border-[#d4af37]/20" />

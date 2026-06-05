@@ -68,5 +68,27 @@
     "_id": "n6dq16pmq0sym3l",
     "status": "Pending",
     "createdAt": "2026-06-05T10:49:55.041Z"
+  },
+  {
+    "fullName": "Test Student",
+    "contactNumber": "9888800000",
+    "serviceRequested": "Bridal Package Consultation",
+    "preferredDate": "2026-06-05",
+    "timeSlot": "09:00 AM - 11:00 AM",
+    "message": "hi how ",
+    "_id": "6ocb2limq0t2v56",
+    "status": "Pending",
+    "createdAt": "2026-06-05T10:53:13.386Z"
+  },
+  {
+    "fullName": "Test Hasitha",
+    "contactNumber": "66666666666",
+    "serviceRequested": "Beauty Salon Services",
+    "preferredDate": "2026-06-05",
+    "timeSlot": "01:00 PM - 03:00 PM",
+    "message": "test hhh",
+    "_id": "42w7letmq0ta6q9",
+    "status": "Pending",
+    "createdAt": "2026-06-05T10:58:54.993Z"
   }
 ]
