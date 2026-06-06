@@ -28,16 +28,16 @@ const categoryMeta: Record<string, { title: string; description: string; heroIma
 // Fallback static services (used only if backend is unreachable)
 const fallbackServices: Record<string, any[]> = {
   'hair-care': [
-    { _id: 'f1', title: 'Botanical Hair Styling', description: 'Professional blow-dry styling, thermal straightening, and updos tailored for any formal occasion.', image: '/lookbook/sa2.webp' },
-    { _id: 'f2', title: 'Balayage & Coloring', description: 'Custom highlights and hand-painted balayage treatments using international organic products.', image: '/lookbook/sa16.webp' },
-    { _id: 'f3', title: 'Keratin Deep Treatment', description: 'Restructuring protein therapies and intense hydration hair spas for absolute shine.', image: '/lookbook/sa9.webp' },
-    { _id: 'f4', title: 'Bespoke Bridal Hair Design', description: 'Traditional South Indian long braids and jasmine garland draping for your wedding.', image: '/lookbook/sa15.webp' }
+    { _id: 'f1', title: 'Botanical Hair Styling', description: 'Professional blow-dry styling, thermal straightening, and updos tailored for any formal occasion.', image: '/imges/sa2.webp' },
+    { _id: 'f2', title: 'Balayage & Coloring', description: 'Custom highlights and hand-painted balayage treatments using international organic products.', image: '/imges/sa16.webp' },
+    { _id: 'f3', title: 'Keratin Deep Treatment', description: 'Restructuring protein therapies and intense hydration hair spas for absolute shine.', image: '/imges/sa9.webp' },
+    { _id: 'f4', title: 'Bespoke Bridal Hair Design', description: 'Traditional South Indian long braids and jasmine garland draping for your wedding.', image: '/imges/sa15.webp' }
   ],
   'skin-care': [
-    { _id: 'f5', title: 'Luxury Herbal Facial', description: 'Sandalwood and turmeric deep cleansing, exfoliation, and clarifying herbal face packs.', image: '/lookbook/sa4.webp' },
-    { _id: 'f6', title: 'Advanced Skin Brightening', description: 'Gentle exfoliation and specialized serum infusions to restore skin clarity and natural glow.', image: '/lookbook/sa11.webp' },
-    { _id: 'f7', title: 'Anti-Aging Therapy', description: 'Collagen-boosting treatments to tighten pores, reduce fine lines, and firm the skin.', image: '/lookbook/sa18.webp' },
-    { _id: 'f8', title: 'Clarifying Acne Care', description: 'Detoxifying clay treatments and healing therapies designed to clear breakouts gently.', image: '/lookbook/sa18.webp' }
+    { _id: 'f5', title: 'Luxury Herbal Facial', description: 'Sandalwood and turmeric deep cleansing, exfoliation, and clarifying herbal face packs.', image: '/imges/sa4.webp' },
+    { _id: 'f6', title: 'Advanced Skin Brightening', description: 'Gentle exfoliation and specialized serum infusions to restore skin clarity and natural glow.', image: '/imges/sa11.webp' },
+    { _id: 'f7', title: 'Anti-Aging Therapy', description: 'Collagen-boosting treatments to tighten pores, reduce fine lines, and firm the skin.', image: '/imges/sa18.webp' },
+    { _id: 'f8', title: 'Clarifying Acne Care', description: 'Detoxifying clay treatments and healing therapies designed to clear breakouts gently.', image: '/imges/sa18.webp' }
   ]
 };
 

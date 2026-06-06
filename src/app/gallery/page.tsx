@@ -61,7 +61,7 @@ const REAL_IMAGES = [
 
 const STATIC_IMAGES = REAL_IMAGES.map(img => ({
   _id: img.file,
-  url: `/lookbook/${img.file}.webp`,
+  url: `/imges/${img.file}.webp`,
   title: img.title,
   category: img.category
 }));
@@ -190,7 +190,7 @@ export default function GalleryPage() {
 
             {/* CARD 1: Main — s16 Grand Bridal */}
             <div className="absolute top-0 left-6 w-[75%] h-[85%] rounded-2xl overflow-hidden border-4 border-[#d4af37] bg-[#fdf5eb] shadow-[0_16px_40px_rgba(74,37,17,0.18)] transition-all duration-500 ease-out hover:-translate-y-4 hover:scale-[1.03] hover:shadow-[0_28px_55px_rgba(74,37,17,0.28)] z-10 hover:z-30 cursor-pointer group">
-              <img src="/lookbook/s16.webp" alt="Grand Bridal" className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105" />
+              <img src="/imges/s16.webp" alt="Grand Bridal" className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105" />
               <div className="absolute inset-2 border border-[#d4af37]/30 rounded-xl pointer-events-none z-10" />
               <div className="absolute bottom-3 left-3 bg-[#1c1512]/60 backdrop-blur-sm rounded-full px-3 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <span className="text-[#d4af37] font-sans font-bold text-[8px] tracking-[0.2em] uppercase">Grand Bridal</span>
@@ -199,7 +199,7 @@ export default function GalleryPage() {
 
             {/* CARD 2: Bottom-Left — s6 Floral Mehndi */}
             <div className="absolute bottom-2 left-0 w-[48%] h-[52%] rounded-2xl overflow-hidden border-4 border-white bg-[#fdf5eb] shadow-[0_12px_30px_rgba(74,37,17,0.22)] transition-all duration-500 ease-out hover:-translate-y-4 hover:scale-[1.06] hover:shadow-[0_22px_45px_rgba(74,37,17,0.32)] z-20 hover:z-30 cursor-pointer group -rotate-3 hover:rotate-0">
-              <img src="/lookbook/s6.webp" alt="Floral Mehndi" className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105" />
+              <img src="/imges/s6.webp" alt="Floral Mehndi" className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105" />
               <div className="absolute inset-1.5 border border-[#d4af37]/25 rounded-xl pointer-events-none z-10" />
               <div className="absolute bottom-2 left-2 bg-[#1c1512]/60 backdrop-blur-sm rounded-full px-2.5 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <span className="text-[#d4af37] font-sans font-bold text-[7px] tracking-[0.18em] uppercase">Mehndi</span>
@@ -208,7 +208,7 @@ export default function GalleryPage() {
 
             {/* CARD 3: Bottom-Right — s11 Jewellery Styling */}
             <div className="absolute bottom-0 right-0 w-[46%] h-[46%] rounded-2xl overflow-hidden border-4 border-white bg-[#fdf5eb] shadow-[0_12px_30px_rgba(74,37,17,0.22)] transition-all duration-500 ease-out hover:-translate-y-4 hover:scale-[1.06] hover:shadow-[0_22px_45px_rgba(74,37,17,0.32)] z-20 hover:z-30 cursor-pointer group rotate-2 hover:rotate-0">
-              <img src="/lookbook/s11.webp" alt="Jewellery Styling" className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105" />
+              <img src="/imges/s11.webp" alt="Jewellery Styling" className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105" />
               <div className="absolute inset-1.5 border border-[#d4af37]/25 rounded-xl pointer-events-none z-10" />
               <div className="absolute bottom-2 left-2 bg-[#1c1512]/60 backdrop-blur-sm rounded-full px-2.5 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <span className="text-[#d4af37] font-sans font-bold text-[7px] tracking-[0.18em] uppercase">Jewellery</span>

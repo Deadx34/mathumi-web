@@ -139,7 +139,7 @@ export default async function Home() {
             {/* === CARD 2: Bottom-Left Offset Card === */}
             <div className="absolute bottom-2 left-0 w-[48%] h-[52%] rounded-2xl overflow-hidden border-4 border-white bg-[#fdf5eb] shadow-[0_12px_30px_rgba(74,37,17,0.22)] transition-all duration-500 ease-out hover:-translate-y-4 hover:scale-[1.06] hover:shadow-[0_22px_45px_rgba(74,37,17,0.32)] z-20 hover:z-30 cursor-pointer group -rotate-3 hover:rotate-0">
               <img
-                src="/lookbook/s8.webp"
+                src="/imges/s8.webp"
                 alt="Mathumi Bridal Portrait"
                 className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
               />
@@ -152,7 +152,7 @@ export default async function Home() {
             {/* === CARD 3: Bottom-Right Offset Card === */}
             <div className="absolute bottom-0 right-0 w-[46%] h-[46%] rounded-2xl overflow-hidden border-4 border-white bg-[#fdf5eb] shadow-[0_12px_30px_rgba(74,37,17,0.22)] transition-all duration-500 ease-out hover:-translate-y-4 hover:scale-[1.06] hover:shadow-[0_22px_45px_rgba(74,37,17,0.32)] z-20 hover:z-30 cursor-pointer group rotate-2 hover:rotate-0">
               <img
-                src="/lookbook/s13.webp"
+                src="/imges/s13.webp"
                 alt="Mathumi Traditional Bridal"
                 className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
               />
@@ -218,7 +218,7 @@ export default async function Home() {
             MATHUMI BRIDAL BOUTIQUE
           </h2>
           <div className="w-full h-[260px] relative mb-6 rounded overflow-hidden shadow-inner border border-[#c2a670]/20 bg-transparent">
-            <img src="/lookbook/s2.webp" alt="Mathumi Bridal Styling" className="absolute inset-0 w-full h-full object-contain object-top transition-transform duration-500 hover:scale-105" />
+            <img src="/imges/s2.webp" alt="Mathumi Bridal Styling" className="absolute inset-0 w-full h-full object-contain object-top transition-transform duration-500 hover:scale-105" />
           </div>
           <p className="text-xs text-[#1c1512]/80 mb-6 flex-grow leading-relaxed font-semibold font-sans px-2">
             Our pure Kanchipuram fabric of fine gold zari threads, hand-worked designer blouses, and lehengas are created and curated.
@@ -413,7 +413,7 @@ export default async function Home() {
             <div key={idx} className="relative w-full h-[180px] sm:h-[260px] md:h-[300px] lg:h-[320px] rounded shadow-[0_10px_25px_rgba(74,37,17,0.06)] border-2 border-[#d4af37] p-1.5 bg-white overflow-hidden group hover:border-[#6e1224] transition-all duration-500">
               <div className="relative w-full h-full overflow-hidden rounded">
                 <img
-                  src={`/lookbook/${img.file}.webp`}
+                  src={`/imges/${img.file}.webp`}
                   alt={img.title}
                   className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110"
                   loading={idx < 4 ? 'eager' : 'lazy'}

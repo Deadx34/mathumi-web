@@ -78,7 +78,7 @@ const sareeItems = [
     type: 'SAREE', 
     price: 'LKR 85,000',
     desc: 'Woven with authentic gold zari thread, featuring intricate heritage borders and traditional peacock motifs.', 
-    image: '/lookbook/sa5.webp', 
+    image: '/imges/sa5.webp', 
     fabric: 'Pure Mulberry Silk', 
     zari: 'Chased Gold Zari' 
   },
@@ -89,7 +89,7 @@ const sareeItems = [
     type: 'SAREE', 
     price: 'LKR 92,000',
     desc: 'Draped in royal green silk featuring elegant broad temple borders and traditional floral buttis.', 
-    image: '/lookbook/sa12.webp', 
+    image: '/imges/sa12.webp', 
     fabric: 'Pure Silk', 
     zari: 'Antique Gold Zari' 
   },
@@ -100,7 +100,7 @@ const sareeItems = [
     type: 'SAREE', 
     price: 'LKR 78,000',
     desc: 'Soft pastel peach silk woven for modern bridal aesthetics, displaying delicate paisley details.', 
-    image: '/lookbook/sa8.webp', 
+    image: '/imges/sa8.webp', 
     fabric: 'Raw Silk Blend', 
     zari: 'Fine Silver Gold Zari' 
   },
@@ -111,7 +111,7 @@ const sareeItems = [
     type: 'AARI BLOUSE', 
     price: 'LKR 18,000',
     desc: 'Exquisite hand-carved aari embroidery featuring traditional double-headed peacock motifs on premium velvet.', 
-    image: '/lookbook/sa15.webp', 
+    image: '/imges/sa15.webp', 
     fabric: 'Premium Velvet & Silk', 
     zari: 'Heavy Zardosi Beadwork' 
   },
@@ -122,7 +122,7 @@ const sareeItems = [
     type: 'AARI BLOUSE', 
     price: 'LKR 22,000',
     desc: 'Elaborate kundan and gold thread hand-embroidery on high-sheen silk fabric, perfect for wedding sarees.', 
-    image: '/lookbook/sa22.webp', 
+    image: '/imges/sa22.webp', 
     fabric: 'Pure Raw Silk', 
     zari: 'Kundan & Bead Embroidery' 
   },
@@ -133,7 +133,7 @@ const sareeItems = [
     type: 'BRIDAL LEHENGA', 
     price: 'LKR 145,000',
     desc: 'Stunning traditional lehenga skirt with a matching blouse and diaphanous dupatta, heavily embroidered in gold.', 
-    image: '/lookbook/sa19.webp', 
+    image: '/imges/sa19.webp', 
     fabric: 'Handloom Georgette Silk', 
     zari: 'Heavy Zardosi Work' 
   },
