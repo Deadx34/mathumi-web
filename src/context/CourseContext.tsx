@@ -7,6 +7,7 @@ export type Course = {
   duration: string;
   price: string;
   image: string;
+  images?: string[];
   syllabus: string[];
 };
 

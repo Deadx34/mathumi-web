@@ -21,10 +21,10 @@ function CategoryCard({ cat, slug, serviceCount }: { cat: any, slug: string, ser
   };
 
   return (
-    <div className="gold-panel flex flex-col rounded overflow-hidden bg-white border border-[#c2a670]/15 shadow-sm group hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
-      <div className="relative w-full h-[220px] sm:h-[260px] md:h-[280px] flex flex-col bg-[#faf7f2]">
+    <div className="gold-panel flex flex-col rounded overflow-hidden bg-transparent border border-[#c2a670]/15 shadow-sm group hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
+      <div className="relative w-full h-[300px] sm:h-[360px] md:h-[400px] flex flex-col bg-transparent">
         <Link href={`/salon/${slug}`} className="relative flex-grow min-h-0 block">
-          <img src={images[currentIndex]} alt={`${cat.name} - ${currentIndex + 1}`} className="absolute inset-0 w-full h-full object-cover object-center img-luxury-hover transition-all duration-500" />
+          <img src={images[currentIndex]} alt={`${cat.name} - ${currentIndex + 1}`} className="absolute inset-0 w-full h-full object-contain object-center img-luxury-hover transition-all duration-500" />
         </Link>
         
         {images.length > 1 && (
