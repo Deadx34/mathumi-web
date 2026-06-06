@@ -256,7 +256,7 @@ export default async function Home() {
         <div className="lg:col-span-8 flex flex-col justify-between gap-8">
           
           {/* Discover Radiance Horizontal Panel */}
-          <div className="gold-panel p-6 sm:p-8 rounded bg-white border-2 border-[#d4af37] w-full flex flex-col md:flex-row items-center gap-6 justify-between shadow-sm">
+          <div className="p-6 sm:p-8 rounded bg-transparent w-full flex flex-col md:flex-row items-center gap-6 justify-between">
             <div className="flex flex-col items-start text-left md:max-w-[55%]">
               <h3 className="text-xl font-serif font-bold text-[#4a2511] mb-4 tracking-wide">
                 Discover your Radiance, Learn the Art of Beauty.
@@ -264,14 +264,14 @@ export default async function Home() {
               
               {/* Three Thumbnails Row */}
               <div className="flex items-center gap-3 mt-2">
-                <div className="relative w-16 h-16 rounded overflow-hidden border border-[#d4af37]/40">
-                  <Image src="/gallery_makeup_artist_1780157979803.png" alt="Mehndi Thumb" fill className="object-cover" />
+                <div className="relative w-16 h-16 rounded overflow-hidden">
+                  <Image src="/imges/sa11.webp" alt="Mehndi Thumb" fill className="object-contain" />
                 </div>
-                <div className="relative w-16 h-16 rounded overflow-hidden border border-[#d4af37]/40">
-                  <Image src="/gallery_hair_styling_1780157961534.png" alt="Hair Thumb" fill className="object-cover" />
+                <div className="relative w-16 h-16 rounded overflow-hidden">
+                  <Image src="/imges/sa1.webp" alt="Hair Thumb" fill className="object-contain" />
                 </div>
-                <div className="relative w-16 h-16 rounded overflow-hidden border border-[#d4af37]/40">
-                  <Image src="/gallery_spa_facial_1780157996108.png" alt="Skincare Thumb" fill className="object-cover" />
+                <div className="relative w-16 h-16 rounded overflow-hidden">
+                  <Image src="/imges/s10.webp" alt="Skincare Thumb" fill className="object-contain" />
                 </div>
               </div>
             </div>
@@ -294,13 +294,13 @@ export default async function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
             
             {/* Card Left: Mathumi Beauty Salon */}
-            <div className="gold-panel p-6 rounded bg-white border-2 border-[#d4af37] flex flex-col justify-between items-stretch">
+            <div className="p-6 rounded bg-transparent flex flex-col justify-between items-stretch">
               <div>
                 <h3 className="text-base sm:text-lg font-serif font-bold text-[#4a2511] mb-4 uppercase tracking-wider text-center border-b border-[#d4af37]/20 pb-2">
                   MATHUMI BEAUTY SALON
                 </h3>
-                <div className="relative w-full h-32 rounded overflow-hidden border border-[#d4af37]/20 mb-4 bg-[#fdf5eb]">
-                  <Image src="/salon_hair.png" alt="Salon Services" fill className="object-cover" />
+                <div className="relative w-full h-40 rounded overflow-hidden mb-4 bg-transparent">
+                  <Image src="/imges/sa11.webp" alt="Salon Services" fill className="object-contain" />
                 </div>
                 <ul className="text-xs text-[#1c1512]/80 space-y-3 font-semibold font-sans mb-6 px-1">
                   {services.length > 0 ? (
@@ -326,13 +326,13 @@ export default async function Home() {
             </div>
 
             {/* Card Right: Academy & Training */}
-            <div className="gold-panel p-6 rounded bg-white border-2 border-[#d4af37] flex flex-col justify-between items-stretch">
+            <div className="p-6 rounded bg-transparent flex flex-col justify-between items-stretch">
               <div>
                 <h3 className="text-base sm:text-lg font-serif font-bold text-[#4a2511] mb-4 uppercase tracking-wider text-center border-b border-[#d4af37]/20 pb-2">
                   ACADEMY & TRAINING
                 </h3>
-                <div className="relative w-full h-32 rounded overflow-hidden border border-[#d4af37]/20 mb-4 bg-[#fdf5eb]">
-                  <Image src="/academy_class2.png" alt="Academy Class" fill className="object-cover" />
+                <div className="relative w-full h-40 rounded overflow-hidden mb-4 bg-transparent">
+                  <Image src="/imges/sa1.webp" alt="Academy Class" fill className="object-contain" />
                 </div>
                 <ul className="text-xs text-[#1c1512]/80 space-y-3 font-semibold font-sans mb-6 px-1">
                   {courses.length > 0 ? (
@@ -363,12 +363,10 @@ export default async function Home() {
 
         {/* Right Column (Big Vertical Bridalpamper card) */}
         <div className="lg:col-span-4 flex flex-col items-stretch">
-          <div className="gold-panel p-5 rounded bg-white border-2 border-[#d4af37] h-full flex flex-col justify-between shadow-sm relative overflow-hidden">
-            {/* Border Accent Overlay */}
-            <div className="absolute inset-1.5 border border-[#d4af37]/35 pointer-events-none z-10 rounded"></div>
+          <div className="p-5 rounded bg-transparent h-full flex flex-col justify-between relative overflow-hidden">
             
-            <div className="relative w-full h-[360px] md:h-[420px] lg:h-[460px] rounded overflow-hidden border border-[#d4af37]/20 bg-[#fdf5eb] shadow-inner mb-4">
-              <Image src="/gallery_bridal_makeup_1780157939359.png" alt="Bride Pampering Facial" fill className="object-cover object-top transition-transform duration-700 hover:scale-105" />
+            <div className="relative w-full h-[400px] md:h-[460px] lg:h-[500px] rounded overflow-hidden mb-4 bg-transparent">
+              <Image src="/imges/s7.webp" alt="Bride Pampering Facial" fill className="object-contain transition-transform duration-700 hover:scale-105" />
             </div>
 
             <div className="text-center pt-2 flex flex-col items-center">
