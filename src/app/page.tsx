@@ -180,7 +180,7 @@ export default async function Home() {
             MATHUMI BEAUTY SALON
           </h2>
           <div className="w-full h-[260px] relative mb-6 rounded overflow-hidden shadow-inner border border-[#c2a670]/20 bg-transparent">
-            <Image src="/salon_facial.png" alt="Beauty Salon Facial" fill className="object-contain transition-transform duration-500 hover:scale-105" />
+            <Image src="/imges/s12.webp" alt="Beauty Salon Facial" fill className="object-contain transition-transform duration-500 hover:scale-105" />
           </div>
           <p className="text-xs text-[#1c1512]/80 mb-6 flex-grow leading-relaxed font-semibold font-sans px-2">
             Beauty repair completion of skin treatments, nahny, routine treatments and professional facial therapies.
@@ -199,7 +199,7 @@ export default async function Home() {
             MATHUMI ACADEMY
           </h2>
           <div className="w-full h-[260px] relative mb-6 rounded overflow-hidden shadow-inner border border-[#c2a670]/20 bg-transparent">
-            <Image src="/academy_class1.png" alt="Academy Training" fill className="object-contain transition-transform duration-500 hover:scale-105" />
+            <Image src="/imges/sa1.webp" alt="Academy Training" fill className="object-contain transition-transform duration-500 hover:scale-105" />
           </div>
           <p className="text-xs text-[#1c1512]/80 mb-6 flex-grow leading-relaxed font-semibold font-sans px-2">
             Professional makeup instruction, saree draping masterclasses, and certified courses for upcoming wedding styling specialists.
@@ -218,7 +218,7 @@ export default async function Home() {
             MATHUMI BRIDAL BOUTIQUE
           </h2>
           <div className="w-full h-[260px] relative mb-6 rounded overflow-hidden shadow-inner border border-[#c2a670]/20 bg-transparent">
-            <img src="/imges/s2.webp" alt="Mathumi Bridal Styling" className="absolute inset-0 w-full h-full object-contain object-top transition-transform duration-500 hover:scale-105" />
+            <img src="/imges/sa6.webp" alt="Mathumi Bridal Styling" className="absolute inset-0 w-full h-full object-contain object-top transition-transform duration-500 hover:scale-105" />
           </div>
           <p className="text-xs text-[#1c1512]/80 mb-6 flex-grow leading-relaxed font-semibold font-sans px-2">
             Our pure Kanchipuram fabric of fine gold zari threads, hand-worked designer blouses, and lehengas are created and curated.
