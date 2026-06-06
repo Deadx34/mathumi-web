@@ -174,13 +174,13 @@ export default async function Home() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 w-full z-10 mb-16 sm:mb-24">
         
         {/* Card 1: Salon Panel */}
-        <div className="gold-panel p-6 sm:p-8 flex flex-col items-center text-center rounded bg-white border-2 border-[#d4af37]">
+        <div className="gold-panel p-6 sm:p-8 flex flex-col items-center text-center rounded bg-transparent border-2 border-[#d4af37]">
           <span className="text-[#6e1224] font-sans font-bold text-[9px] tracking-[0.25em] uppercase mb-1">THE SANCTUARY</span>
           <h2 className="text-lg sm:text-xl font-serif font-bold text-[#4a2511] mb-4 uppercase tracking-[0.1em] h-8 flex items-center justify-center">
             MATHUMI BEAUTY SALON
           </h2>
-          <div className="w-full h-44 relative mb-6 rounded overflow-hidden shadow-inner border border-[#c2a670]/20 bg-[#fdf5eb]">
-            <Image src="/salon_facial.png" alt="Beauty Salon Facial" fill className="object-cover transition-transform duration-500 hover:scale-105" />
+          <div className="w-full h-[260px] relative mb-6 rounded overflow-hidden shadow-inner border border-[#c2a670]/20 bg-transparent">
+            <Image src="/salon_facial.png" alt="Beauty Salon Facial" fill className="object-contain transition-transform duration-500 hover:scale-105" />
           </div>
           <p className="text-xs text-[#1c1512]/80 mb-6 flex-grow leading-relaxed font-semibold font-sans px-2">
             Beauty repair completion of skin treatments, nahny, routine treatments and professional facial therapies.
@@ -193,13 +193,13 @@ export default async function Home() {
         </div>
 
         {/* Card 2: Academy Panel */}
-        <div className="gold-panel p-6 sm:p-8 flex flex-col items-center text-center rounded bg-white border-2 border-[#d4af37]">
+        <div className="gold-panel p-6 sm:p-8 flex flex-col items-center text-center rounded bg-transparent border-2 border-[#d4af37]">
           <span className="text-[#6e1224] font-sans font-bold text-[9px] tracking-[0.25em] uppercase mb-1">THE EDUCATION</span>
           <h2 className="text-lg sm:text-xl font-serif font-bold text-[#4a2511] mb-4 uppercase tracking-[0.1em] h-8 flex items-center justify-center">
             MATHUMI ACADEMY
           </h2>
-          <div className="w-full h-44 relative mb-6 rounded overflow-hidden shadow-inner border border-[#c2a670]/20 bg-[#fdf5eb]">
-            <Image src="/academy_class1.png" alt="Academy Training" fill className="object-cover transition-transform duration-500 hover:scale-105" />
+          <div className="w-full h-[260px] relative mb-6 rounded overflow-hidden shadow-inner border border-[#c2a670]/20 bg-transparent">
+            <Image src="/academy_class1.png" alt="Academy Training" fill className="object-contain transition-transform duration-500 hover:scale-105" />
           </div>
           <p className="text-xs text-[#1c1512]/80 mb-6 flex-grow leading-relaxed font-semibold font-sans px-2">
             Professional makeup instruction, saree draping masterclasses, and certified courses for upcoming wedding styling specialists.
@@ -212,13 +212,13 @@ export default async function Home() {
         </div>
 
         {/* Card 3: Boutique Panel */}
-        <div className="gold-panel p-6 sm:p-8 flex flex-col items-center text-center rounded bg-white border-2 border-[#d4af37]">
+        <div className="gold-panel p-6 sm:p-8 flex flex-col items-center text-center rounded bg-transparent border-2 border-[#d4af37]">
           <span className="text-[#6e1224] font-sans font-bold text-[9px] tracking-[0.25em] uppercase mb-1">THE ATELIER</span>
           <h2 className="text-lg sm:text-xl font-serif font-bold text-[#4a2511] mb-4 uppercase tracking-[0.1em] h-8 flex items-center justify-center">
             MATHUMI BRIDAL BOUTIQUE
           </h2>
-          <div className="w-full h-44 relative mb-6 rounded overflow-hidden shadow-inner border border-[#c2a670]/20 bg-[#fdf5eb]">
-            <img src="/lookbook/s2.webp" alt="Mathumi Bridal Styling" className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-500 hover:scale-105" />
+          <div className="w-full h-[260px] relative mb-6 rounded overflow-hidden shadow-inner border border-[#c2a670]/20 bg-transparent">
+            <img src="/lookbook/s2.webp" alt="Mathumi Bridal Styling" className="absolute inset-0 w-full h-full object-contain object-top transition-transform duration-500 hover:scale-105" />
           </div>
           <p className="text-xs text-[#1c1512]/80 mb-6 flex-grow leading-relaxed font-semibold font-sans px-2">
             Our pure Kanchipuram fabric of fine gold zari threads, hand-worked designer blouses, and lehengas are created and curated.
