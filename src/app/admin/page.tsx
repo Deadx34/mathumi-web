@@ -138,7 +138,7 @@ export default function AdminDashboard() {
     formData.append('image', file);
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/upload`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/upload`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: formData
@@ -311,7 +311,7 @@ export default function AdminDashboard() {
     setLoading(true);
     setError(null);
     try {
-      const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const API = process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com';
       const authHeaders = { 'Authorization': `Bearer ${token}` };
 
       const [bRes, iRes, sRes, aRes, salonRes, gRes, catRes, staffRes] = await Promise.all([
@@ -353,7 +353,7 @@ export default function AdminDashboard() {
   const handleUpdateBookingStatus = async (id: string, status: string) => {
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/bookings/${id}/status`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/bookings/${id}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ status })
@@ -374,7 +374,7 @@ export default function AdminDashboard() {
   const handleUpdateInquiryStatus = async (id: string, status: string) => {
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/inquiries/${id}/status`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/inquiries/${id}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ status })
@@ -395,7 +395,7 @@ export default function AdminDashboard() {
   const handleSaveSaree = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem('adminToken');
-    const url = isEditing ? `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/sarees/${sareeForm._id}` : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/sarees`;
+    const url = isEditing ? `${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/sarees/${sareeForm._id}` : `${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/sarees`;
     const method = isEditing ? 'PUT' : 'POST';
 
     // Remove empty _id so Mongoose generates one
@@ -428,7 +428,7 @@ export default function AdminDashboard() {
     if (!confirm("Are you sure you want to delete this saree?")) return;
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/sarees/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/sarees/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -484,7 +484,7 @@ export default function AdminDashboard() {
   const handleSaveService = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem('adminToken');
-    const url = isEditingService ? `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/salon-services/${serviceForm._id}` : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/salon-services`;
+    const url = isEditingService ? `${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/salon-services/${serviceForm._id}` : `${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/salon-services`;
     const method = isEditingService ? 'PUT' : 'POST';
     const payload: any = { ...serviceForm };
     if (!payload._id) delete payload._id;
@@ -508,7 +508,7 @@ export default function AdminDashboard() {
     if (!confirm("Delete this service?")) return;
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/salon-services/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/salon-services/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
       if (res.ok) { 
         showToast("Service deleted successfully!", "success"); 
         fetchAllData(token!); 
@@ -540,7 +540,7 @@ export default function AdminDashboard() {
   const handleSaveCategory = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem('adminToken');
-    const url = isEditingCategory ? `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/salon-categories/${categoryForm._id}` : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/salon-categories`;
+    const url = isEditingCategory ? `${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/salon-categories/${categoryForm._id}` : `${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/salon-categories`;
     const method = isEditingCategory ? 'PUT' : 'POST';
     const payload: any = { ...categoryForm };
     if (!payload._id) delete payload._id;
@@ -569,7 +569,7 @@ export default function AdminDashboard() {
     if (!confirm("Are you sure you want to delete this category? Any services in this category might need to be reassigned manually.")) return;
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/salon-categories/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/salon-categories/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -607,7 +607,7 @@ export default function AdminDashboard() {
   const handleSaveGallery = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem('adminToken');
-    const url = isEditingGallery ? `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/gallery/${galleryForm._id}` : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/gallery`;
+    const url = isEditingGallery ? `${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/gallery/${galleryForm._id}` : `${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/gallery`;
     const method = isEditingGallery ? 'PUT' : 'POST';
     const payload: any = { ...galleryForm };
     if (!payload._id) delete payload._id;
@@ -631,7 +631,7 @@ export default function AdminDashboard() {
     if (!confirm("Delete this image?")) return;
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/gallery/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/gallery/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
       if (res.ok) { 
         showToast("Gallery image deleted successfully!", "success"); 
         fetchAllData(token!); 
@@ -651,7 +651,7 @@ export default function AdminDashboard() {
   const handleSaveAcademy = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem('adminToken');
-    const url = isEditingAcademy ? `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/academy-courses/${academyForm._id}` : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/academy-courses`;
+    const url = isEditingAcademy ? `${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/academy-courses/${academyForm._id}` : `${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/academy-courses`;
     const method = isEditingAcademy ? 'PUT' : 'POST';
     
     let parsedSyllabus: string | string[] = academyForm.syllabus;
@@ -681,7 +681,7 @@ export default function AdminDashboard() {
     if (!confirm("Delete this course?")) return;
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/academy-courses/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/academy-courses/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
       if (res.ok) { 
         showToast("Academy course deleted successfully!", "success"); 
         fetchAllData(token!); 
@@ -713,8 +713,8 @@ export default function AdminDashboard() {
       return;
     }
     const url = isEditingStaff
-      ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/staff/${staffForm._id}`
-      : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/staff`;
+      ? `${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/staff/${staffForm._id}`
+      : `${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/staff`;
     const method = isEditingStaff ? 'PUT' : 'POST';
     const payload: any = { ...staffForm };
     if (!payload._id) delete payload._id;
@@ -751,7 +751,7 @@ export default function AdminDashboard() {
     if (!confirm('Are you sure you want to delete this staff member?')) return;
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/staff/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/staff/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -2177,3 +2177,4 @@ export default function AdminDashboard() {
     </div>
   );
 }
+

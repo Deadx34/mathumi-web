@@ -29,7 +29,7 @@ export function CourseProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/academy-courses`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/academy-courses`);
       if (!res.ok) {
         throw new Error(`Failed to fetch courses: ${res.statusText}`);
       }
@@ -65,3 +65,4 @@ export function useCourses() {
   }
   return context;
 }
+

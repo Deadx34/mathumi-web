@@ -19,10 +19,10 @@
   {
     "name": "hasitha saree3",
     "price": "23000",
-    "image": "http://localhost:5000/uploads/1780639871053-679898326.webp",
+    "image": "https://api.mathumibridal.com/uploads/1780639871053-679898326.webp",
     "images": [
-      "http://localhost:5000/uploads/1780639871053-679898326.webp",
-      "http://localhost:5000/uploads/1780639871080-470720889.webp"
+      "https://api.mathumibridal.com/uploads/1780639871053-679898326.webp",
+      "https://api.mathumibridal.com/uploads/1780639871080-470720889.webp"
     ],
     "color": "red",
     "category": "Pure Kanchipuram Silk Sarees",

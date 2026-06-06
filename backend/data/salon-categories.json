@@ -35,38 +35,38 @@
   {
     "name": "test",
     "description": "test",
-    "image": "http://localhost:5000/uploads/1780635878165-855561847.webp",
+    "image": "https://api.mathumibridal.com/uploads/1780635878165-855561847.webp",
     "images": [
-      "http://localhost:5000/uploads/1780635878165-855561847.webp"
+      "https://api.mathumibridal.com/uploads/1780635878165-855561847.webp"
     ],
     "_id": "zqmn70lmq0gmlki"
   },
   {
     "name": "Hasitha saloon",
     "description": "test 123\n67yuiik\n0089\niiuu",
-    "image": "http://localhost:5000/uploads/1780637255258-509724713.webp",
+    "image": "https://api.mathumibridal.com/uploads/1780637255258-509724713.webp",
     "images": [
-      "http://localhost:5000/uploads/1780637255258-509724713.webp",
-      "http://localhost:5000/uploads/1780637258971-99822693.png"
+      "https://api.mathumibridal.com/uploads/1780637255258-509724713.webp",
+      "https://api.mathumibridal.com/uploads/1780637258971-99822693.png"
     ],
     "_id": "xtbuoskmq0hg8oo"
   },
   {
     "name": "test",
     "description": "test",
-    "image": "http://localhost:5000/uploads/1780640561669-43332975.webp",
+    "image": "https://api.mathumibridal.com/uploads/1780640561669-43332975.webp",
     "images": [
-      "http://localhost:5000/uploads/1780640561669-43332975.webp",
-      "http://localhost:5000/uploads/1780640566761-787026834.webp"
+      "https://api.mathumibridal.com/uploads/1780640561669-43332975.webp",
+      "https://api.mathumibridal.com/uploads/1780640566761-787026834.webp"
     ],
     "_id": "gp3bz42mq0jf31j"
   },
   {
     "name": "hinew",
     "description": "new",
-    "image": "http://localhost:5000/uploads/1780644419735-196725575.webp",
+    "image": "https://api.mathumibridal.com/uploads/1780644419735-196725575.webp",
     "images": [
-      "http://localhost:5000/uploads/1780644419735-196725575.webp"
+      "https://api.mathumibridal.com/uploads/1780644419735-196725575.webp"
     ],
     "_id": "z24k71umq0lpocq"
   }

@@ -11,15 +11,15 @@
     "title": "test",
     "duration": "5",
     "price": "56000",
-    "image": "http://localhost:5000/uploads/1780635802900-906520279.webp",
+    "image": "https://api.mathumibridal.com/uploads/1780635802900-906520279.webp",
     "syllabus": [
       "test"
     ],
     "_id": "stibjo1mq0gkzjp",
     "images": [
-      "http://localhost:5000/uploads/1780635802900-906520279.webp",
-      "http://localhost:5000/uploads/1780640179766-652453408.webp",
-      "http://localhost:5000/uploads/1780640186110-533129176.webp"
+      "https://api.mathumibridal.com/uploads/1780635802900-906520279.webp",
+      "https://api.mathumibridal.com/uploads/1780640179766-652453408.webp",
+      "https://api.mathumibridal.com/uploads/1780640186110-533129176.webp"
     ],
     "updatedAt": "2026-06-05T06:16:32.244Z"
   },
@@ -27,10 +27,10 @@
     "title": "test",
     "duration": "4 month",
     "price": "6700",
-    "image": "http://localhost:5000/uploads/1780640450589-760152332.png",
+    "image": "https://api.mathumibridal.com/uploads/1780640450589-760152332.png",
     "images": [
-      "http://localhost:5000/uploads/1780640450589-760152332.png",
-      "http://localhost:5000/uploads/1780640450627-871242474.png"
+      "https://api.mathumibridal.com/uploads/1780640450589-760152332.png",
+      "https://api.mathumibridal.com/uploads/1780640450627-871242474.png"
     ],
     "syllabus": [
       "test"
