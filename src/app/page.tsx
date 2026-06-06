@@ -300,7 +300,7 @@ export default async function Home() {
                   MATHUMI BEAUTY SALON
                 </h3>
                 <div className="relative w-full h-40 rounded overflow-hidden border border-[#d4af37]/20 mb-4 bg-transparent">
-                  <Image src="/imges/sa11.webp" alt="Salon Services" fill className="object-contain" />
+                  <Image src="/imges/sa11.webp" alt="Salon Services" fill className="object-cover" />
                 </div>
                 <ul className="text-xs text-[#1c1512]/80 space-y-3 font-semibold font-sans mb-6 px-1">
                   {services.length > 0 ? (
@@ -332,7 +332,7 @@ export default async function Home() {
                   ACADEMY & TRAINING
                 </h3>
                 <div className="relative w-full h-40 rounded overflow-hidden border border-[#d4af37]/20 mb-4 bg-transparent">
-                  <Image src="/imges/sa1.webp" alt="Academy Class" fill className="object-contain" />
+                  <Image src="/imges/sa1.webp" alt="Academy Class" fill className="object-cover" />
                 </div>
                 <ul className="text-xs text-[#1c1512]/80 space-y-3 font-semibold font-sans mb-6 px-1">
                   {courses.length > 0 ? (
@@ -368,7 +368,7 @@ export default async function Home() {
             <div className="absolute inset-1.5 border border-[#d4af37]/35 pointer-events-none z-10 rounded"></div>
             
             <div className="relative w-full h-[400px] md:h-[460px] lg:h-[500px] rounded overflow-hidden border border-[#d4af37]/20 bg-transparent shadow-inner mb-4">
-              <Image src="/imges/s7.webp" alt="Bride Pampering Facial" fill className="object-contain transition-transform duration-700 hover:scale-105" />
+              <Image src="/imges/s7.webp" alt="Bride Pampering Facial" fill className="object-cover transition-transform duration-700 hover:scale-105" />
             </div>
 
             <div className="text-center pt-2 flex flex-col items-center">
