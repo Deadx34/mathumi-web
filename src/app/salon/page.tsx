@@ -160,8 +160,7 @@ export default function SalonPage() {
       <div className="relative w-full h-[450px] md:h-[55vh] flex flex-col items-center justify-center text-center">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
-          <Image src="/salon_header.png" fill className="object-cover object-center" alt="Beauty Care Hero" priority />
-          <div className="absolute inset-0 bg-[#1c1512]/65 backdrop-blur-[2px]"></div>
+          <Image src="/imges/s12.webp" fill className="object-contain object-center" alt="Beauty Care Hero" priority />
         </div>
 
         {/* Hero Content */}
