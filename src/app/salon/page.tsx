@@ -222,9 +222,9 @@ export default function SalonPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
               
               {!loading && (salonCategories.length > 0 ? salonCategories : [
-                { name: 'Hair Styling', description: 'Precision cuts, botanical oil massages, keratin repair, and gorgeous bridal styling designed for exquisite bounce.', image: '/salon_hair.png' },
+                { name: 'Hair Styling', description: 'Precision cuts, botanical oil massages, keratin repair, and gorgeous bridal styling designed for exquisite bounce.', image: '/imges/sa10.webp' },
                 { name: 'Skin Care', description: 'Herbal facials, deep cleansing, and anti-aging therapies customized to elevate your skin\'s organic radiance.', image: '/salon_facial.png' },
-                { name: 'Makeup Artistry', description: 'Professional bridal, party, and photoshoot makeup services by certified artists.', image: '/hero_bride.png' }
+                { name: 'Makeup Artistry', description: 'Professional bridal, party, and photoshoot makeup services by certified artists.', image: '/imges/s18.webp' }
               ]).map((cat: any, idx: number) => {
                 const catName = cat.name;
                 const slug = catName === 'Hair Styling' ? 'hair-care' : catName.toLowerCase().replace(/\s+/g, '-');

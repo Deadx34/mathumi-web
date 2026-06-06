@@ -57,8 +57,8 @@ function ServiceCard({ service }: { service: any }) {
 
   return (
     <div className="gold-panel flex flex-col sm:flex-row rounded overflow-hidden bg-white border border-[#c2a670]/15 shadow-sm group hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
-      <div className="relative w-full sm:w-[40%] h-56 sm:h-auto bg-[#faf7f2] flex-shrink-0">
-        <img src={images[currentIndex]} alt={`${service.title} - ${currentIndex + 1}`} className="absolute inset-0 w-full h-full object-cover img-luxury-hover transition-opacity duration-300" />
+      <div className="relative w-full sm:w-[40%] h-56 sm:h-auto bg-transparent flex-shrink-0">
+        <img src={images[currentIndex]} alt={`${service.title} - ${currentIndex + 1}`} className="absolute inset-0 w-full h-full object-contain object-center img-luxury-hover transition-opacity duration-300" />
         
         {images.length > 1 && (
           <>

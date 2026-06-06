@@ -95,9 +95,9 @@ function generateId() {
 function getSeedData(collection) {
   if (collection === 'salon-categories') {
     return [
-      { _id: 'c1', name: 'Hair Styling', description: 'Transform your look with our professional hair styling, organic conditioning, and treatments.', image: '/salon_hair.png', images: ['/salon_hair.png', '/lookbook/sa2.webp', '/lookbook/sa16.webp'] },
+      { _id: 'c1', name: 'Hair Styling', description: 'Transform your look with our professional hair styling, organic conditioning, and treatments.', image: '/imges/sa10.webp', images: ['/imges/sa10.webp', '/lookbook/sa2.webp', '/lookbook/sa16.webp'] },
       { _id: 'c2', name: 'Skin Care', description: 'Rejuvenate your skin with our customized treatments and advanced clinical facials.', image: '/salon_facial.png', images: ['/salon_facial.png', '/lookbook/sa4.webp', '/lookbook/sa11.webp'] },
-      { _id: 'c3', name: 'Makeup Artistry', description: 'Professional bridal, party, and photoshoot makeup services by certified artists.', image: '/hero_bride.png', images: ['/hero_bride.png', '/lookbook/sa22.webp', '/lookbook/sa15.webp'] }
+      { _id: 'c3', name: 'Makeup Artistry', description: 'Professional bridal, party, and photoshoot makeup services by certified artists.', image: '/imges/s18.webp', images: ['/imges/s18.webp', '/lookbook/sa22.webp', '/lookbook/sa15.webp'] }
     ];
   }
   if (collection === 'salon-services') {

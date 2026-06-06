@@ -3,9 +3,9 @@
     "_id": "c1",
     "name": "Hair Styling",
     "description": "Transform your look with our professional hair styling, organic conditioning, and treatments.",
-    "image": "/salon_hair.png",
+    "image": "/imges/sa10.webp",
     "images": [
-      "/salon_hair.png",
+      "/imges/sa10.webp",
       "/lookbook/sa2.webp",
       "/lookbook/sa16.webp"
     ]
@@ -25,9 +25,9 @@
     "_id": "c3",
     "name": "Makeup Artistry",
     "description": "Professional bridal, party, and photoshoot makeup services by certified artists.",
-    "image": "/hero_bride.png",
+    "image": "/imges/s18.webp",
     "images": [
-      "/hero_bride.png",
+      "/imges/s18.webp",
       "/lookbook/sa22.webp",
       "/lookbook/sa15.webp"
     ]

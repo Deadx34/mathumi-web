@@ -9,11 +9,11 @@ function CourseImageSlider({ images, fallback, title }: { images?: string[], fal
   const imgs = Array.isArray(images) && images.length > 0 ? images : (fallback ? [fallback] : ['/academy_class1.png']);
 
   if (imgs.length <= 1) {
-    return <img src={imgs[0]} alt={title} className="absolute inset-0 w-full h-full object-cover object-top img-luxury-hover" />;
+    return <img src={imgs[0]} alt={title} className="absolute inset-0 w-full h-full object-contain object-center img-luxury-hover bg-transparent" />;
   }
   return (
-    <div className="relative w-full h-full group/slider">
-      <img src={imgs[idx]} alt={`${title} - ${idx + 1}`} className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-500" />
+    <div className="relative w-full h-full group/slider bg-transparent">
+      <img src={imgs[idx]} alt={`${title} - ${idx + 1}`} className="absolute inset-0 w-full h-full object-contain object-center transition-transform duration-500 bg-transparent" />
       <button
         onClick={(e) => { e.stopPropagation(); setIdx(i => (i === 0 ? imgs.length - 1 : i - 1)); }}
         className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-[#6e1224] text-white rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all z-10 border border-white/10 shadow-md"
