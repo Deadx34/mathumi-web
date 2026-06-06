@@ -368,7 +368,7 @@ export default async function Home() {
             <div className="absolute inset-1.5 border border-[#d4af37]/35 pointer-events-none z-10 rounded"></div>
             
             <div className="relative w-full h-[400px] md:h-[460px] lg:h-[500px] rounded overflow-hidden border border-[#d4af37]/20 bg-transparent shadow-inner mb-4">
-              <Image src="/imges/s7.webp" alt="Bride Pampering Facial" fill className="object-cover transition-transform duration-700 hover:scale-105" />
+              <Image src="/imges/s14.webp" alt="Bride Pampering Facial" fill className="object-cover transition-transform duration-700 hover:scale-105" />
             </div>
 
             <div className="text-center pt-2 flex flex-col items-center">
