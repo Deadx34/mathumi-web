@@ -256,7 +256,7 @@ export default async function Home() {
         <div className="lg:col-span-8 flex flex-col justify-between gap-8">
           
           {/* Discover Radiance Horizontal Panel */}
-          <div className="gold-panel p-6 sm:p-8 rounded bg-white border-2 border-[#d4af37] w-full flex flex-col md:flex-row items-center gap-6 justify-between shadow-sm">
+          <div className="gold-panel p-6 sm:p-8 rounded border-2 border-[#d4af37] w-full flex flex-col md:flex-row items-center gap-6 justify-between shadow-sm bg-transparent">
             <div className="flex flex-col items-start text-left md:max-w-[55%]">
               <h3 className="text-xl font-serif font-bold text-[#4a2511] mb-4 tracking-wide">
                 Discover your Radiance, Learn the Art of Beauty.
@@ -294,12 +294,12 @@ export default async function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
             
             {/* Card Left: Mathumi Beauty Salon */}
-            <div className="gold-panel p-6 rounded bg-white border-2 border-[#d4af37] flex flex-col justify-between items-stretch shadow-sm">
+            <div className="gold-panel p-6 rounded border-2 border-[#d4af37] flex flex-col justify-between items-stretch shadow-sm bg-transparent">
               <div>
                 <h3 className="text-base sm:text-lg font-serif font-bold text-[#4a2511] mb-4 uppercase tracking-wider text-center border-b border-[#d4af37]/20 pb-2">
                   MATHUMI BEAUTY SALON
                 </h3>
-                <div className="relative w-full h-40 rounded overflow-hidden border border-[#d4af37]/20 mb-4 bg-[#fdf5eb]">
+                <div className="relative w-full h-40 rounded overflow-hidden border border-[#d4af37]/20 mb-4 bg-transparent">
                   <Image src="/imges/sa11.webp" alt="Salon Services" fill className="object-contain" />
                 </div>
                 <ul className="text-xs text-[#1c1512]/80 space-y-3 font-semibold font-sans mb-6 px-1">
@@ -326,12 +326,12 @@ export default async function Home() {
             </div>
 
             {/* Card Right: Academy & Training */}
-            <div className="gold-panel p-6 rounded bg-white border-2 border-[#d4af37] flex flex-col justify-between items-stretch shadow-sm">
+            <div className="gold-panel p-6 rounded border-2 border-[#d4af37] flex flex-col justify-between items-stretch shadow-sm bg-transparent">
               <div>
                 <h3 className="text-base sm:text-lg font-serif font-bold text-[#4a2511] mb-4 uppercase tracking-wider text-center border-b border-[#d4af37]/20 pb-2">
                   ACADEMY & TRAINING
                 </h3>
-                <div className="relative w-full h-40 rounded overflow-hidden border border-[#d4af37]/20 mb-4 bg-[#fdf5eb]">
+                <div className="relative w-full h-40 rounded overflow-hidden border border-[#d4af37]/20 mb-4 bg-transparent">
                   <Image src="/imges/sa1.webp" alt="Academy Class" fill className="object-contain" />
                 </div>
                 <ul className="text-xs text-[#1c1512]/80 space-y-3 font-semibold font-sans mb-6 px-1">
@@ -363,11 +363,11 @@ export default async function Home() {
 
         {/* Right Column (Big Vertical Bridalpamper card) */}
         <div className="lg:col-span-4 flex flex-col items-stretch">
-          <div className="gold-panel p-5 rounded bg-white border-2 border-[#d4af37] h-full flex flex-col justify-between shadow-sm relative overflow-hidden">
+          <div className="gold-panel p-5 rounded border-2 border-[#d4af37] h-full flex flex-col justify-between shadow-sm relative overflow-hidden bg-transparent">
             {/* Border Accent Overlay */}
             <div className="absolute inset-1.5 border border-[#d4af37]/35 pointer-events-none z-10 rounded"></div>
             
-            <div className="relative w-full h-[400px] md:h-[460px] lg:h-[500px] rounded overflow-hidden border border-[#d4af37]/20 bg-[#fdf5eb] shadow-inner mb-4">
+            <div className="relative w-full h-[400px] md:h-[460px] lg:h-[500px] rounded overflow-hidden border border-[#d4af37]/20 bg-transparent shadow-inner mb-4">
               <Image src="/imges/s7.webp" alt="Bride Pampering Facial" fill className="object-contain transition-transform duration-700 hover:scale-105" />
             </div>
 
