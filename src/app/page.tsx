@@ -299,8 +299,8 @@ export default async function Home() {
                 <h3 className="text-base sm:text-lg font-serif font-bold text-[#4a2511] mb-4 uppercase tracking-wider text-center border-b border-[#d4af37]/20 pb-2">
                   MATHUMI BEAUTY SALON
                 </h3>
-                <div className="relative w-full h-40 rounded overflow-hidden border border-[#d4af37]/20 mb-4 bg-transparent">
-                  <Image src="/imges/sa11.webp" alt="Salon Services" fill className="object-cover" />
+                <div className="w-full rounded overflow-hidden border border-[#d4af37]/20 mb-4 bg-transparent">
+                  <img src="/imges/sa11.webp" alt="Salon Services" className="w-full h-auto block" />
                 </div>
                 <ul className="text-xs text-[#1c1512]/80 space-y-3 font-semibold font-sans mb-6 px-1">
                   {services.length > 0 ? (
@@ -331,8 +331,8 @@ export default async function Home() {
                 <h3 className="text-base sm:text-lg font-serif font-bold text-[#4a2511] mb-4 uppercase tracking-wider text-center border-b border-[#d4af37]/20 pb-2">
                   ACADEMY & TRAINING
                 </h3>
-                <div className="relative w-full h-40 rounded overflow-hidden border border-[#d4af37]/20 mb-4 bg-transparent">
-                  <Image src="/imges/sa1.webp" alt="Academy Class" fill className="object-cover" />
+                <div className="w-full rounded overflow-hidden border border-[#d4af37]/20 mb-4 bg-transparent">
+                  <img src="/imges/sa1.webp" alt="Academy Class" className="w-full h-auto block" />
                 </div>
                 <ul className="text-xs text-[#1c1512]/80 space-y-3 font-semibold font-sans mb-6 px-1">
                   {courses.length > 0 ? (
