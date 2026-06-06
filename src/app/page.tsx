@@ -299,8 +299,8 @@ export default async function Home() {
                 <h3 className="text-base sm:text-lg font-serif font-bold text-[#4a2511] mb-4 uppercase tracking-wider text-center border-b border-[#d4af37]/20 pb-2">
                   MATHUMI BEAUTY SALON
                 </h3>
-                <div className="w-full rounded overflow-hidden border border-[#d4af37]/20 mb-4 bg-transparent">
-                  <img src="/imges/sa11.webp" alt="Salon Services" className="w-full h-auto block" />
+                <div className="flex justify-center mb-4">
+                  <img src="/imges/sa11.webp" alt="Salon Services" className="h-40 w-auto rounded border border-[#d4af37]/20 object-contain block" />
                 </div>
                 <ul className="text-xs text-[#1c1512]/80 space-y-3 font-semibold font-sans mb-6 px-1">
                   {services.length > 0 ? (
@@ -331,8 +331,8 @@ export default async function Home() {
                 <h3 className="text-base sm:text-lg font-serif font-bold text-[#4a2511] mb-4 uppercase tracking-wider text-center border-b border-[#d4af37]/20 pb-2">
                   ACADEMY & TRAINING
                 </h3>
-                <div className="w-full rounded overflow-hidden border border-[#d4af37]/20 mb-4 bg-transparent">
-                  <img src="/imges/sa1.webp" alt="Academy Class" className="w-full h-auto block" />
+                <div className="flex justify-center mb-4">
+                  <img src="/imges/sa1.webp" alt="Academy Class" className="h-40 w-auto rounded border border-[#d4af37]/20 object-contain block" />
                 </div>
                 <ul className="text-xs text-[#1c1512]/80 space-y-3 font-semibold font-sans mb-6 px-1">
                   {courses.length > 0 ? (
@@ -367,8 +367,8 @@ export default async function Home() {
             {/* Border Accent Overlay */}
             <div className="absolute inset-1.5 border border-[#d4af37]/35 pointer-events-none z-10 rounded"></div>
             
-            <div className="relative w-full h-[400px] md:h-[460px] lg:h-[500px] rounded overflow-hidden border border-[#d4af37]/20 bg-transparent shadow-inner mb-4">
-              <Image src="/imges/s14.webp" alt="Bride Pampering Facial" fill className="object-cover transition-transform duration-700 hover:scale-105" />
+            <div className="flex justify-center mb-4 relative z-20">
+              <img src="/imges/s14.webp" alt="Bride Pampering Facial" className="h-[400px] md:h-[460px] lg:h-[500px] w-auto rounded border border-[#d4af37]/20 object-contain block transition-transform duration-700 hover:scale-105" />
             </div>
 
             <div className="text-center pt-2 flex flex-col items-center">
