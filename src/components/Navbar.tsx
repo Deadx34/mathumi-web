@@ -17,7 +17,7 @@ export default function Navbar() {
     }
     setSubmitting(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/inquiries`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/inquiries`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -61,10 +61,10 @@ export default function Navbar() {
           {/* Navigation Links */}
           <div className="hidden md:flex items-center space-x-4 md:space-x-6 lg:space-x-10 flex-shrink-0 relative z-10 h-full">
             <Link href="/" className="text-[#4a2511] text-sm md:text-lg lg:text-xl font-serif font-bold tracking-widest hover:text-[#800020] transition-colors">HOME</Link>
-            <Link href="/salon" className="text-[#4a2511] text-sm md:text-lg lg:text-xl font-serif font-bold tracking-widest hover:text-[#800020] transition-colors">SALON</Link>
+            <Link href="/salon" className="text-[#4a2511] text-sm md:text-lg lg:text-xl font-serif font-bold tracking-widest hover:text-[#800020] transition-colors">SERVICES</Link>
             <Link href="/academy" className="text-[#4a2511] text-sm md:text-lg lg:text-xl font-serif font-bold tracking-widest hover:text-[#800020] transition-colors">ACADEMY</Link>
             <Link href="/gallery" className="text-[#4a2511] text-sm md:text-lg lg:text-xl font-serif font-bold tracking-widest hover:text-[#800020] transition-colors">GALLERY</Link>
-            <Link href="/boutique" className="text-[#4a2511] text-sm md:text-lg lg:text-xl font-serif font-bold tracking-widest hover:text-[#800020] transition-colors">BOUTIQUE</Link>
+            <Link href="/boutique" className="text-[#4a2511] text-sm md:text-lg lg:text-xl font-serif font-bold tracking-widest hover:text-[#800020] transition-colors">SAREE</Link>
             
 
 
@@ -200,7 +200,7 @@ export default function Navbar() {
                 onClick={() => setMobileMenuOpen(false)}
                 className="text-[#4a2511] text-lg font-serif font-bold tracking-widest hover:text-[#800020] transition-colors border-b border-[#d4af37]/20 pb-2"
               >
-                SALON
+                SERVICES
               </Link>
               <Link 
                 href="/academy" 
@@ -221,7 +221,7 @@ export default function Navbar() {
                 onClick={() => setMobileMenuOpen(false)}
                 className="text-[#4a2511] text-lg font-serif font-bold tracking-widest hover:text-[#800020] transition-colors border-b border-[#d4af37]/20 pb-2"
               >
-                BOUTIQUE
+                SAREE
               </Link>
               
               <Link 

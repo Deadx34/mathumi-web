@@ -90,7 +90,7 @@ export default function GalleryPage() {
   }, [activeCategory]);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/gallery`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/gallery`)
       .then(res => {
         if (!res.ok) throw new Error("Failed to fetch gallery database");
         return res.json();
@@ -102,8 +102,11 @@ export default function GalleryPage() {
           title: img.title,
           category: img.category
         }));
-        // Prepend uploaded/newer database images, followed by static ones
-        setGalleryList([...formattedDbImages, ...STATIC_IMAGES]);
+        // Filter out static images that are already in the database
+        const dbIds = new Set(formattedDbImages.map((img: any) => img._id));
+        const filteredStatic = STATIC_IMAGES.filter(img => !dbIds.has(img._id));
+        
+        setGalleryList([...formattedDbImages, ...filteredStatic]);
         setLoading(false);
       })
       .catch(err => {

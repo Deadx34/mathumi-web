@@ -105,8 +105,8 @@ export default function CategoryPage({ params }: { params: any }) {
 
   useEffect(() => {
     Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/salon-services`).then(res => res.json()),
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/salon-categories`).then(res => res.json())
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/salon-services`).then(res => res.json()),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/salon-categories`).then(res => res.json())
     ])
       .then(([servicesData, categoriesData]) => {
         const matchedCat = categoriesData.find((c: any) => 

@@ -4,5 +4,233 @@
     "category": "Academy",
     "url": "http://localhost:5000/uploads/1780636052481-535317603.png",
     "_id": "1mqxxfrmq0gqbt5"
+  },
+  {
+    "_id": "sa1",
+    "url": "/imges/sa1.webp",
+    "title": "Royal Bridal Glow",
+    "category": "Bridal"
+  },
+  {
+    "_id": "sa2",
+    "url": "/imges/sa2.webp",
+    "title": "Elegant Hair Artistry",
+    "category": "Salon"
+  },
+  {
+    "_id": "sa3",
+    "url": "/imges/sa3.webp",
+    "title": "Flawless Bridal Eye Look",
+    "category": "Makeup"
+  },
+  {
+    "_id": "sa4",
+    "url": "/imges/sa4.webp",
+    "title": "Radiant Skin Hydration",
+    "category": "Skin Care"
+  },
+  {
+    "_id": "sa5",
+    "url": "/imges/sa5.webp",
+    "title": "Designer Handloom Saree",
+    "category": "Boutique"
+  },
+  {
+    "_id": "sa6",
+    "url": "/imges/sa6.webp",
+    "title": "Advanced Pleating Session",
+    "category": "Academy"
+  },
+  {
+    "_id": "sa7",
+    "url": "/imges/sa7.webp",
+    "title": "Signature Lookbook Shoot",
+    "category": "Gallery"
+  },
+  {
+    "_id": "sa8",
+    "url": "/imges/sa8.webp",
+    "title": "Pure Zari Kanchipuram Bride",
+    "category": "Bridal"
+  },
+  {
+    "_id": "sa9",
+    "url": "/imges/sa9.webp",
+    "title": "Traditional Jasmine Braid",
+    "category": "Salon"
+  },
+  {
+    "_id": "sa10",
+    "url": "/imges/sa10.webp",
+    "title": "Classic South Indian Makeup",
+    "category": "Makeup"
+  },
+  {
+    "_id": "sa11",
+    "url": "/imges/sa11.webp",
+    "title": "Golden Radiance Facial",
+    "category": "Skin Care"
+  },
+  {
+    "_id": "sa12",
+    "url": "/imges/sa12.webp",
+    "title": "Exclusive Silk Collection",
+    "category": "Boutique"
+  },
+  {
+    "_id": "sa13",
+    "url": "/imges/sa13.webp",
+    "title": "Professional Academy Class",
+    "category": "Academy"
+  },
+  {
+    "_id": "sa14",
+    "url": "/imges/sa14.webp",
+    "title": "Modern Draping Showcase",
+    "category": "Gallery"
+  },
+  {
+    "_id": "sa15",
+    "url": "/imges/sa15.webp",
+    "title": "Traditional Tamil Bridal",
+    "category": "Bridal"
+  },
+  {
+    "_id": "sa16",
+    "url": "/imges/sa16.webp",
+    "title": "Intricate Floral Styling",
+    "category": "Salon"
+  },
+  {
+    "_id": "sa17",
+    "url": "/imges/sa17.webp",
+    "title": "High-Definition Bridal Base",
+    "category": "Makeup"
+  },
+  {
+    "_id": "sa18",
+    "url": "/imges/sa18.webp",
+    "title": "Luxury Skin Pampering Pack",
+    "category": "Skin Care"
+  },
+  {
+    "_id": "sa19",
+    "url": "/imges/sa19.webp",
+    "title": "Heritage Bridal Lehenga",
+    "category": "Boutique"
+  },
+  {
+    "_id": "sa20",
+    "url": "/imges/sa20.webp",
+    "title": "Hairstyling Masterclass",
+    "category": "Academy"
+  },
+  {
+    "_id": "sa21",
+    "url": "/imges/sa21.webp",
+    "title": "Mathumi Signature Style",
+    "category": "Gallery"
+  },
+  {
+    "_id": "sa22",
+    "url": "/imges/sa22.webp",
+    "title": "Regal Traditional Bride",
+    "category": "Bridal"
+  },
+  {
+    "_id": "s1",
+    "url": "/imges/s1.webp",
+    "title": "Bridal Elegance",
+    "category": "Bridal"
+  },
+  {
+    "_id": "s2",
+    "url": "/imges/s2.webp",
+    "title": "Classic Bride Portrait",
+    "category": "Bridal"
+  },
+  {
+    "_id": "s3",
+    "url": "/imges/s3.webp",
+    "title": "Graceful Saree Draping",
+    "category": "Boutique"
+  },
+  {
+    "_id": "s4",
+    "url": "/imges/s4.webp",
+    "title": "Stunning Hair Updo",
+    "category": "Salon"
+  },
+  {
+    "_id": "s6",
+    "url": "/imges/s6.webp",
+    "title": "Floral Mehndi Art",
+    "category": "Bridal"
+  },
+  {
+    "_id": "s7",
+    "url": "/imges/s7.webp",
+    "title": "Bridal Jewellery Styling",
+    "category": "Bridal"
+  },
+  {
+    "_id": "s8",
+    "url": "/imges/s8.webp",
+    "title": "Golden Bridal Look",
+    "category": "Bridal"
+  },
+  {
+    "_id": "s9",
+    "url": "/imges/s9.webp",
+    "title": "Elegant Draping Style",
+    "category": "Boutique"
+  },
+  {
+    "_id": "s10",
+    "url": "/imges/s10.webp",
+    "title": "Soft Bridal Glam",
+    "category": "Makeup"
+  },
+  {
+    "_id": "s11",
+    "url": "/imges/s11.webp",
+    "title": "Jewellery & Flowers",
+    "category": "Bridal"
+  },
+  {
+    "_id": "s12",
+    "url": "/imges/s12.webp",
+    "title": "Heritage Silk Bride",
+    "category": "Bridal"
+  },
+  {
+    "_id": "s13",
+    "url": "/imges/s13.webp",
+    "title": "Traditional Muhurtham Look",
+    "category": "Bridal"
+  },
+  {
+    "_id": "s14",
+    "url": "/imges/s14.webp",
+    "title": "Professional Blow Dry",
+    "category": "Salon"
+  },
+  {
+    "_id": "s15",
+    "url": "/imges/s15.webp",
+    "title": "Signature Bridal Art",
+    "category": "Gallery"
+  },
+  {
+    "_id": "s16",
+    "url": "/imges/s16.webp",
+    "title": "Grand Bridal Portrait",
+    "category": "Bridal"
+  },
+  {
+    "_id": "s18",
+    "url": "/imges/s18.webp",
+    "title": "Radiant Bride Close-up",
+    "category": "Bridal"
   }
 ]

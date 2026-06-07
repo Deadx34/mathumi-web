@@ -7,7 +7,7 @@ export default async function Home() {
   let services = [];
   let courses = [];
   try {
-    const servicesRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/salon-services`, { cache: 'no-store' });
+    const servicesRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/salon-services`, { cache: 'no-store' });
     if (servicesRes.ok) {
       services = await servicesRes.json();
     }
@@ -16,7 +16,7 @@ export default async function Home() {
   }
 
   try {
-    const coursesRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/academy-courses`, { cache: 'no-store' });
+    const coursesRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/academy-courses`, { cache: 'no-store' });
     if (coursesRes.ok) {
       courses = await coursesRes.json();
     }
@@ -175,15 +175,16 @@ export default async function Home() {
         
         {/* Card 1: Salon Panel */}
         <div className="gold-panel p-6 sm:p-8 flex flex-col items-center text-center rounded bg-transparent border-2 border-[#d4af37]">
-          <span className="text-[#6e1224] font-sans font-bold text-[9px] tracking-[0.25em] uppercase mb-1">THE SANCTUARY</span>
+          <span className="text-[#6e1224] font-sans font-bold text-[9px] tracking-[0.25em] uppercase mb-1">MATHUMI BEAUTY SANCTUARY</span>
           <h2 className="text-lg sm:text-xl font-serif font-bold text-[#4a2511] mb-4 uppercase tracking-[0.1em] h-8 flex items-center justify-center">
-            MATHUMI BEAUTY SALON
+            BEAUTY SALON
           </h2>
           <div className="w-full h-[260px] relative mb-6 rounded overflow-hidden shadow-inner border border-[#c2a670]/20 bg-transparent">
             <Image src="/imges/s12.webp" alt="Beauty Salon Facial" fill className="object-contain transition-transform duration-500 hover:scale-105" />
           </div>
+          <div className="text-[#d4af37] text-md mb-2">✧</div>
           <p className="text-xs text-[#1c1512]/80 mb-6 flex-grow leading-relaxed font-semibold font-sans px-2">
-            Beauty repair completion of skin treatments, nahny, routine treatments and professional facial therapies.
+            Experience premium holistic care. From organic skincare and advanced facials to customized hair styling in Batticaloa.
           </p>
           <div className="w-full border-t border-dashed border-[#c2a670]/20 pt-4 mt-auto">
             <Link href="/salon" className="gold-button w-full py-3 rounded-full text-center block text-[10px] tracking-widest font-sans font-bold">

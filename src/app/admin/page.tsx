@@ -54,6 +54,9 @@ export default function AdminDashboard() {
     description: ''
   });
   const [isEditing, setIsEditing] = useState(false);
+  const [openSareeMenuId, setOpenSareeMenuId] = useState<string | null>(null);
+  const [selectedSaree, setSelectedSaree] = useState<any>(null);
+  const [isSareeViewModalOpen, setIsSareeViewModalOpen] = useState(false);
 
   const handleRemoveSareeImage = (indexToRemove: number) => {
     setSareeForm(p => {
@@ -70,6 +73,9 @@ export default function AdminDashboard() {
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [categoryForm, setCategoryForm] = useState<{ _id: string, name: string, description: string, image: string, images: string[] }>({ _id: '', name: '', description: '', image: '', images: [] });
   const [isEditingCategory, setIsEditingCategory] = useState(false);
+  const [openCategoryMenuId, setOpenCategoryMenuId] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<any>(null);
+  const [isCategoryViewModalOpen, setIsCategoryViewModalOpen] = useState(false);
 
   const handleRemoveCategoryImage = (indexToRemove: number) => {
     setCategoryForm(p => {
@@ -86,6 +92,9 @@ export default function AdminDashboard() {
   const [isServiceModalOpen, setIsServiceModalOpen] = useState(false);
   const [serviceForm, setServiceForm] = useState<{ _id: string, title: string, category: string, description: string, image: string, images: string[] }>({ _id: '', title: '', category: 'Hair Styling', description: '', image: '', images: [] });
   const [isEditingService, setIsEditingService] = useState(false);
+  const [openServiceMenuId, setOpenServiceMenuId] = useState<string | null>(null);
+  const [selectedService, setSelectedService] = useState<any>(null);
+  const [isServiceViewModalOpen, setIsServiceViewModalOpen] = useState(false);
 
   const handleRemoveServiceImage = (indexToRemove: number) => {
     setServiceForm(p => {
@@ -116,6 +125,9 @@ export default function AdminDashboard() {
   const [isAcademyModalOpen, setIsAcademyModalOpen] = useState(false);
   const [academyForm, setAcademyForm] = useState({ _id: '', title: '', duration: '', price: '', image: '', images: [] as string[], syllabus: '' });
   const [isEditingAcademy, setIsEditingAcademy] = useState(false);
+  const [openAcademyMenuId, setOpenAcademyMenuId] = useState<string | null>(null);
+  const [selectedAcademy, setSelectedAcademy] = useState<any>(null);
+  const [isAcademyViewModalOpen, setIsAcademyViewModalOpen] = useState(false);
 
   const handleRemoveAcademyImage = (indexToRemove: number) => {
     setAcademyForm(p => {
@@ -138,7 +150,7 @@ export default function AdminDashboard() {
     formData.append('image', file);
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/upload`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/upload`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: formData
@@ -311,7 +323,7 @@ export default function AdminDashboard() {
     setLoading(true);
     setError(null);
     try {
-      const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const API = process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com';
       const authHeaders = { 'Authorization': `Bearer ${token}` };
 
       const [bRes, iRes, sRes, aRes, salonRes, gRes, catRes, staffRes] = await Promise.all([
@@ -353,7 +365,7 @@ export default function AdminDashboard() {
   const handleUpdateBookingStatus = async (id: string, status: string) => {
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/bookings/${id}/status`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/bookings/${id}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ status })
@@ -363,6 +375,24 @@ export default function AdminDashboard() {
         showToast('Failed to update booking status: ' + (errorData.message || 'Unknown error'), 'error');
       } else {
         showToast('Booking status updated successfully!', 'success');
+        
+        // If the booking is marked as Confirmed, open a WhatsApp link with a custom message
+        if (status === 'Confirmed') {
+          const booking = bookings.find(item => item._id === id);
+          if (booking && booking.contactNumber) {
+            let phone = booking.contactNumber.trim();
+            // If phone starts with 0, replace with Sri Lankan country code (94)
+            if (phone.startsWith('0')) {
+              phone = '94' + phone.substring(1);
+            }
+            // Remove spaces, plus signs, dashes
+            phone = phone.replace(/[\s+\-]/g, '');
+            
+            const messageText = `Dear ${booking.fullName},\n\nYour booking for *${booking.serviceRequested}* on *${booking.preferredDate || 'the requested date'}* at *${booking.timeSlot || 'the requested time'}* has been *Confirmed*! ✦\n\nThank you for choosing Mathumi.\nWe look forward to seeing you.`;
+            const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(messageText)}`;
+            window.open(waUrl, '_blank');
+          }
+        }
       }
       fetchAllData(token!);
     } catch (err) {
@@ -374,7 +404,7 @@ export default function AdminDashboard() {
   const handleUpdateInquiryStatus = async (id: string, status: string) => {
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/inquiries/${id}/status`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/inquiries/${id}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ status })
@@ -395,7 +425,7 @@ export default function AdminDashboard() {
   const handleSaveSaree = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem('adminToken');
-    const url = isEditing ? `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/sarees/${sareeForm._id}` : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/sarees`;
+    const url = isEditing ? `${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/sarees/${sareeForm._id}` : `${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/sarees`;
     const method = isEditing ? 'PUT' : 'POST';
 
     // Remove empty _id so Mongoose generates one
@@ -428,7 +458,7 @@ export default function AdminDashboard() {
     if (!confirm("Are you sure you want to delete this saree?")) return;
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/sarees/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/sarees/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -484,7 +514,7 @@ export default function AdminDashboard() {
   const handleSaveService = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem('adminToken');
-    const url = isEditingService ? `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/salon-services/${serviceForm._id}` : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/salon-services`;
+    const url = isEditingService ? `${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/salon-services/${serviceForm._id}` : `${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/salon-services`;
     const method = isEditingService ? 'PUT' : 'POST';
     const payload: any = { ...serviceForm };
     if (!payload._id) delete payload._id;
@@ -508,7 +538,7 @@ export default function AdminDashboard() {
     if (!confirm("Delete this service?")) return;
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/salon-services/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/salon-services/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
       if (res.ok) { 
         showToast("Service deleted successfully!", "success"); 
         fetchAllData(token!); 
@@ -540,7 +570,7 @@ export default function AdminDashboard() {
   const handleSaveCategory = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem('adminToken');
-    const url = isEditingCategory ? `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/salon-categories/${categoryForm._id}` : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/salon-categories`;
+    const url = isEditingCategory ? `${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/salon-categories/${categoryForm._id}` : `${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/salon-categories`;
     const method = isEditingCategory ? 'PUT' : 'POST';
     const payload: any = { ...categoryForm };
     if (!payload._id) delete payload._id;
@@ -569,7 +599,7 @@ export default function AdminDashboard() {
     if (!confirm("Are you sure you want to delete this category? Any services in this category might need to be reassigned manually.")) return;
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/salon-categories/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/salon-categories/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -607,7 +637,7 @@ export default function AdminDashboard() {
   const handleSaveGallery = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem('adminToken');
-    const url = isEditingGallery ? `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/gallery/${galleryForm._id}` : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/gallery`;
+    const url = isEditingGallery ? `${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/gallery/${galleryForm._id}` : `${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/gallery`;
     const method = isEditingGallery ? 'PUT' : 'POST';
     const payload: any = { ...galleryForm };
     if (!payload._id) delete payload._id;
@@ -631,7 +661,7 @@ export default function AdminDashboard() {
     if (!confirm("Delete this image?")) return;
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/gallery/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/gallery/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
       if (res.ok) { 
         showToast("Gallery image deleted successfully!", "success"); 
         fetchAllData(token!); 
@@ -651,7 +681,7 @@ export default function AdminDashboard() {
   const handleSaveAcademy = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem('adminToken');
-    const url = isEditingAcademy ? `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/academy-courses/${academyForm._id}` : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/academy-courses`;
+    const url = isEditingAcademy ? `${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/academy-courses/${academyForm._id}` : `${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/academy-courses`;
     const method = isEditingAcademy ? 'PUT' : 'POST';
     
     let parsedSyllabus: string | string[] = academyForm.syllabus;
@@ -681,7 +711,7 @@ export default function AdminDashboard() {
     if (!confirm("Delete this course?")) return;
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/academy-courses/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/academy-courses/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
       if (res.ok) { 
         showToast("Academy course deleted successfully!", "success"); 
         fetchAllData(token!); 
@@ -713,8 +743,8 @@ export default function AdminDashboard() {
       return;
     }
     const url = isEditingStaff
-      ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/staff/${staffForm._id}`
-      : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/staff`;
+      ? `${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/staff/${staffForm._id}`
+      : `${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/staff`;
     const method = isEditingStaff ? 'PUT' : 'POST';
     const payload: any = { ...staffForm };
     if (!payload._id) delete payload._id;
@@ -751,7 +781,7 @@ export default function AdminDashboard() {
     if (!confirm('Are you sure you want to delete this staff member?')) return;
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/staff/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/staff/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -906,7 +936,7 @@ export default function AdminDashboard() {
             {/* Bookings Section */}
             <div>
               <h2 className="text-md font-serif font-bold text-[#4a2511] uppercase tracking-wider mb-4 border-b border-[#d4af37]/25 pb-2">Bookings Overview</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 
                 {/* Pending Bookings */}
                 <div 
@@ -932,32 +962,6 @@ export default function AdminDashboard() {
                     <p className="text-4xl font-light text-[#1d4ed8] font-serif">{bookings.filter(b => b.status === 'Confirmed').length}</p>
                   </div>
                   <div className="text-[10px] text-gray-500 mt-3 border-t border-[#c2a670]/10 pt-2 font-medium">Scheduled slots</div>
-                </div>
-
-                {/* Completed Bookings */}
-                <div 
-                  onClick={() => setActiveTab('bookings')}
-                  className="gold-panel p-6 text-center bg-white border border-[#c2a670]/15 shadow-sm hover:shadow-md hover:border-[#6e1224]/40 hover:-translate-y-0.5 cursor-pointer transition-all duration-300 relative flex flex-col justify-between min-h-[140px]"
-                >
-                  <div className="absolute top-2 right-2 bg-green-100 text-green-800 text-[9px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Completed</div>
-                  <div>
-                    <h3 className="text-[10px] font-bold text-[#1c1512]/60 uppercase tracking-widest mb-1.5 mt-2">Completed</h3>
-                    <p className="text-4xl font-light text-[#047857] font-serif">{bookings.filter(b => b.status === 'Completed').length}</p>
-                  </div>
-                  <div className="text-[10px] text-gray-500 mt-3 border-t border-[#c2a670]/10 pt-2 font-medium">Past bookings</div>
-                </div>
-
-                {/* Cancelled Bookings */}
-                <div 
-                  onClick={() => setActiveTab('bookings')}
-                  className="gold-panel p-6 text-center bg-white border border-[#c2a670]/15 shadow-sm hover:shadow-md hover:border-[#6e1224]/40 hover:-translate-y-0.5 cursor-pointer transition-all duration-300 relative flex flex-col justify-between min-h-[140px]"
-                >
-                  <div className="absolute top-2 right-2 bg-red-100 text-red-800 text-[9px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Cancelled</div>
-                  <div>
-                    <h3 className="text-[10px] font-bold text-[#1c1512]/60 uppercase tracking-widest mb-1.5 mt-2">Cancelled</h3>
-                    <p className="text-4xl font-light text-[#dc2626] font-serif">{bookings.filter(b => b.status === 'Cancelled').length}</p>
-                  </div>
-                  <div className="text-[10px] text-gray-500 mt-3 border-t border-[#c2a670]/10 pt-2 font-medium">Cancelled slots</div>
                 </div>
 
                 {/* Total Bookings */}
@@ -1052,7 +1056,7 @@ export default function AdminDashboard() {
         ) : activeTab === 'bookings' ? (
           <div className="flex flex-col h-full space-y-4">
             <div className="flex gap-4 overflow-x-auto pb-4 items-start h-[70vh] custom-scrollbar">
-              {['Pending', 'Confirmed', 'Completed', 'Cancelled'].map(status => (
+              {['Pending', 'Confirmed'].map(status => (
                 <div key={status} className="flex-shrink-0 w-80 bg-[#fdf5eb]/60 rounded-xl border border-[#d4af37]/30 flex flex-col h-full max-h-full shadow-sm">
                   <div className="p-4 border-b border-[#d4af37]/30 bg-gradient-to-r from-[#4a2511] to-[#6a3519] rounded-t-xl font-bold text-white flex justify-between items-center sticky top-0 z-10 shadow-sm">
                     <span className="tracking-wide">{status}</span>
@@ -1089,15 +1093,11 @@ export default function AdminDashboard() {
                             onChange={(e) => handleUpdateBookingStatus(b._id, e.target.value)}
                             className={`w-full p-2 text-xs rounded-lg font-bold border appearance-none outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#d4af37]/50 transition-colors ${
                               b.status === 'Pending' || !b.status ? 'bg-yellow-50 text-yellow-800 border-yellow-300' : 
-                              b.status === 'Confirmed' ? 'bg-blue-50 text-blue-800 border-blue-300' : 
-                              b.status === 'Completed' ? 'bg-green-50 text-green-800 border-green-300' : 
-                              'bg-red-50 text-red-800 border-red-300'
+                              'bg-blue-50 text-blue-800 border-blue-300'
                             }`}
                           >
                             <option value="Pending">Move to Pending</option>
                             <option value="Confirmed">Move to Confirmed</option>
-                            <option value="Completed">Move to Completed</option>
-                            <option value="Cancelled">Move to Cancelled</option>
                           </select>
                           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
                             <svg className="fill-current h-4 w-4 opacity-60" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -1195,7 +1195,7 @@ export default function AdminDashboard() {
                 + Add New Saree
               </button>
             </div>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto pb-32">
               <table className="w-full text-left">
                 <thead>
                   <tr className="bg-[#f4e8d3] text-[#4a2511]">
@@ -1215,9 +1215,41 @@ export default function AdminDashboard() {
                       <td className="p-3 font-semibold text-[#4a2511]">{s.name}</td>
                       <td className="p-3 text-[#800020] font-bold">{s.price}</td>
                       <td className="p-3 capitalize">{s.color}</td>
-                      <td className="p-3 text-right space-x-2">
-                        <button onClick={() => openEditModal(s)} className="text-blue-600 hover:text-blue-800 font-bold text-sm bg-blue-100 px-3 py-1 rounded">Edit</button>
-                        <button onClick={() => handleDeleteSaree(s._id)} className="text-red-600 hover:text-red-800 font-bold text-sm bg-red-100 px-3 py-1 rounded">Delete</button>
+                      <td className="p-3 text-right whitespace-nowrap relative">
+                        <button
+                          onClick={() => setOpenSareeMenuId(openSareeMenuId === s._id ? null : s._id)}
+                          className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#fdf5eb] hover:bg-[#d4af37]/20 text-[#4a2511] hover:text-[#800020] transition-all duration-200 border border-[#d4af37]/30 hover:border-[#d4af37] shadow-sm flex-shrink-0"
+                          title="Actions"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                          </svg>
+                        </button>
+                        {openSareeMenuId === s._id && (
+                          <>
+                            <div className="fixed inset-0 z-10" onClick={() => setOpenSareeMenuId(null)}></div>
+                            <div className="absolute right-full mr-2 top-0 w-32 bg-white rounded-md shadow-lg z-20 border border-gray-200 py-1 overflow-hidden text-left menu-popup">
+                              <button
+                                onClick={() => { setOpenSareeMenuId(null); setSelectedSaree(s); setIsSareeViewModalOpen(true); }}
+                                className="block w-full text-left px-4 py-2 text-sm text-[#4a2511] font-semibold hover:bg-[#fdf5eb]"
+                              >
+                                View
+                              </button>
+                              <button
+                                onClick={() => { setOpenSareeMenuId(null); openEditModal(s); }}
+                                className="block w-full text-left px-4 py-2 text-sm text-blue-600 font-semibold hover:bg-blue-50"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => { setOpenSareeMenuId(null); handleDeleteSaree(s._id); }}
+                                className="block w-full text-left px-4 py-2 text-sm text-red-600 font-semibold hover:bg-red-50"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -1234,14 +1266,13 @@ export default function AdminDashboard() {
                 + Add Course
               </button>
             </div>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto pb-32">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-[#f4e8d3] text-[#4a2511] border-b border-[#d4af37]">
                     <th className="p-3">Image</th>
                     <th className="p-3">Title</th>
                     <th className="p-3">Duration</th>
-                    <th className="p-3">Price</th>
                     <th className="p-3 text-right">Actions</th>
                   </tr>
                 </thead>
@@ -1253,10 +1284,41 @@ export default function AdminDashboard() {
                       </td>
                       <td className="p-3 font-semibold text-[#4a2511]">{c.title}</td>
                       <td className="p-3 text-sm">{c.duration}</td>
-                      <td className="p-3 font-bold text-[#800020]">{c.price}</td>
-                      <td className="p-3 text-right space-x-2">
-                        <button onClick={() => openEditAcademyModal(c)} className="text-blue-600 hover:text-blue-800 font-bold text-sm bg-blue-100 px-3 py-1 rounded">Edit</button>
-                        <button onClick={() => handleDeleteAcademy(c._id)} className="text-red-600 hover:text-red-800 font-bold text-sm bg-red-100 px-3 py-1 rounded">Delete</button>
+                      <td className="p-3 text-right whitespace-nowrap relative">
+                        <button
+                          onClick={() => setOpenAcademyMenuId(openAcademyMenuId === c._id ? null : c._id)}
+                          className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#fdf5eb] hover:bg-[#d4af37]/20 text-[#4a2511] hover:text-[#800020] transition-all duration-200 border border-[#d4af37]/30 hover:border-[#d4af37] shadow-sm flex-shrink-0"
+                          title="Actions"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                          </svg>
+                        </button>
+                        {openAcademyMenuId === c._id && (
+                          <>
+                            <div className="fixed inset-0 z-10" onClick={() => setOpenAcademyMenuId(null)}></div>
+                            <div className="absolute right-full mr-2 top-0 w-32 bg-white rounded-md shadow-lg z-20 border border-gray-200 py-1 overflow-hidden text-left menu-popup">
+                              <button
+                                onClick={() => { setOpenAcademyMenuId(null); setSelectedAcademy(c); setIsAcademyViewModalOpen(true); }}
+                                className="block w-full text-left px-4 py-2 text-sm text-[#4a2511] font-semibold hover:bg-[#fdf5eb]"
+                              >
+                                View
+                              </button>
+                              <button
+                                onClick={() => { setOpenAcademyMenuId(null); openEditAcademyModal(c); }}
+                                className="block w-full text-left px-4 py-2 text-sm text-blue-600 font-semibold hover:bg-blue-50"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => { setOpenAcademyMenuId(null); handleDeleteAcademy(c._id); }}
+                                className="block w-full text-left px-4 py-2 text-sm text-red-600 font-semibold hover:bg-red-50"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -1273,7 +1335,7 @@ export default function AdminDashboard() {
                 + Add Service
               </button>
             </div>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto pb-32">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-[#f4e8d3] text-[#4a2511] border-b border-[#d4af37]">
@@ -1293,9 +1355,41 @@ export default function AdminDashboard() {
                       <td className="p-3 font-semibold text-[#4a2511]">{s.title}</td>
                       <td className="p-3 text-sm">{s.category}</td>
                       <td className="p-3 text-xs text-gray-700">{s.description}</td>
-                      <td className="p-3 text-right space-x-2">
-                        <button onClick={() => openEditServiceModal(s)} className="text-blue-600 hover:text-blue-800 font-bold text-sm bg-blue-100 px-3 py-1 rounded">Edit</button>
-                        <button onClick={() => handleDeleteService(s._id)} className="text-red-600 hover:text-red-800 font-bold text-sm bg-red-100 px-3 py-1 rounded">Delete</button>
+                      <td className="p-3 text-right whitespace-nowrap relative">
+                        <button
+                          onClick={() => setOpenServiceMenuId(openServiceMenuId === s._id ? null : s._id)}
+                          className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#fdf5eb] hover:bg-[#d4af37]/20 text-[#4a2511] hover:text-[#800020] transition-all duration-200 border border-[#d4af37]/30 hover:border-[#d4af37] shadow-sm flex-shrink-0"
+                          title="Actions"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                          </svg>
+                        </button>
+                        {openServiceMenuId === s._id && (
+                          <>
+                            <div className="fixed inset-0 z-10" onClick={() => setOpenServiceMenuId(null)}></div>
+                            <div className="absolute right-full mr-2 top-0 w-32 bg-white rounded-md shadow-lg z-20 border border-gray-200 py-1 overflow-hidden text-left menu-popup">
+                              <button
+                                onClick={() => { setOpenServiceMenuId(null); setSelectedService(s); setIsServiceViewModalOpen(true); }}
+                                className="block w-full text-left px-4 py-2 text-sm text-[#4a2511] font-semibold hover:bg-[#fdf5eb]"
+                              >
+                                View
+                              </button>
+                              <button
+                                onClick={() => { setOpenServiceMenuId(null); openEditServiceModal(s); }}
+                                className="block w-full text-left px-4 py-2 text-sm text-blue-600 font-semibold hover:bg-blue-50"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => { setOpenServiceMenuId(null); handleDeleteService(s._id); }}
+                                className="block w-full text-left px-4 py-2 text-sm text-red-600 font-semibold hover:bg-red-50"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -1312,7 +1406,7 @@ export default function AdminDashboard() {
                 + Add Category
               </button>
             </div>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto pb-32">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-[#f4e8d3] text-[#4a2511] border-b border-[#d4af37]">
@@ -1330,9 +1424,41 @@ export default function AdminDashboard() {
                       </td>
                       <td className="p-3 font-semibold text-[#4a2511]">{c.name}</td>
                       <td className="p-3 text-xs text-gray-700">{c.description}</td>
-                      <td className="p-3 text-right space-x-2">
-                        <button onClick={() => openEditCategoryModal(c)} className="text-blue-600 hover:text-blue-800 font-bold text-sm bg-blue-100 px-3 py-1 rounded">Edit</button>
-                        <button onClick={() => handleDeleteCategory(c._id)} className="text-red-600 hover:text-red-800 font-bold text-sm bg-red-100 px-3 py-1 rounded">Delete</button>
+                      <td className="p-3 text-right whitespace-nowrap relative">
+                        <button
+                          onClick={() => setOpenCategoryMenuId(openCategoryMenuId === c._id ? null : c._id)}
+                          className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#fdf5eb] hover:bg-[#d4af37]/20 text-[#4a2511] hover:text-[#800020] transition-all duration-200 border border-[#d4af37]/30 hover:border-[#d4af37] shadow-sm flex-shrink-0"
+                          title="Actions"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                          </svg>
+                        </button>
+                        {openCategoryMenuId === c._id && (
+                          <>
+                            <div className="fixed inset-0 z-10" onClick={() => setOpenCategoryMenuId(null)}></div>
+                            <div className="absolute right-full mr-2 top-0 w-32 bg-white rounded-md shadow-lg z-20 border border-gray-200 py-1 overflow-hidden text-left menu-popup">
+                              <button
+                                onClick={() => { setOpenCategoryMenuId(null); setSelectedCategory(c); setIsCategoryViewModalOpen(true); }}
+                                className="block w-full text-left px-4 py-2 text-sm text-[#4a2511] font-semibold hover:bg-[#fdf5eb]"
+                              >
+                                View
+                              </button>
+                              <button
+                                onClick={() => { setOpenCategoryMenuId(null); openEditCategoryModal(c); }}
+                                className="block w-full text-left px-4 py-2 text-sm text-blue-600 font-semibold hover:bg-blue-50"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => { setOpenCategoryMenuId(null); handleDeleteCategory(c._id); }}
+                                className="block w-full text-left px-4 py-2 text-sm text-red-600 font-semibold hover:bg-red-50"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -1376,7 +1502,7 @@ export default function AdminDashboard() {
                 + Add Staff Member
               </button>
             </div>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto pb-32">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-[#f4e8d3] text-[#4a2511] border-b border-[#d4af37]">
@@ -1443,7 +1569,7 @@ export default function AdminDashboard() {
                         {openStaffMenuId === s._id && (
                           <>
                             <div className="fixed inset-0 z-10" onClick={() => setOpenStaffMenuId(null)}></div>
-                            <div className="absolute right-8 top-10 mt-1 w-32 bg-white rounded-md shadow-lg z-20 border border-gray-200 py-1 overflow-hidden">
+                            <div className="absolute right-full mr-2 top-0 w-32 bg-white rounded-md shadow-lg z-20 border border-gray-200 py-1 overflow-hidden text-left menu-popup">
                               <button
                                 onClick={() => { setOpenStaffMenuId(null); setSelectedStaff(s); setIsStaffViewModalOpen(true); }}
                                 className="block w-full text-left px-4 py-2 text-sm text-[#4a2511] font-semibold hover:bg-[#fdf5eb]"
@@ -1729,15 +1855,9 @@ export default function AdminDashboard() {
                 <label className="block text-sm font-semibold mb-1 text-[#4a2511]">Course Title</label>
                 <input required type="text" className="w-full p-2 border border-[#d4af37] rounded bg-[#fdf5eb]" value={academyForm.title} onChange={e => setAcademyForm({...academyForm, title: e.target.value})} />
               </div>
-              <div className="flex gap-4">
-                <div className="w-1/2">
-                  <label className="block text-sm font-semibold mb-1 text-[#4a2511]">Duration</label>
-                  <input required type="text" className="w-full p-2 border border-[#d4af37] rounded bg-[#fdf5eb]" placeholder="e.g. 3 Months" value={academyForm.duration} onChange={e => setAcademyForm({...academyForm, duration: e.target.value})} />
-                </div>
-                <div className="w-1/2">
-                  <label className="block text-sm font-semibold mb-1 text-[#4a2511]">Price</label>
-                  <input required type="text" className="w-full p-2 border border-[#d4af37] rounded bg-[#fdf5eb]" placeholder="e.g. LKR 120,000" value={academyForm.price} onChange={e => setAcademyForm({...academyForm, price: e.target.value})} />
-                </div>
+              <div>
+                <label className="block text-sm font-semibold mb-1 text-[#4a2511]">Duration</label>
+                <input required type="text" className="w-full p-2 border border-[#d4af37] rounded bg-[#fdf5eb]" placeholder="e.g. 3 Months" value={academyForm.duration} onChange={e => setAcademyForm({...academyForm, duration: e.target.value})} />
               </div>
               <div>
                 <label className="block text-sm font-semibold mb-1 text-[#4a2511]">Syllabus (One item per line)</label>
@@ -2033,6 +2153,175 @@ export default function AdminDashboard() {
             <div className="px-6 py-4 bg-[#fdf5eb] border-t border-[#d4af37]/20 flex justify-end">
               <button
                 onClick={() => setIsInquiryModalOpen(false)}
+                className="px-6 py-2 bg-gradient-to-r from-[#4a2511] to-[#800020] text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity shadow-md"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Academy Course Details Modal */}
+      {isAcademyViewModalOpen && selectedAcademy && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center" onClick={() => setIsAcademyViewModalOpen(false)}>
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+          <div className="relative bg-white rounded-2xl shadow-2xl border border-[#d4af37]/40 w-full max-w-xl mx-4 overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-gradient-to-r from-[#4a2511] to-[#800020] px-6 py-4 flex items-center justify-between">
+              <h3 className="text-white font-serif font-bold text-lg tracking-wide">🎓 Course Details</h3>
+              <button onClick={() => setIsAcademyViewModalOpen(false)} className="text-white/80 hover:text-white text-2xl transition-colors">×</button>
+            </div>
+            <div className="px-6 py-5 space-y-4 max-h-[70vh] overflow-y-auto">
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="w-full sm:w-1/3">
+                  <img src={selectedAcademy.image || '/academy_class1.png'} alt={selectedAcademy.title} className="w-full h-32 object-cover rounded-xl border border-[#d4af37]/30 shadow-sm" />
+                </div>
+                <div className="w-full sm:w-2/3 space-y-2">
+                  <h4 className="text-lg font-bold text-[#4a2511] font-serif">{selectedAcademy.title}</h4>
+                  <p className="text-xs text-gray-500 font-semibold">Duration: {selectedAcademy.duration}</p>
+                </div>
+              </div>
+              {selectedAcademy.syllabus && (
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold mb-1">Syllabus / Modules</p>
+                  <p className="text-xs text-gray-700 bg-gray-50 p-3 rounded-lg border border-gray-100 whitespace-pre-wrap">
+                    {Array.isArray(selectedAcademy.syllabus) ? selectedAcademy.syllabus.join('\n') : selectedAcademy.syllabus}
+                  </p>
+                </div>
+              )}
+            </div>
+            <div className="px-6 py-4 bg-[#fdf5eb] border-t border-[#d4af37]/20 flex justify-end">
+              <button onClick={() => setIsAcademyViewModalOpen(false)} className="px-6 py-2 bg-gradient-to-r from-[#4a2511] to-[#800020] text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity shadow-md">Close</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Salon Service Details Modal */}
+      {isServiceViewModalOpen && selectedService && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center" onClick={() => setIsServiceViewModalOpen(false)}>
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+          <div className="relative bg-white rounded-2xl shadow-2xl border border-[#d4af37]/40 w-full max-w-xl mx-4 overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-gradient-to-r from-[#4a2511] to-[#800020] px-6 py-4 flex items-center justify-between">
+              <h3 className="text-white font-serif font-bold text-lg tracking-wide">✂️ Service Details</h3>
+              <button onClick={() => setIsServiceViewModalOpen(false)} className="text-white/80 hover:text-white text-2xl transition-colors">×</button>
+            </div>
+            <div className="px-6 py-5 space-y-4 max-h-[70vh] overflow-y-auto">
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="w-full sm:w-1/3">
+                  <img src={selectedService.image || '/salon-service.png'} alt={selectedService.title} className="w-full h-32 object-cover rounded-xl border border-[#d4af37]/30 shadow-sm" />
+                </div>
+                <div className="w-full sm:w-2/3 space-y-2">
+                  <h4 className="text-lg font-bold text-[#4a2511] font-serif">{selectedService.title}</h4>
+                  <span className="bg-[#d4af37]/15 text-[#3a1f0d] border border-[#d4af37]/35 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider inline-block mt-1">{selectedService.category}</span>
+                </div>
+              </div>
+              {selectedService.description && (
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold mb-1">Description</p>
+                  <p className="text-xs text-gray-700 bg-gray-50 p-3 rounded-lg border border-gray-100 whitespace-pre-wrap">{selectedService.description}</p>
+                </div>
+              )}
+            </div>
+            <div className="px-6 py-4 bg-[#fdf5eb] border-t border-[#d4af37]/20 flex justify-end">
+              <button onClick={() => setIsServiceViewModalOpen(false)} className="px-6 py-2 bg-gradient-to-r from-[#4a2511] to-[#800020] text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity shadow-md">Close</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Salon Category Details Modal */}
+      {isCategoryViewModalOpen && selectedCategory && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center" onClick={() => setIsCategoryViewModalOpen(false)}>
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+          <div className="relative bg-white rounded-2xl shadow-2xl border border-[#d4af37]/40 w-full max-w-xl mx-4 overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-gradient-to-r from-[#4a2511] to-[#800020] px-6 py-4 flex items-center justify-between">
+              <h3 className="text-white font-serif font-bold text-lg tracking-wide">🏷️ Category Details</h3>
+              <button onClick={() => setIsCategoryViewModalOpen(false)} className="text-white/80 hover:text-white text-2xl transition-colors">×</button>
+            </div>
+            <div className="px-6 py-5 space-y-4 max-h-[70vh] overflow-y-auto">
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="w-full sm:w-1/3">
+                  <img src={selectedCategory.image || '/salon-service.png'} alt={selectedCategory.name} className="w-full h-32 object-cover rounded-xl border border-[#d4af37]/30 shadow-sm" />
+                </div>
+                <div className="w-full sm:w-2/3 space-y-2">
+                  <h4 className="text-lg font-bold text-[#4a2511] font-serif">{selectedCategory.name}</h4>
+                </div>
+              </div>
+              {selectedCategory.description && (
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold mb-1">Description</p>
+                  <p className="text-xs text-gray-700 bg-gray-50 p-3 rounded-lg border border-gray-100 whitespace-pre-wrap">{selectedCategory.description}</p>
+                </div>
+              )}
+            </div>
+            <div className="px-6 py-4 bg-[#fdf5eb] border-t border-[#d4af37]/20 flex justify-end">
+              <button onClick={() => setIsCategoryViewModalOpen(false)} className="px-6 py-2 bg-gradient-to-r from-[#4a2511] to-[#800020] text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity shadow-md">Close</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Saree Details Modal */}
+      {isSareeViewModalOpen && selectedSaree && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center" onClick={() => setIsSareeViewModalOpen(false)}>
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+          {/* Modal */}
+          <div
+            className="relative bg-white rounded-2xl shadow-2xl border border-[#d4af37]/40 w-full max-w-xl mx-4 overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="bg-gradient-to-r from-[#4a2511] to-[#800020] px-6 py-4 flex items-center justify-between">
+              <h3 className="text-white font-serif font-bold text-lg tracking-wide">👘 Saree Details</h3>
+              <button
+                onClick={() => setIsSareeViewModalOpen(false)}
+                className="text-white/80 hover:text-white text-2xl leading-none transition-colors"
+              >
+                ×
+              </button>
+            </div>
+            {/* Body */}
+            <div className="px-6 py-5 space-y-4 max-h-[70vh] overflow-y-auto">
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="w-full sm:w-1/3">
+                  <img src={selectedSaree.image} alt={selectedSaree.name} className="w-full h-40 object-cover rounded-xl border border-[#d4af37]/30 shadow-sm" />
+                </div>
+                <div className="w-full sm:w-2/3 space-y-2">
+                  <h4 className="text-lg font-bold text-[#4a2511] font-serif">{selectedSaree.name}</h4>
+                  <p className="text-sm font-bold text-[#800020]">{selectedSaree.price}</p>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <p><span className="text-gray-500 font-medium">Color:</span> <span className="capitalize font-semibold">{selectedSaree.color || '—'}</span></p>
+                    <p><span className="text-gray-500 font-medium">Category:</span> <span className="font-semibold">{selectedSaree.category || '—'}</span></p>
+                    <p><span className="text-gray-500 font-medium">Fabric:</span> <span className="font-semibold">{selectedSaree.fabric || '—'}</span></p>
+                    <p><span className="text-gray-500 font-medium">Zari:</span> <span className="font-semibold">{selectedSaree.zari || '—'}</span></p>
+                  </div>
+                </div>
+              </div>
+              
+              {selectedSaree.description && (
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold mb-1">Description</p>
+                  <p className="text-xs text-gray-700 bg-gray-50 p-3 rounded-lg border border-gray-100 whitespace-pre-wrap">{selectedSaree.description}</p>
+                </div>
+              )}
+
+              {selectedSaree.images && selectedSaree.images.length > 0 && (
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold mb-1.5">Gallery / Additional Images</p>
+                  <div className="flex gap-2 overflow-x-auto pb-1">
+                    {selectedSaree.images.map((img: string, idx: number) => (
+                      <img key={idx} src={img} alt="" className="w-16 h-16 object-cover rounded-lg border border-gray-200 shadow-sm" />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+            {/* Footer */}
+            <div className="px-6 py-4 bg-[#fdf5eb] border-t border-[#d4af37]/20 flex justify-end">
+              <button
+                onClick={() => setIsSareeViewModalOpen(false)}
                 className="px-6 py-2 bg-gradient-to-r from-[#4a2511] to-[#800020] text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity shadow-md"
               >
                 Close
