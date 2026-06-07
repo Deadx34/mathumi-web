@@ -176,3 +176,18 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-playfair), serif;
   font-style: italic;
 }
+
+@keyframes popup {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateX(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateX(0);
+  }
+}
+
+.menu-popup {
+  animation: popup 0.12s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

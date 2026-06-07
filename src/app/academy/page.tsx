@@ -206,14 +206,10 @@ export default function AcademyPage() {
                   <div className="p-8 flex flex-col flex-grow">
                     <h3 className="text-2xl font-serif font-bold text-[#1c1512] mb-6 border-b border-[#c2a670]/15 pb-4 uppercase tracking-wide">{course.title}</h3>
                     
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 bg-[#fbf9f6] p-4 rounded border border-[#c2a670]/15 text-center">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 bg-[#fbf9f6] p-4 rounded border border-[#c2a670]/15 text-center">
                       <div className="pb-3 sm:pb-0 border-b sm:border-b-0 sm:border-r border-[#c2a670]/15">
                         <span className="block text-[10px] font-bold text-[#1c1512]/50 uppercase mb-1">Duration</span>
                         <span className="text-[#6e1224] font-bold text-sm sm:text-base">{course.duration}</span>
-                      </div>
-                      <div className="py-3 sm:py-0 border-b sm:border-b-0 sm:border-r border-[#c2a670]/15">
-                        <span className="block text-[10px] font-bold text-[#1c1512]/50 uppercase mb-1">Course Fee</span>
-                        <span className="text-[#6e1224] font-bold text-sm sm:text-base">{course.price}</span>
                       </div>
                       <div className="pt-3 sm:pt-0">
                         <span className="block text-[10px] font-bold text-[#1c1512]/50 uppercase mb-1">Status</span>
