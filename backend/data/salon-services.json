@@ -63,9 +63,9 @@
     "title": "test",
     "category": "Skin Care",
     "description": "test",
-    "image": "http://localhost:5000/uploads/1780635832880-469563153.webp",
+    "image": "https://api.mathumibridal.com/uploads/1780635832880-469563153.webp",
     "images": [
-      "http://localhost:5000/uploads/1780635832880-469563153.webp"
+      "https://api.mathumibridal.com/uploads/1780635832880-469563153.webp"
     ],
     "_id": "zp5lzdcmq0glmq4"
   },
@@ -73,9 +73,9 @@
     "title": "hi",
     "category": "test",
     "description": "test",
-    "image": "http://localhost:5000/uploads/1780640605396-759136497.png",
+    "image": "https://api.mathumibridal.com/uploads/1780640605396-759136497.png",
     "images": [
-      "http://localhost:5000/uploads/1780640605396-759136497.png"
+      "https://api.mathumibridal.com/uploads/1780640605396-759136497.png"
     ],
     "_id": "tn05jt5mq0jfwzz"
   },
@@ -83,11 +83,11 @@
     "title": "hasi",
     "category": "hinew",
     "description": "test",
-    "image": "http://localhost:5000/uploads/1780644448711-941402106.webp",
+    "image": "https://api.mathumibridal.com/uploads/1780644448711-941402106.webp",
     "images": [
-      "http://localhost:5000/uploads/1780644448711-941402106.webp",
-      "http://localhost:5000/uploads/1780644453238-668514804.webp",
-      "http://localhost:5000/uploads/1780644560922-386845953.webp"
+      "https://api.mathumibridal.com/uploads/1780644448711-941402106.webp",
+      "https://api.mathumibridal.com/uploads/1780644453238-668514804.webp",
+      "https://api.mathumibridal.com/uploads/1780644560922-386845953.webp"
     ],
     "_id": "rzyjvw5mq0lqeds",
     "updatedAt": "2026-06-05T07:29:22.404Z"
@@ -96,10 +96,10 @@
     "title": "hfg",
     "category": "Hair Styling",
     "description": "test",
-    "image": "http://localhost:5000/uploads/1780646138864-87628541.webp",
+    "image": "https://api.mathumibridal.com/uploads/1780646138864-87628541.webp",
     "images": [
-      "http://localhost:5000/uploads/1780646138864-87628541.webp",
-      "http://localhost:5000/uploads/1780646152860-349847344.webp"
+      "https://api.mathumibridal.com/uploads/1780646138864-87628541.webp",
+      "https://api.mathumibridal.com/uploads/1780646152860-349847344.webp"
     ],
     "_id": "cgkgl00mq0mqj37",
     "updatedAt": "2026-06-05T07:55:53.959Z"

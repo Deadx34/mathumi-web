@@ -215,3 +215,4 @@ export default function CategoryPage({ params }: { params: any }) {
     </div>
   );
 }
+
