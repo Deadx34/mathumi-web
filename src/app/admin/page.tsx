@@ -142,7 +142,7 @@ export default function AdminDashboard() {
 
   // Add/Edit Gallery State
   const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false);
-  const [galleryForm, setGalleryForm] = useState({ _id: '', title: '', category: 'General', url: '' });
+  const [galleryForm, setGalleryForm] = useState({ _id: '', title: '', category: 'Bridal', url: '' });
   const [isEditingGallery, setIsEditingGallery] = useState(false);
 
   const uploadImage = async (file: File) => {
@@ -674,7 +674,7 @@ export default function AdminDashboard() {
     }
   };
 
-  const openAddGalleryModal = () => { setGalleryForm({ _id: '', title: '', category: 'General', url: '' }); setIsEditingGallery(false); setIsGalleryModalOpen(true); };
+  const openAddGalleryModal = () => { setGalleryForm({ _id: '', title: '', category: 'Bridal', url: '' }); setIsEditingGallery(false); setIsGalleryModalOpen(true); };
   const openEditGalleryModal = (g: any) => { setGalleryForm(g); setIsEditingGallery(true); setIsGalleryModalOpen(true); };
 
   // --- ACADEMY HANDLERS ---
@@ -1821,9 +1821,11 @@ export default function AdminDashboard() {
                 <select className="w-full p-2 border border-[#d4af37] rounded bg-[#fdf5eb]" value={galleryForm.category} onChange={e => setGalleryForm({...galleryForm, category: e.target.value})}>
                   <option value="Bridal">Bridal</option>
                   <option value="Salon">Salon</option>
-                  <option value="Academy">Academy</option>
+                  <option value="Makeup">Makeup</option>
+                  <option value="Skin Care">Skin Care</option>
                   <option value="Boutique">Boutique</option>
-                  <option value="General">General</option>
+                  <option value="Academy">Academy</option>
+                  <option value="Gallery">Gallery</option>
                 </select>
               </div>
               <div>
