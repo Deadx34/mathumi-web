@@ -2,7 +2,7 @@
   "version": 1,
   "config": {
     "env": {
-      "NEXT_PUBLIC_API_URL": "https://api.mathumibridal.com"
+      "NEXT_PUBLIC_API_URL": "http://localhost:5000"
     },
     "webpack": null,
     "typescript": {
@@ -119,7 +119,7 @@
         "transform": "lodash/{{member}}"
       }
     },
-    "outputFileTracingRoot": "C:\\mathumi-web",
+    "outputFileTracingRoot": "C:\\Users\\Hasitha",
     "cacheComponents": false,
     "cacheLife": {
       "default": {
@@ -319,12 +319,12 @@
     "bundlePagesRouterDependencies": false,
     "configFileName": "next.config.ts",
     "turbopack": {
-      "root": "C:\\mathumi-web"
+      "root": "C:\\Users\\Hasitha"
     },
     "distDirRoot": ".next"
   },
-  "appDir": "C:\\mathumi-web",
-  "relativeAppDir": "",
+  "appDir": "C:\\Users\\Hasitha\\Documents\\mathumi-web",
+  "relativeAppDir": "Documents\\mathumi-web",
   "files": [
     ".next\\routes-manifest.json",
     ".next\\server\\pages-manifest.json",

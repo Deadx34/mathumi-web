@@ -4,10 +4,44 @@ import { useRouter } from 'next/navigation';
 import { useDropzone } from 'react-dropzone';
 import { useToast } from '@/components/Toast';
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 
+  (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') ? 'http://localhost:5000' : 'https://api.mathumibridal.com');
+
 export default function AdminDashboard() {
   const { showToast, ToastElement } = useToast();
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'bookings' | 'inquiries' | 'manageSarees' | 'manageAcademy' | 'manageSalon' | 'manageCategories' | 'manageGallery' | 'manageStaff'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'bookings' | 'inquiries' | 'manageSarees' | 'manageAcademy' | 'manageSalon' | 'manageCategories' | 'manageGallery' | 'manageStaff' | 'billingCategories' | 'billingServices' | 'billingCustomers' | 'billingPOS'>('dashboard');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [isPOSExpanded, setIsPOSExpanded] = useState(false);
+
+  // Billing Categories POS
+  const [billingCategories, setBillingCategories] = useState<any[]>([]);
+  const [billingCategoryForm, setBillingCategoryForm] = useState({ _id: '', name: '' });
+  const [isBillingCategoryModalOpen, setIsBillingCategoryModalOpen] = useState(false);
+  const [isEditingBillingCategory, setIsEditingBillingCategory] = useState(false);
+  const [searchBillingCategory, setSearchBillingCategory] = useState('');
+
+  // Billing Services POS
+  const [billingServices, setBillingServices] = useState<any[]>([]);
+  const [billingServiceForm, setBillingServiceForm] = useState({ _id: '', name: '', category: '', price: '', commissionValue: '', commissionType: 'percentage' });
+  const [isBillingServiceModalOpen, setIsBillingServiceModalOpen] = useState(false);
+  const [isEditingBillingService, setIsEditingBillingService] = useState(false);
+  const [searchBillingService, setSearchBillingService] = useState('');
+
+  // Customers POS
+  const [billingCustomers, setBillingCustomers] = useState<any[]>([]);
+  const [customerForm, setCustomerForm] = useState({ _id: '', name: '', whatsapp: '', phone: '', address: '' });
+  const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
+  const [isEditingCustomer, setIsEditingCustomer] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState<any>(null);
+  const [isCustomerViewModalOpen, setIsCustomerViewModalOpen] = useState(false);
+  const [searchCustomer, setSearchCustomer] = useState('');
+  
+  // POS Billing Cart State
+  const [invoiceCart, setInvoiceCart] = useState<any[]>([]);
+  const [selectedPOSCustomer, setSelectedPOSCustomer] = useState<any>(null);
+  const [selectedPOSServiceId, setSelectedPOSServiceId] = useState('');
+  const [selectedPOSStaffId, setSelectedPOSStaffId] = useState('');
+  const [posDiscount, setPosDiscount] = useState<number>(0);
   const [bookings, setBookings] = useState<any[]>([]);
   // State for Booking Details Modal
   const [selectedBooking, setSelectedBooking] = useState<any>(null);
@@ -150,7 +184,7 @@ export default function AdminDashboard() {
     formData.append('image', file);
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/upload`, {
+      const res = await fetch(`${API_BASE}/api/upload`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: formData
@@ -323,18 +357,34 @@ export default function AdminDashboard() {
     setLoading(true);
     setError(null);
     try {
-      const API = process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com';
+      const API = API_BASE;
       const authHeaders = { 'Authorization': `Bearer ${token}` };
 
-      const [bRes, iRes, sRes, aRes, salonRes, gRes, catRes, staffRes] = await Promise.all([
-        fetch(`${API}/api/bookings`, { headers: authHeaders }),
-        fetch(`${API}/api/inquiries`, { headers: authHeaders }),
-        fetch(`${API}/api/sarees`),
-        fetch(`${API}/api/academy-courses`),
-        fetch(`${API}/api/salon-services`),
-        fetch(`${API}/api/gallery`),
-        fetch(`${API}/api/salon-categories`),
-        fetch(`${API}/api/staff`, { headers: authHeaders })
+      const safeFetch = async (url: string, options?: RequestInit) => {
+        try {
+          const res = await fetch(url, options);
+          return res;
+        } catch (err) {
+          console.warn(`Fetch connection error for ${url}:`, err);
+          return new Response(JSON.stringify([]), {
+            status: 503,
+            headers: { 'Content-Type': 'application/json' }
+          });
+        }
+      };
+
+      const [bRes, iRes, sRes, aRes, salonRes, gRes, catRes, staffRes, billingCatRes, billingServRes, customerRes] = await Promise.all([
+        safeFetch(`${API}/api/bookings`, { headers: authHeaders }),
+        safeFetch(`${API}/api/inquiries`, { headers: authHeaders }),
+        safeFetch(`${API}/api/sarees`),
+        safeFetch(`${API}/api/academy-courses`),
+        safeFetch(`${API}/api/salon-services`),
+        safeFetch(`${API}/api/gallery`),
+        safeFetch(`${API}/api/salon-categories`),
+        safeFetch(`${API}/api/staff`, { headers: authHeaders }),
+        safeFetch(`${API}/api/billing-categories`, { headers: authHeaders }),
+        safeFetch(`${API}/api/billing-services`, { headers: authHeaders }),
+        safeFetch(`${API}/api/customers`, { headers: authHeaders })
       ]);
 
       if (bRes.status === 401 || bRes.status === 400) {
@@ -355,6 +405,9 @@ export default function AdminDashboard() {
       setGallery(await safeJson(gRes, []));
       setSalonCategories(await safeJson(catRes, []));
       if (staffRes.ok) setStaffList(await safeJson(staffRes, []));
+      setBillingCategories(await safeJson(billingCatRes, []));
+      setBillingServices(await safeJson(billingServRes, []));
+      setBillingCustomers(await safeJson(customerRes, []));
     } catch (err: any) {
       console.error("Dashboard connection error:", err);
       setError(err.message || 'Failed to connect to the backend server. Please make sure the backend is running.');
@@ -365,7 +418,7 @@ export default function AdminDashboard() {
   const handleUpdateBookingStatus = async (id: string, status: string) => {
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/bookings/${id}/status`, {
+      const res = await fetch(`${API_BASE}/api/bookings/${id}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ status })
@@ -401,10 +454,31 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleUpdateSareeStatus = async (id: string, status: string) => {
+    const token = localStorage.getItem('adminToken');
+    try {
+      const res = await fetch(`${API_BASE}/api/sarees/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ status })
+      });
+      if (!res.ok) {
+        const errorData = await res.json();
+        showToast('Failed to update saree status: ' + (errorData.message || 'Unknown error'), 'error');
+      } else {
+        showToast('Saree status updated successfully!', 'success');
+        fetchAllData(token!);
+      }
+    } catch (err) {
+      console.error(err);
+      showToast('Network error while updating saree status.', 'error');
+    }
+  };
+
   const handleUpdateInquiryStatus = async (id: string, status: string) => {
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/inquiries/${id}/status`, {
+      const res = await fetch(`${API_BASE}/api/inquiries/${id}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ status })
@@ -425,7 +499,7 @@ export default function AdminDashboard() {
   const handleSaveSaree = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem('adminToken');
-    const url = isEditing ? `${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/sarees/${sareeForm._id}` : `${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/sarees`;
+    const url = isEditing ? `${API_BASE}/api/sarees/${sareeForm._id}` : `${API_BASE}/api/sarees`;
     const method = isEditing ? 'PUT' : 'POST';
 
     // Remove empty _id so Mongoose generates one
@@ -458,7 +532,7 @@ export default function AdminDashboard() {
     if (!confirm("Are you sure you want to delete this saree?")) return;
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/sarees/${id}`, {
+      const res = await fetch(`${API_BASE}/api/sarees/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -514,7 +588,7 @@ export default function AdminDashboard() {
   const handleSaveService = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem('adminToken');
-    const url = isEditingService ? `${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/salon-services/${serviceForm._id}` : `${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/salon-services`;
+    const url = isEditingService ? `${API_BASE}/api/salon-services/${serviceForm._id}` : `${API_BASE}/api/salon-services`;
     const method = isEditingService ? 'PUT' : 'POST';
     const payload: any = { ...serviceForm };
     if (!payload._id) delete payload._id;
@@ -538,7 +612,7 @@ export default function AdminDashboard() {
     if (!confirm("Delete this service?")) return;
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/salon-services/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+      const res = await fetch(`${API_BASE}/api/salon-services/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
       if (res.ok) { 
         showToast("Service deleted successfully!", "success"); 
         fetchAllData(token!); 
@@ -570,7 +644,7 @@ export default function AdminDashboard() {
   const handleSaveCategory = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem('adminToken');
-    const url = isEditingCategory ? `${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/salon-categories/${categoryForm._id}` : `${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/salon-categories`;
+    const url = isEditingCategory ? `${API_BASE}/api/salon-categories/${categoryForm._id}` : `${API_BASE}/api/salon-categories`;
     const method = isEditingCategory ? 'PUT' : 'POST';
     const payload: any = { ...categoryForm };
     if (!payload._id) delete payload._id;
@@ -599,7 +673,7 @@ export default function AdminDashboard() {
     if (!confirm("Are you sure you want to delete this category? Any services in this category might need to be reassigned manually.")) return;
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/salon-categories/${id}`, {
+      const res = await fetch(`${API_BASE}/api/salon-categories/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -637,7 +711,7 @@ export default function AdminDashboard() {
   const handleSaveGallery = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem('adminToken');
-    const url = isEditingGallery ? `${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/gallery/${galleryForm._id}` : `${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/gallery`;
+    const url = isEditingGallery ? `${API_BASE}/api/gallery/${galleryForm._id}` : `${API_BASE}/api/gallery`;
     const method = isEditingGallery ? 'PUT' : 'POST';
     const payload: any = { ...galleryForm };
     if (!payload._id) delete payload._id;
@@ -661,7 +735,7 @@ export default function AdminDashboard() {
     if (!confirm("Delete this image?")) return;
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/gallery/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+      const res = await fetch(`${API_BASE}/api/gallery/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
       if (res.ok) { 
         showToast("Gallery image deleted successfully!", "success"); 
         fetchAllData(token!); 
@@ -681,7 +755,7 @@ export default function AdminDashboard() {
   const handleSaveAcademy = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem('adminToken');
-    const url = isEditingAcademy ? `${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/academy-courses/${academyForm._id}` : `${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/academy-courses`;
+    const url = isEditingAcademy ? `${API_BASE}/api/academy-courses/${academyForm._id}` : `${API_BASE}/api/academy-courses`;
     const method = isEditingAcademy ? 'PUT' : 'POST';
     
     let parsedSyllabus: string | string[] = academyForm.syllabus;
@@ -711,7 +785,7 @@ export default function AdminDashboard() {
     if (!confirm("Delete this course?")) return;
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.mathumibridal.com"}/api/academy-courses/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+      const res = await fetch(`${API_BASE}/api/academy-courses/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
       if (res.ok) { 
         showToast("Academy course deleted successfully!", "success"); 
         fetchAllData(token!); 
@@ -743,8 +817,8 @@ export default function AdminDashboard() {
       return;
     }
     const url = isEditingStaff
-      ? `${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/staff/${staffForm._id}`
-      : `${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/staff`;
+      ? `${API_BASE}/api/staff/${staffForm._id}`
+      : `${API_BASE}/api/staff`;
     const method = isEditingStaff ? 'PUT' : 'POST';
     const payload: any = { ...staffForm };
     if (!payload._id) delete payload._id;
@@ -781,7 +855,7 @@ export default function AdminDashboard() {
     if (!confirm('Are you sure you want to delete this staff member?')) return;
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com'}/api/staff/${id}`, {
+      const res = await fetch(`${API_BASE}/api/staff/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -806,6 +880,185 @@ export default function AdminDashboard() {
     setStaffForm({ ...s });
     setIsEditingStaff(true);
     setIsStaffModalOpen(true);
+  };
+
+  // --- BILLING CATEGORY POS HANDLERS ---
+  const handleSaveBillingCategory = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const token = localStorage.getItem('adminToken');
+    const url = isEditingBillingCategory 
+      ? `${API_BASE}/api/billing-categories/${billingCategoryForm._id}` 
+      : `${API_BASE}/api/billing-categories`;
+    const method = isEditingBillingCategory ? 'PUT' : 'POST';
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ name: billingCategoryForm.name })
+      });
+      if (res.ok) {
+        showToast(isEditingBillingCategory ? "Category updated successfully!" : "Category added successfully!", 'success');
+        setIsBillingCategoryModalOpen(false);
+        fetchAllData(token!);
+      } else {
+        const errorData = await res.json().catch(() => ({}));
+        showToast("Failed to save category: " + (errorData.message || `Status ${res.status}`), 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("Network error while saving category", 'error');
+    }
+  };
+
+  const handleDeleteBillingCategory = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this category?")) return;
+    const token = localStorage.getItem('adminToken');
+    try {
+      const res = await fetch(`${API_BASE}/api/billing-categories/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        showToast("Category deleted successfully!", 'success');
+        fetchAllData(token!);
+      } else {
+        showToast("Failed to delete category", 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("Network error while deleting category", 'error');
+    }
+  };
+
+  const openAddBillingCategoryModal = () => {
+    setBillingCategoryForm({ _id: '', name: '' });
+    setIsEditingBillingCategory(false);
+    setIsBillingCategoryModalOpen(true);
+  };
+
+  const openEditBillingCategoryModal = (cat: any) => {
+    setBillingCategoryForm({ _id: cat._id, name: cat.name });
+    setIsEditingBillingCategory(true);
+    setIsBillingCategoryModalOpen(true);
+  };
+
+  // --- BILLING SERVICE POS HANDLERS ---
+  const handleSaveBillingService = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const token = localStorage.getItem('adminToken');
+    const url = isEditingBillingService 
+      ? `${API_BASE}/api/billing-services/${billingServiceForm._id}` 
+      : `${API_BASE}/api/billing-services`;
+    const method = isEditingBillingService ? 'PUT' : 'POST';
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(billingServiceForm)
+      });
+      if (res.ok) {
+        showToast(isEditingBillingService ? "Service updated successfully!" : "Service added successfully!", 'success');
+        setIsBillingServiceModalOpen(false);
+        fetchAllData(token!);
+      } else {
+        const errorData = await res.json().catch(() => ({}));
+        showToast("Failed to save service: " + (errorData.message || `Status ${res.status}`), 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("Network error while saving service", 'error');
+    }
+  };
+
+  const handleDeleteBillingService = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this service?")) return;
+    const token = localStorage.getItem('adminToken');
+    try {
+      const res = await fetch(`${API_BASE}/api/billing-services/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        showToast("Service deleted successfully!", 'success');
+        fetchAllData(token!);
+      } else {
+        showToast("Failed to delete service", 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("Network error while deleting service", 'error');
+    }
+  };
+
+  const openAddBillingServiceModal = () => {
+    const defaultCat = billingCategories.length > 0 ? billingCategories[0].name : '';
+    setBillingServiceForm({ _id: '', name: '', category: defaultCat, price: '', commissionValue: '', commissionType: 'percentage' });
+    setIsEditingBillingService(false);
+    setIsBillingServiceModalOpen(true);
+  };
+
+  const openEditBillingServiceModal = (s: any) => {
+    setBillingServiceForm({
+      _id: s._id || '',
+      name: s.name || '',
+      category: s.category || '',
+      price: s.price || '',
+      commissionValue: s.commissionValue !== undefined ? s.commissionValue : (s.commission || ''),
+      commissionType: s.commissionType || 'percentage'
+    });
+    setIsEditingBillingService(true);
+    setIsBillingServiceModalOpen(true);
+  };
+
+  // --- CUSTOMER POS HANDLERS ---
+  const handleSaveCustomer = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const whatsappClean = customerForm.whatsapp.trim();
+    if (!/^\d+$/.test(whatsappClean)) {
+      showToast("WhatsApp number must contain only digits!", 'error');
+      return;
+    }
+    const isDuplicate = billingCustomers.some(c => c.whatsapp.trim() === whatsappClean && c._id !== customerForm._id);
+    if (isDuplicate) {
+      showToast("WhatsApp number must be unique! This number is already registered.", 'error');
+      return;
+    }
+
+    const token = localStorage.getItem('adminToken');
+    const url = isEditingCustomer 
+      ? `${API_BASE}/api/customers/${customerForm._id}` 
+      : `${API_BASE}/api/customers`;
+    const method = isEditingCustomer ? 'PUT' : 'POST';
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(customerForm)
+      });
+      if (res.ok) {
+        showToast(isEditingCustomer ? "Customer updated successfully!" : "Customer registered successfully!", 'success');
+        setIsCustomerModalOpen(false);
+        fetchAllData(token!);
+      } else {
+        const errorData = await res.json().catch(() => ({}));
+        showToast("Failed to save customer data: " + (errorData.message || `Status ${res.status}`), 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("Network error while saving customer data", 'error');
+    }
+  };
+
+  const openAddCustomerModal = () => {
+    setCustomerForm({ _id: '', name: '', whatsapp: '', phone: '', address: '' });
+    setIsEditingCustomer(false);
+    setIsCustomerModalOpen(true);
+  };
+
+  const openEditCustomerModal = (c: any) => {
+    setCustomerForm({ ...c });
+    setIsEditingCustomer(true);
+    setIsCustomerModalOpen(true);
   };
 
   const handleLogout = () => {
@@ -880,6 +1133,65 @@ export default function AdminDashboard() {
               <span className="capitalize">{label}</span>
             </button>
           ))}
+
+          {/* Billing & POS Group */}
+          <div className="flex flex-col gap-1 mt-2">
+            <button 
+              className={`text-left px-4 py-3 rounded-lg font-medium transition-all text-sm flex justify-between items-center ${
+                activeTab === 'billingCategories' || activeTab === 'billingServices' || activeTab === 'billingCustomers' || activeTab === 'billingPOS'
+                  ? 'bg-[#d4af37]/20 text-[#d4af37]' 
+                  : 'text-[#eacda3] hover:bg-white/10 hover:text-white'
+              }`}
+              onClick={() => setIsPOSExpanded(!isPOSExpanded)}
+            >
+              <span>💳 Billing & POS</span>
+              <span className="text-[10px]">{isPOSExpanded ? '▼' : '▶'}</span>
+            </button>
+            
+            {isPOSExpanded && (
+              <div className="pl-4 flex flex-col gap-1 mt-1 border-l border-[#d4af37]/30">
+                <button
+                  className={`text-left px-4 py-2 rounded-lg font-medium transition-all text-xs ${
+                    activeTab === 'billingPOS'
+                      ? 'bg-[#d4af37] text-[#3a1f0d] shadow-md'
+                      : 'text-[#eacda3] hover:bg-white/5 hover:text-white'
+                  }`}
+                  onClick={() => {
+                    setActiveTab('billingPOS');
+                    setIsMobileSidebarOpen(false);
+                  }}
+                >
+                  🔸 Create Invoice / POS
+                </button>
+                <button
+                  className={`text-left px-4 py-2 rounded-lg font-medium transition-all text-xs ${
+                    activeTab === 'billingServices'
+                      ? 'bg-[#d4af37] text-[#3a1f0d] shadow-md'
+                      : 'text-[#eacda3] hover:bg-white/5 hover:text-white'
+                  }`}
+                  onClick={() => {
+                    setActiveTab('billingServices');
+                    setIsMobileSidebarOpen(false);
+                  }}
+                >
+                  🔸 Categories & Services
+                </button>
+                <button
+                  className={`text-left px-4 py-2 rounded-lg font-medium transition-all text-xs ${
+                    activeTab === 'billingCustomers'
+                      ? 'bg-[#d4af37] text-[#3a1f0d] shadow-md'
+                      : 'text-[#eacda3] hover:bg-white/5 hover:text-white'
+                  }`}
+                  onClick={() => {
+                    setActiveTab('billingCustomers');
+                    setIsMobileSidebarOpen(false);
+                  }}
+                >
+                  🔸 Customer Registry
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="p-4 border-t border-white/10">
@@ -936,7 +1248,7 @@ export default function AdminDashboard() {
             {/* Bookings Section */}
             <div>
               <h2 className="text-md font-serif font-bold text-[#4a2511] uppercase tracking-wider mb-4 border-b border-[#d4af37]/25 pb-2">Bookings Overview</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
                 
                 {/* Pending Bookings */}
                 <div 
@@ -962,6 +1274,32 @@ export default function AdminDashboard() {
                     <p className="text-4xl font-light text-[#1d4ed8] font-serif">{bookings.filter(b => b.status === 'Confirmed').length}</p>
                   </div>
                   <div className="text-[10px] text-gray-500 mt-3 border-t border-[#c2a670]/10 pt-2 font-medium">Scheduled slots</div>
+                </div>
+
+                {/* Completed Bookings */}
+                <div 
+                  onClick={() => setActiveTab('bookings')}
+                  className="gold-panel p-6 text-center bg-white border border-[#c2a670]/15 shadow-sm hover:shadow-md hover:border-[#6e1224]/40 hover:-translate-y-0.5 cursor-pointer transition-all duration-300 relative flex flex-col justify-between min-h-[140px]"
+                >
+                  <div className="absolute top-2 right-2 bg-green-100 text-green-800 text-[9px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Completed</div>
+                  <div>
+                    <h3 className="text-[10px] font-bold text-[#1c1512]/60 uppercase tracking-widest mb-1.5 mt-2">Completed</h3>
+                    <p className="text-4xl font-light text-[#16a34a] font-serif">{bookings.filter(b => b.status === 'Completed').length}</p>
+                  </div>
+                  <div className="text-[10px] text-gray-500 mt-3 border-t border-[#c2a670]/10 pt-2 font-medium">Fulfilled sessions</div>
+                </div>
+
+                {/* Cancelled Bookings */}
+                <div 
+                  onClick={() => setActiveTab('bookings')}
+                  className="gold-panel p-6 text-center bg-white border border-[#c2a670]/15 shadow-sm hover:shadow-md hover:border-[#6e1224]/40 hover:-translate-y-0.5 cursor-pointer transition-all duration-300 relative flex flex-col justify-between min-h-[140px]"
+                >
+                  <div className="absolute top-2 right-2 bg-red-100 text-red-800 text-[9px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Cancelled</div>
+                  <div>
+                    <h3 className="text-[10px] font-bold text-[#1c1512]/60 uppercase tracking-widest mb-1.5 mt-2">Cancelled</h3>
+                    <p className="text-4xl font-light text-[#dc2626] font-serif">{bookings.filter(b => b.status === 'Cancelled').length}</p>
+                  </div>
+                  <div className="text-[10px] text-gray-500 mt-3 border-t border-[#c2a670]/10 pt-2 font-medium">Revoked requests</div>
                 </div>
 
                 {/* Total Bookings */}
@@ -1056,7 +1394,7 @@ export default function AdminDashboard() {
         ) : activeTab === 'bookings' ? (
           <div className="flex flex-col h-full space-y-4">
             <div className="flex gap-4 overflow-x-auto pb-4 items-start h-[70vh] custom-scrollbar">
-              {['Pending', 'Confirmed'].map(status => (
+              {['Pending', 'Confirmed', 'Completed', 'Cancelled'].map(status => (
                 <div key={status} className="flex-shrink-0 w-80 bg-[#fdf5eb]/60 rounded-xl border border-[#d4af37]/30 flex flex-col h-full max-h-full shadow-sm">
                   <div className="p-4 border-b border-[#d4af37]/30 bg-gradient-to-r from-[#4a2511] to-[#6a3519] rounded-t-xl font-bold text-white flex justify-between items-center sticky top-0 z-10 shadow-sm">
                     <span className="tracking-wide">{status}</span>
@@ -1089,15 +1427,20 @@ export default function AdminDashboard() {
                         </div>
                         <div className="relative">
                           <select 
-                            value={b.status || 'Pending'}
+                            value=""
                             onChange={(e) => handleUpdateBookingStatus(b._id, e.target.value)}
                             className={`w-full p-2 text-xs rounded-lg font-bold border appearance-none outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#d4af37]/50 transition-colors ${
                               b.status === 'Pending' || !b.status ? 'bg-yellow-50 text-yellow-800 border-yellow-300' : 
-                              'bg-blue-50 text-blue-800 border-blue-300'
+                              b.status === 'Confirmed' ? 'bg-blue-50 text-blue-800 border-blue-300' :
+                              b.status === 'Completed' ? 'bg-green-50 text-green-800 border-green-300' :
+                              'bg-red-50 text-red-800 border-red-300'
                             }`}
                           >
-                            <option value="Pending">Move to Pending</option>
-                            <option value="Confirmed">Move to Confirmed</option>
+                            <option value="" disabled>Update Status</option>
+                            <option value="Pending">🔄 Pending</option>
+                            <option value="Confirmed">✅ Confirmed</option>
+                            <option value="Completed">🏁 Completed</option>
+                            <option value="Cancelled">❌ Cancelled</option>
                           </select>
                           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
                             <svg className="fill-current h-4 w-4 opacity-60" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -1114,218 +1457,279 @@ export default function AdminDashboard() {
             </div>
           </div>
         ) : activeTab === 'inquiries' ? (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="bg-[#f4e8d3] text-[#4a2511]">
-                  <th className="p-3 text-xs">Date Created</th>
-                  <th className="p-3 text-xs">Last Updated</th>
-                  <th className="p-3 text-xs">Customer</th>
-                  <th className="p-3 text-xs">Items Inquired</th>
-                  <th className="p-3 text-xs">Status</th>
-                  <th className="p-3 text-xs text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {inquiries.map(i => (
-                  <tr key={i._id} className="border-b hover:bg-[#fdf5eb]">
-                    <td className="p-3">
-                      <p className="text-xs font-medium text-[#4a2511]">{i.createdAt ? new Date(i.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}</p>
-                      <p className="text-[10px] text-gray-500">{i.createdAt ? new Date(i.createdAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) : ''}</p>
-                    </td>
-                    <td className="p-3">
-                      {i.updatedAt ? (
-                        <>
-                          <p className="text-xs font-medium text-[#4a2511]">{new Date(i.updatedAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
-                          <p className="text-[10px] text-gray-500">{new Date(i.updatedAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</p>
-                        </>
-                      ) : <span className="text-[10px] text-gray-400">Not yet updated</span>}
-                    </td>
-                    <td className="p-3">
-                      <p className="font-bold text-[#4a2511] text-sm">{i.customerName || 'Guest User'}</p>
-                      <p className="text-xs text-[#800020] font-semibold">{i.contactNumber || 'No Contact'}</p>
-                    </td>
-                    <td className="p-3">
-                      <span className="bg-[#e5c07b] text-[#4a2511] px-2 py-1 rounded text-xs font-bold mb-1.5 inline-block">{i.items?.length || 0} items</span>
-                      <div className="text-xs text-[#4a2511] max-w-xs space-y-1.5 mt-1">
-                        {i.items?.map((item: any, idx: number) => (
-                          <div key={item._id || idx} className="flex items-center gap-1.5 bg-white/40 p-1.5 rounded border border-[#eacda3]/40">
-                            {item.image && <img src={item.image} alt="" className="w-8 h-8 object-cover rounded shadow-sm flex-shrink-0" />}
-                            <div className="truncate">
-                              <p className="font-bold text-[11px] leading-tight truncate">{item.name || 'Unknown Item'}</p>
-                              <p className="text-[9px] text-gray-500 leading-none">{item.price || 'No Price'}</p>
+          <div className="flex flex-col h-full space-y-4">
+            <div className="flex gap-4 overflow-x-auto pb-4 items-start h-[70vh] custom-scrollbar">
+              {['New', 'Contacted', 'Closed'].map(status => {
+                const filteredInquiries = inquiries.filter(i => {
+                  const currentStatus = i.status || 'New';
+                  if (status === 'New') {
+                    return currentStatus === 'New' || currentStatus === 'Pending';
+                  }
+                  return currentStatus === status;
+                });
+
+                return (
+                  <div key={status} className="flex-shrink-0 w-80 bg-[#fdf5eb]/60 rounded-xl border border-[#d4af37]/30 flex flex-col h-full max-h-full shadow-sm">
+                    {/* Header */}
+                    <div className="p-4 border-b border-[#d4af37]/30 bg-gradient-to-r from-[#4a2511] to-[#6a3519] rounded-t-xl font-bold text-white flex justify-between items-center sticky top-0 z-10 shadow-sm">
+                      <span className="tracking-wide">{status}</span>
+                      <span className="text-xs bg-white/20 px-2.5 py-1 rounded-full font-semibold border border-white/20">
+                        {filteredInquiries.length}
+                      </span>
+                    </div>
+
+                    {/* Column Content */}
+                    <div className="p-3 overflow-y-auto flex-1 space-y-3 custom-scrollbar">
+                      {filteredInquiries.map(i => (
+                        <div key={i._id} className="bg-white p-4 rounded-xl shadow-sm border border-[#d4af37]/20 relative hover:shadow-md transition-all duration-200 group">
+                          
+                          {/* Dates */}
+                          <div className="flex justify-between text-[10px] text-gray-400 mb-2 border-b border-gray-100 pb-1.5 font-medium">
+                            <span>📅 {i.createdAt ? new Date(i.createdAt).toLocaleDateString('en-GB') : '—'}</span>
+                            <span>🔄 {i.updatedAt ? new Date(i.updatedAt).toLocaleDateString('en-GB') : 'Not updated'}</span>
+                          </div>
+
+                          {/* Customer Info */}
+                          <div className="flex justify-between items-start mb-3">
+                            <div className="flex-1 pr-2">
+                              <p className="font-bold text-[#4a2511] text-sm leading-tight">{i.customerName || 'Guest User'}</p>
+                              <p className="text-[10px] text-[#800020] font-semibold mt-0.5">{i.contactNumber || 'No Contact'}</p>
+                            </div>
+                            
+                            {/* View Details Button */}
+                            <button
+                              title="View Details"
+                              onClick={() => { setSelectedInquiry(i); setIsInquiryModalOpen(true); }}
+                              className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#fdf5eb] hover:bg-[#d4af37]/20 text-[#4a2511] hover:text-[#800020] transition-all duration-200 border border-[#d4af37]/30 hover:border-[#d4af37] shadow-sm flex-shrink-0"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4.5 w-4.5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                              </svg>
+                            </button>
+                          </div>
+
+                          {/* Items Inquired list preview */}
+                          <div className="mb-3">
+                            <span className="bg-[#e5c07b]/40 text-[#4a2511] px-2 py-0.5 rounded text-[10px] font-bold mb-1.5 inline-block">
+                              🛍️ {i.items?.length || 0} items
+                            </span>
+                            <div className="text-[11px] text-[#4a2511] max-w-xs space-y-1 mt-1 max-h-24 overflow-y-auto custom-scrollbar">
+                              {i.items?.map((item: any, idx: number) => (
+                                <div key={item._id || idx} className="flex items-center gap-1.5 bg-[#fdf5eb]/40 p-1.5 rounded border border-[#eacda3]/40">
+                                  {item.image && <img src={item.image} alt="" className="w-6 h-6 object-cover rounded shadow-sm flex-shrink-0" />}
+                                  <div className="truncate">
+                                    <p className="font-bold text-[10px] leading-tight truncate">{item.name || 'Unknown Item'}</p>
+                                    <p className="text-[8px] text-gray-500 leading-none">{item.price || 'No Price'}</p>
+                                  </div>
+                                </div>
+                              ))}
                             </div>
                           </div>
-                        ))}
+
+                          {/* Status Dropdown */}
+                          <div className="relative">
+                            <select 
+                              value={i.status || 'New'}
+                              onChange={(e) => handleUpdateInquiryStatus(i._id, e.target.value)}
+                              className={`w-full p-2 text-xs rounded-lg font-bold border appearance-none outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#d4af37]/50 transition-colors ${
+                                i.status === 'New' || i.status === 'Pending' || !i.status ? 'bg-green-50 text-green-800 border-green-300' : 
+                                i.status === 'Contacted' ? 'bg-blue-50 text-blue-800 border-blue-300' :
+                                'bg-gray-50 text-gray-800 border-gray-300'
+                              }`}
+                            >
+                              <option value="New">🟢 New</option>
+                              <option value="Contacted">🔵 Contacted</option>
+                              <option value="Closed">⚫ Closed</option>
+                            </select>
+                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                              <svg className="fill-current h-4 w-4 opacity-60" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                            </div>
+                          </div>
+
+                        </div>
+                      ))}
+                      {filteredInquiries.length === 0 && (
+                        <div className="text-center text-xs text-gray-400 py-8 italic border-2 border-dashed border-gray-200 rounded-xl mx-2">No inquiries in {status.toLowerCase()}</div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ) : activeTab === 'manageSarees' ? (
+          <div className="flex flex-col h-full space-y-4">
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold font-serif text-[#4a2511]">Saree Catalog</h2>
+              <button onClick={openAddModal} className="gold-button px-4 py-2 text-sm shadow">
+                + Add New Saree
+              </button>
+            </div>
+            
+            <div className="flex gap-4 overflow-x-auto pb-4 items-start h-[70vh] custom-scrollbar">
+              {['Available', 'Rented/Booked', 'Maintenance', 'Archived'].map(status => {
+                const filteredSarees = sarees.filter(s => (s.status || 'Available') === status);
+                return (
+                  <div key={status} className="flex-shrink-0 w-80 bg-[#fdf5eb]/60 rounded-xl border border-[#d4af37]/30 flex flex-col h-full max-h-full shadow-sm">
+                    {/* Header */}
+                    <div className="p-4 border-b border-[#d4af37]/30 bg-gradient-to-r from-[#4a2511] to-[#6a3519] rounded-t-xl font-bold text-white flex justify-between items-center sticky top-0 z-10 shadow-sm">
+                      <span className="tracking-wide">{status}</span>
+                      <span className="text-xs bg-white/20 px-2.5 py-1 rounded-full font-semibold border border-white/20">
+                        {filteredSarees.length}
+                      </span>
+                    </div>
+                    
+                    {/* Column Content */}
+                    <div className="p-3 overflow-y-auto flex-1 space-y-3 custom-scrollbar">
+                      {filteredSarees.map(s => (
+                        <div key={s._id} className="bg-white p-4 rounded-xl shadow-sm border border-[#d4af37]/20 relative hover:shadow-md transition-all duration-200 group">
+                          
+                          {/* Image */}
+                          <div className="h-32 w-full overflow-hidden bg-gray-100 rounded-lg mb-3 relative">
+                            <img 
+                              src={s.image || '/hero-saree.png'} 
+                              alt={s.name} 
+                              className="w-full h-full object-cover" 
+                            />
+                            
+                            {/* Absolute Actions Button */}
+                            <div className="absolute top-1.5 right-1.5 z-20">
+                              <button
+                                onClick={() => openEditModal(s)}
+                                className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/90 hover:bg-white text-[#4a2511] hover:text-[#800020] transition-all duration-200 border border-gray-200 hover:border-[#d4af37] shadow-sm flex-shrink-0"
+                                title="Edit Saree Details"
+                              >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                          
+                          {/* Saree details */}
+                          <div className="text-xs space-y-1.5 mb-3">
+                            <p className="font-bold text-[#4a2511] text-sm leading-tight line-clamp-1">{s.name}</p>
+                            <p className="flex justify-between"><span className="font-semibold text-gray-500">Price:</span> <span className="text-[#800020] font-bold">{s.price}</span></p>
+                            <p className="flex justify-between"><span className="font-semibold text-gray-500">Color:</span> <span className="text-[#4a2511] font-medium capitalize">{s.color || 'N/A'}</span></p>
+                          </div>
+
+                          {/* Quick Switch Dropdown */}
+                          <div className="relative">
+                            <select 
+                              value=""
+                              onChange={(e) => handleUpdateSareeStatus(s._id, e.target.value)}
+                              className={`w-full p-2 text-xs rounded-lg font-bold border appearance-none outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#d4af37]/50 transition-colors ${
+                                (s.status || 'Available') === 'Available' ? 'bg-green-50 text-green-800 border-green-300' : 
+                                (s.status || 'Available') === 'Rented/Booked' ? 'bg-blue-50 text-blue-800 border-blue-300' :
+                                (s.status || 'Available') === 'Maintenance' ? 'bg-yellow-50 text-yellow-800 border-yellow-300' :
+                                'bg-gray-50 text-gray-800 border-gray-300'
+                              }`}
+                            >
+                              <option value="" disabled>Update Status</option>
+                              <option value="Available">🟢 Available</option>
+                              <option value="Rented/Booked">🔵 Rented/Booked</option>
+                              <option value="Maintenance">🟡 Maintenance</option>
+                              <option value="Archived">⚫ Archived</option>
+                            </select>
+                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                              <svg className="fill-current h-4 w-4 opacity-60" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                            </div>
+                          </div>
+
+                        </div>
+                      ))}
+                      {filteredSarees.length === 0 && (
+                        <div className="text-center text-xs text-gray-400 py-8 italic border-2 border-dashed border-gray-200 rounded-xl mx-2">No sarees in {status.toLowerCase()}</div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ) : activeTab === 'manageAcademy' ? (
+          <div>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold font-serif text-[#4a2511]">Academy Courses</h2>
+              <button onClick={openAddAcademyModal} className="gold-button px-4 py-2 text-sm shadow">
+                + Add Course
+              </button>
+            </div>
+            {academyCourses.length === 0 ? (
+              <div className="text-center py-12 bg-white/60 rounded-xl border border-[#d4af37]/20">
+                <p className="text-gray-500 italic">No courses found</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-32">
+                {academyCourses.map(c => (
+                  <div key={c._id} className="bg-white rounded-xl shadow-sm border border-[#d4af37]/30 hover:border-[#d4af37] hover:shadow-md transition-all duration-300 relative flex flex-col overflow-hidden group">
+                    {/* Course Image */}
+                    <div className="h-44 w-full overflow-hidden bg-gray-100 flex-shrink-0 relative">
+                      <img 
+                        src={c.image || '/academy_class1.png'} 
+                        alt={c.title} 
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                      />
+                    </div>
+                    
+                    {/* Content Details */}
+                    <div className="p-4 flex-grow flex flex-col justify-between">
+                      <div>
+                        <h3 className="font-serif font-bold text-[#4a2511] text-base mb-1 leading-snug line-clamp-2" title={c.title}>
+                          {c.title}
+                        </h3>
                       </div>
-                    </td>
-                    <td className="p-3">
-                      <select 
-                        value={i.status || 'New'}
-                        onChange={(e) => handleUpdateInquiryStatus(i._id, e.target.value)}
-                        className={`p-1 text-sm rounded font-bold border ${i.status === 'New' || !i.status ? 'bg-green-100 text-green-800 border-green-300' : i.status === 'Contacted' ? 'bg-blue-100 text-blue-800 border-blue-300' : 'bg-gray-100 text-gray-800 border-gray-300'}`}
-                      >
-                        <option value="New">New</option>
-                        <option value="Contacted">Contacted</option>
-                        <option value="Closed">Closed</option>
-                      </select>
-                    </td>
-                    <td className="p-3 text-center">
+                      
+                      <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
+                        <span className="text-xs text-gray-500 font-medium">Duration</span>
+                        {/* Duration Badge */}
+                        <span className="text-xs bg-[#fdf5eb] text-[#800020] font-semibold px-2.5 py-1 rounded-md border border-[#d4af37]/30">
+                          ⏱️ {c.duration}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Absolute Actions Button */}
+                    <div className="absolute top-2 right-2 z-20">
                       <button
-                        title="View Details"
-                        onClick={() => { setSelectedInquiry(i); setIsInquiryModalOpen(true); }}
-                        className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#fdf5eb] hover:bg-[#d4af37]/20 text-[#4a2511] hover:text-[#800020] transition-all duration-200 border border-[#d4af37]/30 hover:border-[#d4af37] shadow-sm hover:shadow"
+                        onClick={() => setOpenAcademyMenuId(openAcademyMenuId === c._id ? null : c._id)}
+                        className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/90 hover:bg-white text-[#4a2511] hover:text-[#800020] transition-all duration-200 border border-gray-200 hover:border-[#d4af37] shadow-sm flex-shrink-0"
+                        title="Actions"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                           <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
                         </svg>
                       </button>
-                    </td>
-                  </tr>
+                      {openAcademyMenuId === c._id && (
+                        <>
+                          <div className="fixed inset-0 z-10" onClick={() => setOpenAcademyMenuId(null)}></div>
+                          <div className="absolute right-0 mt-1 w-32 bg-white rounded-md shadow-lg z-20 border border-gray-200 py-1 overflow-hidden text-left menu-popup">
+                            <button
+                              onClick={() => { setOpenAcademyMenuId(null); setSelectedAcademy(c); setIsAcademyViewModalOpen(true); }}
+                              className="block w-full text-left px-4 py-2 text-sm text-[#4a2511] font-semibold hover:bg-[#fdf5eb]"
+                            >
+                              View
+                            </button>
+                            <button
+                              onClick={() => { setOpenAcademyMenuId(null); openEditAcademyModal(c); }}
+                              className="block w-full text-left px-4 py-2 text-sm text-blue-600 font-semibold hover:bg-blue-50"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => { setOpenAcademyMenuId(null); handleDeleteAcademy(c._id); }}
+                              className="block w-full text-left px-4 py-2 text-sm text-red-600 font-semibold hover:bg-red-50"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
                 ))}
-                {inquiries.length === 0 && <tr><td colSpan={6} className="p-4 text-center">No inquiries found</td></tr>}
-              </tbody>
-            </table>
-          </div>
-        ) : activeTab === 'manageSarees' ? (
-          <div>
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-[#4a2511]">Saree Catalog</h2>
-              <button onClick={openAddModal} className="gold-button px-4 py-2 text-sm shadow">
-                + Add New Saree
-              </button>
-            </div>
-            <div className="overflow-x-auto pb-32">
-              <table className="w-full text-left">
-                <thead>
-                  <tr className="bg-[#f4e8d3] text-[#4a2511]">
-                    <th className="p-3">Image</th>
-                    <th className="p-3">Name</th>
-                    <th className="p-3">Price</th>
-                    <th className="p-3">Color</th>
-                    <th className="p-3 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {sarees.map(s => (
-                    <tr key={s._id} className="border-b hover:bg-[#fdf5eb]">
-                      <td className="p-3">
-                        <img src={s.image} alt="saree" className="w-12 h-12 object-cover rounded shadow" />
-                      </td>
-                      <td className="p-3 font-semibold text-[#4a2511]">{s.name}</td>
-                      <td className="p-3 text-[#800020] font-bold">{s.price}</td>
-                      <td className="p-3 capitalize">{s.color}</td>
-                      <td className="p-3 text-right whitespace-nowrap relative">
-                        <button
-                          onClick={() => setOpenSareeMenuId(openSareeMenuId === s._id ? null : s._id)}
-                          className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#fdf5eb] hover:bg-[#d4af37]/20 text-[#4a2511] hover:text-[#800020] transition-all duration-200 border border-[#d4af37]/30 hover:border-[#d4af37] shadow-sm flex-shrink-0"
-                          title="Actions"
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-                          </svg>
-                        </button>
-                        {openSareeMenuId === s._id && (
-                          <>
-                            <div className="fixed inset-0 z-10" onClick={() => setOpenSareeMenuId(null)}></div>
-                            <div className="absolute right-full mr-2 top-0 w-32 bg-white rounded-md shadow-lg z-20 border border-gray-200 py-1 overflow-hidden text-left menu-popup">
-                              <button
-                                onClick={() => { setOpenSareeMenuId(null); setSelectedSaree(s); setIsSareeViewModalOpen(true); }}
-                                className="block w-full text-left px-4 py-2 text-sm text-[#4a2511] font-semibold hover:bg-[#fdf5eb]"
-                              >
-                                View
-                              </button>
-                              <button
-                                onClick={() => { setOpenSareeMenuId(null); openEditModal(s); }}
-                                className="block w-full text-left px-4 py-2 text-sm text-blue-600 font-semibold hover:bg-blue-50"
-                              >
-                                Edit
-                              </button>
-                              <button
-                                onClick={() => { setOpenSareeMenuId(null); handleDeleteSaree(s._id); }}
-                                className="block w-full text-left px-4 py-2 text-sm text-red-600 font-semibold hover:bg-red-50"
-                              >
-                                Delete
-                              </button>
-                            </div>
-                          </>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                  {sarees.length === 0 && <tr><td colSpan={5} className="p-4 text-center">No sarees found</td></tr>}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        ) : activeTab === 'manageAcademy' ? (
-          <div>
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-[#4a2511]">Academy Courses</h2>
-              <button onClick={openAddAcademyModal} className="gold-button px-4 py-2 text-sm shadow">
-                + Add Course
-              </button>
-            </div>
-            <div className="overflow-x-auto pb-32">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-[#f4e8d3] text-[#4a2511] border-b border-[#d4af37]">
-                    <th className="p-3">Image</th>
-                    <th className="p-3">Title</th>
-                    <th className="p-3">Duration</th>
-                    <th className="p-3 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {academyCourses.map(c => (
-                    <tr key={c._id} className="border-b border-[#eacda3] hover:bg-[#fdf5eb]">
-                      <td className="p-3">
-                        <img src={c.image || '/academy_class1.png'} alt="course" className="w-12 h-12 object-cover rounded shadow" />
-                      </td>
-                      <td className="p-3 font-semibold text-[#4a2511]">{c.title}</td>
-                      <td className="p-3 text-sm">{c.duration}</td>
-                      <td className="p-3 text-right whitespace-nowrap relative">
-                        <button
-                          onClick={() => setOpenAcademyMenuId(openAcademyMenuId === c._id ? null : c._id)}
-                          className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#fdf5eb] hover:bg-[#d4af37]/20 text-[#4a2511] hover:text-[#800020] transition-all duration-200 border border-[#d4af37]/30 hover:border-[#d4af37] shadow-sm flex-shrink-0"
-                          title="Actions"
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-                          </svg>
-                        </button>
-                        {openAcademyMenuId === c._id && (
-                          <>
-                            <div className="fixed inset-0 z-10" onClick={() => setOpenAcademyMenuId(null)}></div>
-                            <div className="absolute right-full mr-2 top-0 w-32 bg-white rounded-md shadow-lg z-20 border border-gray-200 py-1 overflow-hidden text-left menu-popup">
-                              <button
-                                onClick={() => { setOpenAcademyMenuId(null); setSelectedAcademy(c); setIsAcademyViewModalOpen(true); }}
-                                className="block w-full text-left px-4 py-2 text-sm text-[#4a2511] font-semibold hover:bg-[#fdf5eb]"
-                              >
-                                View
-                              </button>
-                              <button
-                                onClick={() => { setOpenAcademyMenuId(null); openEditAcademyModal(c); }}
-                                className="block w-full text-left px-4 py-2 text-sm text-blue-600 font-semibold hover:bg-blue-50"
-                              >
-                                Edit
-                              </button>
-                              <button
-                                onClick={() => { setOpenAcademyMenuId(null); handleDeleteAcademy(c._id); }}
-                                className="block w-full text-left px-4 py-2 text-sm text-red-600 font-semibold hover:bg-red-50"
-                              >
-                                Delete
-                              </button>
-                            </div>
-                          </>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                  {academyCourses.length === 0 && <tr><td colSpan={3} className="p-4 text-center">No courses found</td></tr>}
-                </tbody>
-              </table>
-            </div>
+              </div>
+            )}
           </div>
         ) : activeTab === 'manageSalon' ? (
           <div>
@@ -1605,6 +2009,492 @@ export default function AdminDashboard() {
               </table>
             </div>
           </div>
+        ) : activeTab === 'billingCategories' ? (
+          <div>
+            <div className="flex justify-between items-center mb-6">
+              <div>
+                <h2 className="text-2xl font-bold font-serif text-[#4a2511]">POS Categories</h2>
+                <p className="text-xs text-gray-500 mt-0.5">Manage product/service categories for internal billing</p>
+              </div>
+              <div className="flex gap-3">
+                <input 
+                  type="text" 
+                  placeholder="Search categories..." 
+                  value={searchBillingCategory} 
+                  onChange={e => setSearchBillingCategory(e.target.value)} 
+                  className="p-2 border border-[#d4af37]/40 rounded bg-white text-xs outline-none w-48 focus:border-[#d4af37]"
+                />
+                <button onClick={openAddBillingCategoryModal} className="gold-button px-4 py-2 text-sm shadow">
+                  + Add Category
+                </button>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-32">
+              {billingCategories
+                .filter(cat => cat.name?.toLowerCase().includes(searchBillingCategory.toLowerCase()))
+                .map(cat => (
+                  <div key={cat._id} className="bg-white p-4 rounded-xl shadow-sm border border-[#d4af37]/30 hover:border-[#d4af37] flex items-center justify-between transition-all duration-200">
+                    <span className="font-serif font-bold text-[#4a2511] text-sm">🏷️ {cat.name}</span>
+                    <div className="flex gap-2">
+                      <button 
+                        onClick={() => openEditBillingCategoryModal(cat)}
+                        className="text-blue-600 hover:text-blue-800 text-xs font-semibold p-1 hover:bg-blue-50 rounded"
+                      >
+                        Edit
+                      </button>
+                      <button 
+                        onClick={() => handleDeleteBillingCategory(cat._id)}
+                        className="text-red-600 hover:text-red-800 text-xs font-semibold p-1 hover:bg-red-50 rounded"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              {billingCategories.length === 0 && (
+                <p className="col-span-full text-center py-8 text-gray-400 italic">No billing categories found</p>
+              )}
+            </div>
+          </div>
+        ) : activeTab === 'billingServices' ? (
+          <div>
+            <div className="flex justify-between items-center mb-6">
+              <div>
+                <h2 className="text-2xl font-bold font-serif text-[#4a2511]">POS Services</h2>
+                <p className="text-xs text-gray-500 mt-0.5">Manage services/products and commissions for internal billing</p>
+              </div>
+              <div className="flex gap-3">
+                <input 
+                  type="text" 
+                  placeholder="Search service/category..." 
+                  value={searchBillingService} 
+                  onChange={e => setSearchBillingService(e.target.value)} 
+                  className="p-2 border border-[#d4af37]/40 rounded bg-white text-xs outline-none w-64 focus:border-[#d4af37]"
+                />
+                <button onClick={openAddBillingServiceModal} className="gold-button px-4 py-2 text-sm shadow">
+                  + Add Service
+                </button>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-32">
+              {billingServices
+                .filter(s => 
+                  s.name?.toLowerCase().includes(searchBillingService.toLowerCase()) || 
+                  s.category?.toLowerCase().includes(searchBillingService.toLowerCase())
+                )
+                .map(s => (
+                  <div key={s._id} className="bg-white p-5 rounded-xl shadow-sm border border-[#d4af37]/30 hover:border-[#d4af37] flex flex-col justify-between transition-all duration-300 relative group">
+                    <div>
+                      <div className="flex justify-between items-start mb-2">
+                        <span className="text-[10px] bg-[#fdf5eb] text-[#800020] border border-[#d4af37]/30 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                          {s.category}
+                        </span>
+                        <div className="flex gap-2">
+                          <button onClick={() => openEditBillingServiceModal(s)} className="text-blue-600 hover:text-blue-800 text-xs font-bold">Edit</button>
+                          <button onClick={() => handleDeleteBillingService(s._id)} className="text-red-600 hover:text-red-800 text-xs font-bold">Delete</button>
+                        </div>
+                      </div>
+                      <h3 className="font-serif font-bold text-[#4a2511] text-base mb-3 leading-snug">{s.name}</h3>
+                    </div>
+                    
+                    <div className="pt-3 border-t border-gray-100 flex justify-between items-center text-xs">
+                      <div>
+                        <p className="text-gray-400 font-semibold uppercase tracking-wider text-[9px]">Staff Commission</p>
+                        <p className="font-bold text-[#4a2511]">
+                          {s.commissionType === 'fixed' ? 'LKR ' : ''}
+                          {s.commissionValue !== undefined ? s.commissionValue : s.commission}
+                          {s.commissionType !== 'fixed' ? '%' : ''}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-gray-400 font-semibold uppercase tracking-wider text-[9px]">Price</p>
+                        <p className="font-extrabold text-[#800020] text-sm">LKR {s.price}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              {billingServices.length === 0 && (
+                <p className="col-span-full text-center py-8 text-gray-400 italic">No billing services found</p>
+              )}
+            </div>
+          </div>
+        ) : activeTab === 'billingPOS' ? (
+          <div>
+            <style dangerouslySetInnerHTML={{__html: `
+              @media print {
+                @page {
+                  size: 80mm auto;
+                  margin: 0;
+                }
+                /* Hide all elements by default to remove them from print flow */
+                body * {
+                  display: none !important;
+                }
+                /* Enable display and strip desktop widths/transforms on ancestors to prevent shrinking */
+                html, body, main, div:has(#print-section) {
+                  display: block !important;
+                  width: 100% !important;
+                  min-width: 0 !important;
+                  max-width: 100% !important;
+                  height: auto !important;
+                  min-height: 0 !important;
+                  max-height: none !important;
+                  overflow: visible !important;
+                  margin: 0 !important;
+                  padding: 0 !important;
+                  border: none !important;
+                  box-shadow: none !important;
+                  background: white !important;
+                  background-image: none !important;
+                  transform: none !important;
+                }
+                /* Explicitly show #print-section and its descendants */
+                #print-section, #print-section * {
+                  display: block !important;
+                }
+                #print-section {
+                  position: static !important;
+                  width: 100% !important;
+                  max-width: 100% !important;
+                  box-sizing: border-box !important;
+                  margin: 0 !important;
+                  padding: 12px !important;
+                  border: none !important;
+                  box-shadow: none !important;
+                  border-radius: 0 !important;
+                  background: white !important;
+                  color: black !important;
+                  page-break-inside: avoid !important;
+                }
+              }
+            `}} />
+
+            <div className="flex justify-between items-center mb-6">
+              <div>
+                <h2 className="text-2xl font-bold font-serif text-[#4a2511]">Generate & Print POS Invoice</h2>
+                <p className="text-xs text-gray-500 mt-0.5">Quickly select services, assign staff, and print thermal receipt invoices</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pb-32">
+              {/* Left Side: POS Cart Controls */}
+              <div className="lg:col-span-7 space-y-6">
+                
+                {/* Section 1: Customer Selection */}
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-[#d4af37]/20">
+                  <h3 className="text-base font-bold font-serif text-[#4a2511] mb-4 uppercase tracking-wider border-b border-[#d4af37]/20 pb-2">1. Select Customer</h3>
+                  <div className="flex gap-4">
+                    <select 
+                      className="w-full p-2 border border-[#d4af37] rounded bg-[#fdf5eb] text-sm focus:outline-none"
+                      value={selectedPOSCustomer ? JSON.stringify(selectedPOSCustomer) : ''}
+                      onChange={e => {
+                        const val = e.target.value;
+                        setSelectedPOSCustomer(val ? JSON.parse(val) : null);
+                      }}
+                    >
+                      <option value="">-- Walk-in Customer (Guest) --</option>
+                      {billingCustomers.map(c => (
+                        <option key={c._id} value={JSON.stringify(c)}>{c.name} ({c.whatsapp})</option>
+                      ))}
+                    </select>
+                  </div>
+                  {selectedPOSCustomer && (
+                    <div className="mt-3 text-xs bg-[#fdf5eb] p-3 rounded border border-[#d4af37]/30 text-stone-700">
+                      <p><strong>Name:</strong> {selectedPOSCustomer.name}</p>
+                      <p><strong>WhatsApp:</strong> {selectedPOSCustomer.whatsapp}</p>
+                      {selectedPOSCustomer.address && <p><strong>Address:</strong> {selectedPOSCustomer.address}</p>}
+                    </div>
+                  )}
+                </div>
+
+                {/* Section 2: Add Service Rate to Invoice */}
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-[#d4af37]/20">
+                  <h3 className="text-base font-bold font-serif text-[#4a2511] mb-4 uppercase tracking-wider border-b border-[#d4af37]/20 pb-2">2. Add Service Rate</h3>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-semibold mb-1 text-gray-500">Choose Service</label>
+                      <select 
+                        className="w-full p-2 border border-[#d4af37] rounded bg-[#fdf5eb] text-sm focus:outline-none"
+                        value={selectedPOSServiceId}
+                        onChange={e => setSelectedPOSServiceId(e.target.value)}
+                      >
+                        <option value="">-- Choose Service --</option>
+                        {billingServices.map(s => (
+                          <option key={s._id} value={s._id}>{s.name} - LKR {s.price}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-semibold mb-1 text-gray-500">Performed By (Staff)</label>
+                        <select 
+                          className="w-full p-2 border border-[#d4af37] rounded bg-[#fdf5eb] text-sm focus:outline-none"
+                          value={selectedPOSStaffId}
+                          onChange={e => setSelectedPOSStaffId(e.target.value)}
+                        >
+                          <option value="">-- Choose Staff Member --</option>
+                          {staffList.map(st => (
+                            <option key={st._id} value={st.name}>{st.name} ({st.role})</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="flex items-end">
+                        <button 
+                          onClick={() => {
+                            if (!selectedPOSServiceId) {
+                              showToast("Please choose a service rate!", "error");
+                              return;
+                            }
+                            const service = billingServices.find(s => s._id === selectedPOSServiceId);
+                            if (!service) return;
+
+                            const item = {
+                              id: Date.now().toString(),
+                              serviceId: service._id,
+                              name: service.name,
+                              price: Number(service.price),
+                              staff: selectedPOSStaffId || "Walk-in Staff/None"
+                            };
+
+                            setInvoiceCart([...invoiceCart, item]);
+                            setSelectedPOSServiceId('');
+                            setSelectedPOSStaffId('');
+                            showToast("Item added to invoice!", "success");
+                          }}
+                          className="gold-button w-full py-2.5 text-xs font-bold uppercase tracking-wider"
+                        >
+                          + Add Item
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section 3: Cart Table */}
+                <div className="bg-white rounded-xl shadow-sm border border-[#d4af37]/20 overflow-hidden">
+                  <div className="p-4 border-b border-[#d4af37]/10 bg-stone-50">
+                    <h3 className="font-serif font-bold text-[#4a2511] text-sm">Invoice Cart List</h3>
+                  </div>
+                  <table className="w-full text-left text-sm">
+                    <thead>
+                      <tr className="bg-[#fdf5eb] text-[#4a2511] text-xs font-bold uppercase">
+                        <th className="p-3">Service</th>
+                        <th className="p-3">Staff</th>
+                        <th className="p-3 text-right">Price</th>
+                        <th className="p-3 text-right">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y">
+                      {invoiceCart.map((item) => (
+                        <tr key={item.id} className="hover:bg-stone-50">
+                          <td className="p-3 font-semibold text-[#4a2511]">{item.name}</td>
+                          <td className="p-3 text-stone-600 text-xs">{item.staff}</td>
+                          <td className="p-3 text-right font-mono">LKR {item.price.toLocaleString()}</td>
+                          <td className="p-3 text-right">
+                            <button 
+                              onClick={() => {
+                                setInvoiceCart(invoiceCart.filter(i => i.id !== item.id));
+                                showToast("Item removed from cart", "success");
+                              }}
+                              className="text-red-600 hover:text-red-800 text-xs font-bold"
+                            >
+                              Remove
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                      {invoiceCart.length === 0 && (
+                        <tr>
+                          <td colSpan={4} className="p-6 text-center text-gray-400 italic text-xs">No items added to invoice yet.</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Right Side: Receipt Thermal View & Actions */}
+              <div className="lg:col-span-5 space-y-6">
+                <div className="bg-white border border-[#d4af37]/30 rounded-xl shadow-md p-6">
+                  
+                  {/* Print invoice receipt area */}
+                  <div 
+                    id="print-section" 
+                    className="border border-stone-300 p-6 bg-stone-50 rounded-lg shadow-inner text-black font-mono text-xs space-y-4 max-w-[350px] mx-auto bg-white"
+                  >
+                    <div className="text-center space-y-1">
+                      <h4 className="font-bold text-sm uppercase">MATHUMI BRIDAL</h4>
+                      <p className="text-[10px] text-stone-600">Boutique & Salon</p>
+                      <p className="text-[9px] text-stone-500">Trinco Road, Near Signal Light, Batticaloa</p>
+                      <p className="text-[9px] text-stone-500">Tel: +94 77 123 4567</p>
+                    </div>
+
+                    <div className="border-t border-dashed border-stone-400 pt-2 space-y-1 text-[10px]">
+                      <p><strong>Date:</strong> {new Date().toLocaleDateString()}</p>
+                      <p><strong>Time:</strong> {new Date().toLocaleTimeString()}</p>
+                      <p><strong>Customer:</strong> {selectedPOSCustomer ? selectedPOSCustomer.name : 'Walk-in Customer'}</p>
+                      {selectedPOSCustomer && <p><strong>WhatsApp:</strong> {selectedPOSCustomer.whatsapp}</p>}
+                    </div>
+
+                    <div className="border-t border-dashed border-stone-400 pt-2">
+                      <table className="w-full text-left text-[10px]">
+                        <thead>
+                          <tr className="border-b border-dashed border-stone-300 font-bold">
+                            <th>Service</th>
+                            <th className="text-right">Price</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {invoiceCart.map((item) => (
+                            <tr key={item.id}>
+                              <td className="py-1">
+                                {item.name}
+                                <div className="text-[8px] text-stone-500">By: {item.staff}</div>
+                              </td>
+                              <td className="text-right py-1">LKR {item.price.toLocaleString()}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <div className="border-t border-dashed border-stone-400 pt-2 space-y-1 text-[10px]">
+                      <div className="flex justify-between">
+                        <span>Subtotal:</span>
+                        <span>LKR {invoiceCart.reduce((sum, item) => sum + item.price, 0).toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Discount:</span>
+                        <span>LKR {posDiscount.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between font-bold border-t border-dashed border-stone-300 pt-1 text-xs">
+                        <span>GRAND TOTAL:</span>
+                        <span>LKR {Math.max(0, invoiceCart.reduce((sum, item) => sum + item.price, 0) - posDiscount).toLocaleString()}</span>
+                      </div>
+                    </div>
+
+                    <div className="text-center pt-4 text-[9px] text-stone-500">
+                      <p>Thank you for choosing Mathumi!</p>
+                      <p>Have a beautiful day!</p>
+                    </div>
+                  </div>
+
+                  {/* Settings and Print Button */}
+                  <div className="mt-6 space-y-4">
+                    <div>
+                      <label className="block text-xs font-semibold mb-1 text-[#4a2511]">Apply Discount (LKR)</label>
+                      <input 
+                        type="number"
+                        className="w-full p-2 border border-[#d4af37] rounded bg-[#fdf5eb] text-sm focus:outline-none"
+                        value={posDiscount || ''}
+                        onChange={e => setPosDiscount(Number(e.target.value))}
+                        placeholder="Discount amount"
+                      />
+                    </div>
+
+                    <div className="flex gap-2">
+                      <button 
+                        onClick={() => {
+                          if (invoiceCart.length === 0) {
+                            showToast("Add items to the cart before printing!", "error");
+                            return;
+                          }
+                          window.print();
+                        }}
+                        className="gold-button flex-1 py-3 text-sm font-bold uppercase tracking-wide flex justify-center items-center gap-2"
+                      >
+                        🖨️ Print Invoice
+                      </button>
+                      <button 
+                        onClick={() => {
+                          setInvoiceCart([]);
+                          setSelectedPOSCustomer(null);
+                          setPosDiscount(0);
+                          showToast("Cart cleared!", "success");
+                        }}
+                        className="bg-stone-200 text-stone-700 px-4 py-3 rounded-lg text-xs font-bold hover:bg-stone-300 transition"
+                      >
+                        Clear
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : activeTab === 'billingCustomers' ? (
+          <div>
+            <div className="flex justify-between items-center mb-6">
+              <div>
+                <h2 className="text-2xl font-bold font-serif text-[#4a2511]">POS Customer Directory</h2>
+                <p className="text-xs text-gray-500 mt-0.5">Manage customer details for POS invoice generation (deletion disabled to protect billing integrity)</p>
+              </div>
+              <div className="flex gap-3">
+                <input 
+                  type="text" 
+                  placeholder="Search by name / WhatsApp..." 
+                  value={searchCustomer} 
+                  onChange={e => setSearchCustomer(e.target.value)} 
+                  className="p-2 border border-[#d4af37]/40 rounded bg-white text-xs outline-none w-64 focus:border-[#d4af37]"
+                />
+                <button onClick={openAddCustomerModal} className="gold-button px-4 py-2 text-sm shadow">
+                  + Add Customer
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-sm border border-[#d4af37]/20 overflow-x-auto mb-32">
+              <table className="w-full text-left">
+                <thead>
+                  <tr className="bg-[#f4e8d3] text-[#4a2511]">
+                    <th className="p-3 text-xs font-bold">Customer Name</th>
+                    <th className="p-3 text-xs font-bold">WhatsApp Number</th>
+                    <th className="p-3 text-xs font-bold">Phone Number</th>
+                    <th className="p-3 text-xs font-bold">Address</th>
+                    <th className="p-3 text-xs font-bold text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {billingCustomers
+                    .filter(c => 
+                      c.name?.toLowerCase().includes(searchCustomer.toLowerCase()) || 
+                      c.whatsapp?.includes(searchCustomer)
+                    )
+                    .map(c => (
+                      <tr key={c._id} className="border-b hover:bg-[#fdf5eb] text-sm">
+                        <td className="p-3 font-semibold text-[#4a2511]">{c.name}</td>
+                        <td className="p-3 text-[#075e54] font-bold">💬 {c.whatsapp}</td>
+                        <td className="p-3">{c.phone || '—'}</td>
+                        <td className="p-3 text-xs text-gray-600 truncate max-w-xs">{c.address || '—'}</td>
+                        <td className="p-3 text-right space-x-2 whitespace-nowrap">
+                          <button 
+                            onClick={() => { setSelectedCustomer(c); setIsCustomerViewModalOpen(true); }}
+                            className="text-[#4a2511] hover:underline font-bold text-xs"
+                          >
+                            👁 View
+                          </button>
+                          <button 
+                            onClick={() => openEditCustomerModal(c)}
+                            className="text-blue-600 hover:underline font-bold text-xs"
+                          >
+                            ✏️ Edit
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  {billingCustomers.length === 0 && (
+                    <tr>
+                      <td colSpan={5} className="p-4 text-center text-gray-400 italic">No customers found</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
         ) : null}
           </div>
         </div>
@@ -1699,9 +2589,20 @@ export default function AdminDashboard() {
                   <img src={sareeForm.image} alt="Preview" className="h-20 mt-4 mx-auto object-cover border border-[#d4af37] rounded" />
                 )}
               </div>
-              <button type="submit" className="gold-button w-full mt-6 text-sm py-3 uppercase tracking-wide">
-                {isEditing ? 'Save Changes' : 'Add Saree'}
-              </button>
+              <div className="flex gap-3 mt-6">
+                {isEditing && (
+                  <button 
+                    type="button" 
+                    onClick={() => { setIsEditModalOpen(false); handleDeleteSaree(sareeForm._id); }}
+                    className="w-1/3 bg-red-600 hover:bg-red-700 text-white rounded text-xs py-3 uppercase font-bold transition-colors"
+                  >
+                    Delete
+                  </button>
+                )}
+                <button type="submit" className={`${isEditing ? 'w-2/3' : 'w-full'} gold-button text-sm py-3 uppercase tracking-wide font-bold`}>
+                  {isEditing ? 'Save Changes' : 'Add Saree'}
+                </button>
+              </div>
             </form>
           </div>
         </div>
@@ -1892,9 +2793,20 @@ export default function AdminDashboard() {
                   <img src={academyForm.image} alt="Preview" className="h-20 mt-4 mx-auto object-cover border border-[#d4af37] rounded" />
                 )}
               </div>
-              <button type="submit" className="gold-button w-full mt-6 text-sm py-3 uppercase">
-                {isEditingAcademy ? 'Save Changes' : 'Add Course'}
-              </button>
+              <div className="flex gap-3 mt-6">
+                {isEditingAcademy && (
+                  <button 
+                    type="button" 
+                    onClick={() => { setIsAcademyModalOpen(false); handleDeleteAcademy(academyForm._id); }}
+                    className="w-1/3 bg-red-600 hover:bg-red-700 text-white rounded text-xs py-3 uppercase font-bold transition-colors"
+                  >
+                    Delete
+                  </button>
+                )}
+                <button type="submit" className={`${isEditingAcademy ? 'w-2/3' : 'w-full'} gold-button text-sm py-3 uppercase tracking-wide font-bold`}>
+                  {isEditingAcademy ? 'Save Changes' : 'Add Course'}
+                </button>
+              </div>
             </form>
           </div>
         </div>
@@ -2459,6 +3371,200 @@ export default function AdminDashboard() {
               >
                 Close
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* POS Billing Category Add/Edit Modal */}
+      {isBillingCategoryModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-[1000] p-4">
+          <div className="gold-panel p-8 w-full max-w-md relative max-h-[90vh] overflow-y-auto">
+            <button onClick={() => setIsBillingCategoryModalOpen(false)} className="absolute top-4 right-4 text-2xl font-bold text-[#4a2511]">&times;</button>
+            <h2 className="text-2xl font-bold text-[#4a2511] mb-6 uppercase text-center border-b border-[#d4af37] pb-2 font-serif">
+              {isEditingBillingCategory ? 'Edit Category' : 'Add New Category'}
+            </h2>
+            <form onSubmit={handleSaveBillingCategory} className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold mb-1 text-[#4a2511]">Category Name</label>
+                <input 
+                  required 
+                  type="text" 
+                  className="w-full p-2 border border-[#d4af37] rounded bg-[#fdf5eb] focus:outline-none focus:ring-2 focus:ring-[#cba135]" 
+                  value={billingCategoryForm.name} 
+                  onChange={e => setBillingCategoryForm({...billingCategoryForm, name: e.target.value})} 
+                />
+              </div>
+              <button type="submit" className="gold-button w-full mt-6 text-sm py-3 uppercase tracking-wide font-bold">
+                {isEditingBillingCategory ? 'Save Changes' : 'Add Category'}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* POS Billing Service Add/Edit Modal */}
+      {isBillingServiceModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-[1000] p-4">
+          <div className="gold-panel p-8 w-full max-w-md relative max-h-[90vh] overflow-y-auto">
+            <button onClick={() => setIsBillingServiceModalOpen(false)} className="absolute top-4 right-4 text-2xl font-bold text-[#4a2511]">&times;</button>
+            <h2 className="text-2xl font-bold text-[#4a2511] mb-6 uppercase text-center border-b border-[#d4af37] pb-2 font-serif">
+              {isEditingBillingService ? 'Edit Service' : 'Add New Service'}
+            </h2>
+            <form onSubmit={handleSaveBillingService} className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold mb-1 text-[#4a2511]">Service Name</label>
+                <input 
+                  required 
+                  type="text" 
+                  className="w-full p-2 border border-[#d4af37] rounded bg-[#fdf5eb] focus:outline-none focus:ring-2 focus:ring-[#cba135]" 
+                  value={billingServiceForm.name} 
+                  onChange={e => setBillingServiceForm({...billingServiceForm, name: e.target.value})} 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-1 text-[#4a2511]">Main Category</label>
+                <select 
+                  required
+                  className="w-full p-2 border border-[#d4af37] rounded bg-[#fdf5eb] focus:outline-none focus:ring-2 focus:ring-[#cba135]" 
+                  value={billingServiceForm.category} 
+                  onChange={e => setBillingServiceForm({...billingServiceForm, category: e.target.value})}
+                >
+                  <option value="" disabled>-- Select Category --</option>
+                  {billingCategories.map(cat => (
+                    <option key={cat._id} value={cat.name}>{cat.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex gap-4">
+                <div className="w-1/3">
+                  <label className="block text-sm font-semibold mb-1 text-[#4a2511]">Price (LKR)</label>
+                  <input 
+                    required 
+                    type="number" 
+                    className="w-full p-2 border border-[#d4af37] rounded bg-[#fdf5eb] focus:outline-none focus:ring-2 focus:ring-[#cba135]" 
+                    value={billingServiceForm.price} 
+                    onChange={e => setBillingServiceForm({...billingServiceForm, price: e.target.value})} 
+                  />
+                </div>
+                <div className="w-1/3">
+                  <label className="block text-sm font-semibold mb-1 text-[#4a2511]">Commission</label>
+                  <input 
+                    required 
+                    type="number" 
+                    className="w-full p-2 border border-[#d4af37] rounded bg-[#fdf5eb] focus:outline-none focus:ring-2 focus:ring-[#cba135]" 
+                    value={billingServiceForm.commissionValue} 
+                    onChange={e => setBillingServiceForm({...billingServiceForm, commissionValue: e.target.value})} 
+                  />
+                </div>
+                <div className="w-1/3">
+                  <label className="block text-sm font-semibold mb-1 text-[#4a2511]">Type</label>
+                  <select 
+                    required
+                    className="w-full p-2 border border-[#d4af37] rounded bg-[#fdf5eb] focus:outline-none focus:ring-2 focus:ring-[#cba135]" 
+                    value={billingServiceForm.commissionType} 
+                    onChange={e => setBillingServiceForm({...billingServiceForm, commissionType: e.target.value})}
+                  >
+                    <option value="percentage">Percent (%)</option>
+                    <option value="fixed">Fixed (LKR)</option>
+                  </select>
+                </div>
+              </div>
+              <button type="submit" className="gold-button w-full mt-6 text-sm py-3 uppercase tracking-wide font-bold">
+                {isEditingBillingService ? 'Save Changes' : 'Add Service'}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Customer Form Modal */}
+      {isCustomerModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-[1000] p-4">
+          <div className="gold-panel p-8 w-full max-w-md relative max-h-[90vh] overflow-y-auto">
+            <button onClick={() => setIsCustomerModalOpen(false)} className="absolute top-4 right-4 text-2xl font-bold text-[#4a2511]">&times;</button>
+            <h2 className="text-2xl font-bold text-[#4a2511] mb-6 uppercase text-center border-b border-[#d4af37] pb-2 font-serif">
+              {isEditingCustomer ? 'Edit Customer Info' : 'Register New Customer'}
+            </h2>
+            <form onSubmit={handleSaveCustomer} className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold mb-1 text-[#4a2511]">Customer Name (Required)</label>
+                <input 
+                  required 
+                  type="text" 
+                  className="w-full p-2 border border-[#d4af37] rounded bg-[#fdf5eb] focus:outline-none focus:ring-2 focus:ring-[#cba135]" 
+                  value={customerForm.name} 
+                  onChange={e => setCustomerForm({...customerForm, name: e.target.value})} 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-1 text-[#4a2511]">WhatsApp Number (Required - numbers only)</label>
+                <input 
+                  required 
+                  type="text" 
+                  placeholder="e.g. 94771234567"
+                  className="w-full p-2 border border-[#d4af37] rounded bg-[#fdf5eb] focus:outline-none focus:ring-2 focus:ring-[#cba135]" 
+                  value={customerForm.whatsapp} 
+                  onChange={e => setCustomerForm({...customerForm, whatsapp: e.target.value})} 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-1 text-[#4a2511]">Phone Number (Optional)</label>
+                <input 
+                  type="text" 
+                  className="w-full p-2 border border-[#d4af37] rounded bg-[#fdf5eb] focus:outline-none focus:ring-2 focus:ring-[#cba135]" 
+                  value={customerForm.phone} 
+                  onChange={e => setCustomerForm({...customerForm, phone: e.target.value})} 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-1 text-[#4a2511]">Address (Optional)</label>
+                <textarea 
+                  rows={3} 
+                  className="w-full p-2 border border-[#d4af37] rounded bg-[#fdf5eb] focus:outline-none focus:ring-2 focus:ring-[#cba135]" 
+                  value={customerForm.address} 
+                  onChange={e => setCustomerForm({...customerForm, address: e.target.value})} 
+                />
+              </div>
+              <button type="submit" className="gold-button w-full mt-6 text-sm py-3 uppercase tracking-wide font-bold">
+                💾 Save Customer
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Customer View Details Modal */}
+      {isCustomerViewModalOpen && selectedCustomer && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center" onClick={() => setIsCustomerViewModalOpen(false)}>
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+          <div className="relative bg-white rounded-2xl shadow-2xl border border-[#d4af37]/40 w-full max-w-md mx-4 overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-gradient-to-r from-[#4a2511] to-[#800020] px-6 py-4 flex items-center justify-between">
+              <h3 className="text-white font-serif font-bold text-lg tracking-wide">👤 Customer Details</h3>
+              <button onClick={() => setIsCustomerViewModalOpen(false)} className="text-white/80 hover:text-white text-2xl transition-colors">×</button>
+            </div>
+            <div className="px-6 py-5 space-y-4 max-h-[70vh] overflow-y-auto text-[#4a2511]">
+              <div className="space-y-3">
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Name</p>
+                  <p className="font-bold text-base">{selectedCustomer.name}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">WhatsApp Number</p>
+                  <p className="font-bold text-base text-[#075e54]">💬 {selectedCustomer.whatsapp}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Phone Number</p>
+                  <p className="font-bold text-base">{selectedCustomer.phone || '—'}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Address</p>
+                  <p className="text-sm font-medium">{selectedCustomer.address || '—'}</p>
+                </div>
+              </div>
+            </div>
+            <div className="px-6 py-4 bg-[#fdf5eb] border-t border-[#d4af37]/20 flex justify-end">
+              <button onClick={() => setIsCustomerViewModalOpen(false)} className="px-6 py-2 bg-gradient-to-r from-[#4a2511] to-[#800020] text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity shadow-md">Close</button>
             </div>
           </div>
         </div>

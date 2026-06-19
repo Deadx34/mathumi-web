@@ -21,7 +21,7 @@ const nextConfig: NextConfig = {
 
   // Expose NEXT_PUBLIC_ env vars to the client
   env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'https://api.mathumibridal.com',
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
   },
 
   // Enable standalone output for cPanel Node.js App deployment

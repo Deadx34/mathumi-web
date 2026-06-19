@@ -20,6 +20,35 @@ interface CourseContextType {
 
 const CourseContext = createContext<CourseContextType | undefined>(undefined);
 
+const DEFAULT_COURSES: Course[] = [
+  {
+    _id: 'ac1',
+    title: 'Professional Bridal Makeup Course',
+    duration: '3 Months',
+    price: 'Rs. 45,000',
+    image: '/hero-saree.png',
+    syllabus: [
+      'Day & Night Makeup',
+      'Bridal Draping',
+      'Hairstyling Basics',
+      'Product Knowledge'
+    ]
+  },
+  {
+    _id: 'ac2',
+    title: 'Self Grooming Mastery',
+    duration: '1 Month',
+    price: 'Rs. 15,000',
+    image: '/hero-saree.png',
+    syllabus: [
+      'Daily Skincare Routine',
+      'Natural Makeup Look',
+      'Basic Blowdry',
+      'Wardrobe Styling'
+    ]
+  }
+];
+
 export function CourseProvider({ children }: { children: ReactNode }) {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(false);
@@ -34,21 +63,25 @@ export function CourseProvider({ children }: { children: ReactNode }) {
         throw new Error(`Failed to fetch courses: ${res.statusText}`);
       }
       const data = await res.json();
-      setCourses(data || []);
+      setCourses(data && data.length > 0 ? data : DEFAULT_COURSES);
     } catch (err) {
-      console.error('Error fetching courses:', err);
-      setError(err instanceof Error ? err.message : 'Unknown error');
-      setCourses([]);
+      console.warn('Error fetching courses, using fallback data:', err);
+      setCourses(DEFAULT_COURSES);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchCourses();
+    const timer = setTimeout(() => {
+      fetchCourses();
+    }, 0);
     // Refresh courses every 30 seconds to show admin updates
     const interval = setInterval(fetchCourses, 30000);
-    return () => clearInterval(interval);
+    return () => {
+      clearTimeout(timer);
+      clearInterval(interval);
+    };
   }, []);
 
   return (

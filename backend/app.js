@@ -222,6 +222,9 @@ generateCRUDRoutes('salon-services');
 generateCRUDRoutes('salon-categories');
 generateCRUDRoutes('gallery');
 generateCRUDRoutes('staff');
+generateCRUDRoutes('billing-categories');
+generateCRUDRoutes('billing-services');
+generateCRUDRoutes('customers');
 
 // ======================== BOOKINGS & INQUIRIES ========================
 

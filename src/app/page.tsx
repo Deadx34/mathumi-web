@@ -86,38 +86,22 @@ export default async function Home() {
         {/* Left: Hero Text Content with Creative Copywriting */}
         <div className="w-full lg:w-[48%] flex flex-col items-center lg:items-start justify-center text-center lg:text-left px-4 lg:px-0 py-1 z-20">
           <span className="text-[#6e1224]/80 font-sans font-bold tracking-[0.3em] uppercase text-[9px] sm:text-[10px] mb-1 block">
-            A PRESTIGE SYNERGY · BATTICALOA & COLOMBO, SRI LANKA
+            SRI LANKA TO WORLD WIDE
           </span>
           <span className="text-[#d4af37] font-cursive text-xl sm:text-2xl lg:text-3xl block font-normal leading-tight mb-1">
             Welcome to the Sanctuary of Mathumi Bridal Care
           </span>
           
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-cursive text-[#4a2511] leading-none mb-1 font-normal">
-            Mathumi
+            Mathumi Bridal
           </h1>
           <span className="text-[#6e1224] font-cursive text-base sm:text-lg lg:text-xl block leading-normal mb-2">
             Where the sacred threads of tradition meet the delicate grace of bridal beauty—exquisitely woven in silk, and masterfully taught to inspire generations.
           </span>
           
-          <div className="kolam-separator justify-center lg:justify-start w-full max-w-[260px] mx-auto lg:mx-0 mt-1 mb-2">
-            <div className="kolam-line"></div>
-            <div className="kolam-ornament font-light tracking-[0.3em] text-[#d4af37]">✧</div>
-            <div className="kolam-line"></div>
-          </div>
-
-          <p className="text-[#6e1224] font-sans font-bold text-[10px] sm:text-xs tracking-[0.15em] uppercase mb-1.5">
-            Bespoke Bridal Styling • Pure Kanchipuram Silks • Professional Academy
-          </p>
-          <p className="text-[#1c1512]/80 font-sans text-xs sm:text-sm font-medium max-w-xl mx-auto lg:mx-0 mb-3 leading-relaxed">
-            Your journey to elegance starts here. Explore our exquisite collections and cultivate professional beauty mastery in Batticaloa.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 w-full justify-center lg:justify-start mt-1">
-            <Link href="/booking" className="gold-button rounded-full text-center py-3 px-8 text-[10px] sm:text-xs tracking-[0.2em] font-sans font-bold shadow-md uppercase block w-[220px] sm:w-auto mx-auto lg:mx-0 transition-transform duration-300 hover:scale-105 active:scale-95">
-              BOOK NOW
-            </Link>
-            <Link href="/boutique" className="px-8 py-3 border-2 border-[#d4af37] text-[#4a2511] font-sans font-bold text-[10px] sm:text-xs tracking-[0.2em] uppercase bg-transparent hover:bg-[#6e1224] hover:text-white hover:border-[#6e1224] transition-all rounded-full text-center cursor-pointer block w-[220px] sm:w-auto mx-auto lg:mx-0 transition-transform duration-300 hover:scale-105 active:scale-95">
-              THE COLLECTION
+          <div className="w-full flex justify-center lg:justify-start mt-6">
+            <Link href="/booking" className="gold-button rounded-full text-center py-4.5 px-10 text-xs sm:text-sm tracking-[0.25em] font-sans font-bold shadow-[0_4px_20px_rgba(212,175,55,0.3)] uppercase block w-[280px] sm:w-auto mx-auto lg:mx-0 transition-all duration-300 hover:scale-105 hover:shadow-[0_8px_30px_rgba(212,175,55,0.5)] active:scale-95">
+              BOOKING FOR BRIDAL
             </Link>
           </div>
         </div>
@@ -128,38 +112,30 @@ export default async function Home() {
           <div className="relative w-full max-w-[480px] h-[280px] sm:h-[380px] md:h-[430px] lg:h-[480px]">
 
             {/* === CARD 1: Main Background Card (large, top-left) === */}
-            <div className="absolute top-0 left-6 w-[75%] h-[85%] transition-all duration-500 ease-out hover:-translate-y-4 hover:scale-[1.03] z-10 hover:z-30 cursor-pointer group">
+            <div className="absolute top-0 left-6 w-[75%] h-[85%] transition-all duration-500 ease-out hover:-translate-y-4 hover:scale-[1.03] z-10 hover:z-30 cursor-pointer group flex items-center justify-center">
               <img
                 src="/home_header.png"
                 alt="Mathumi Bride"
-                className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
+                className="max-w-full max-h-full w-auto h-auto rounded-2xl border-4 border-white shadow-[0_8px_30px_rgba(255,255,255,0.6)] group-hover:shadow-[0_15px_40px_rgba(255,255,255,0.8)] transition-all duration-700 group-hover:scale-105"
               />
             </div>
 
             {/* === CARD 2: Bottom-Left Offset Card === */}
-            <div className="absolute bottom-2 left-0 w-[48%] h-[52%] rounded-2xl overflow-hidden border-4 border-white bg-[#fdf5eb] shadow-[0_12px_30px_rgba(74,37,17,0.22)] transition-all duration-500 ease-out hover:-translate-y-4 hover:scale-[1.06] hover:shadow-[0_22px_45px_rgba(74,37,17,0.32)] z-20 hover:z-30 cursor-pointer group -rotate-3 hover:rotate-0">
+            <div className="absolute bottom-2 left-0 w-[48%] h-[52%] transition-all duration-500 ease-out hover:-translate-y-4 hover:scale-[1.06] z-20 hover:z-30 cursor-pointer group -rotate-3 hover:rotate-0 flex items-center justify-center">
               <img
                 src="/imges/s8.webp"
                 alt="Mathumi Bridal Portrait"
-                className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                className="max-w-full max-h-full w-auto h-auto rounded-2xl border-4 border-white shadow-[0_8px_30px_rgba(255,255,255,0.6)] group-hover:shadow-[0_15px_40px_rgba(255,255,255,0.8)] transition-all duration-700 group-hover:scale-105"
               />
-              <div className="absolute inset-1.5 border border-[#d4af37]/25 rounded-xl pointer-events-none z-10" />
-              <div className="absolute bottom-2 left-2 bg-[#1c1512]/60 backdrop-blur-sm rounded-full px-2.5 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <span className="text-[#d4af37] font-sans font-bold text-[7px] tracking-[0.18em] uppercase">Portrait</span>
-              </div>
             </div>
 
             {/* === CARD 3: Bottom-Right Offset Card === */}
-            <div className="absolute bottom-0 right-0 w-[46%] h-[46%] rounded-2xl overflow-hidden border-4 border-white bg-[#fdf5eb] shadow-[0_12px_30px_rgba(74,37,17,0.22)] transition-all duration-500 ease-out hover:-translate-y-4 hover:scale-[1.06] hover:shadow-[0_22px_45px_rgba(74,37,17,0.32)] z-20 hover:z-30 cursor-pointer group rotate-2 hover:rotate-0">
+            <div className="absolute bottom-0 right-0 w-[46%] h-[46%] transition-all duration-500 ease-out hover:-translate-y-4 hover:scale-[1.06] z-20 hover:z-30 cursor-pointer group rotate-2 hover:rotate-0 flex items-center justify-center">
               <img
-                src="/imges/s13.webp"
+                src="/imges/sar.jpeg"
                 alt="Mathumi Traditional Bridal"
-                className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                className="max-w-full max-h-full w-auto h-auto rounded-2xl border-4 border-white shadow-[0_8px_30px_rgba(255,255,255,0.6)] group-hover:shadow-[0_15px_40px_rgba(255,255,255,0.8)] transition-all duration-700 group-hover:scale-105"
               />
-              <div className="absolute inset-1.5 border border-[#d4af37]/25 rounded-xl pointer-events-none z-10" />
-              <div className="absolute bottom-2 left-2 bg-[#1c1512]/60 backdrop-blur-sm rounded-full px-2.5 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <span className="text-[#d4af37] font-sans font-bold text-[7px] tracking-[0.18em] uppercase">Traditional</span>
-              </div>
             </div>
 
             {/* Gold ✧ floating ornament */}
@@ -177,10 +153,10 @@ export default async function Home() {
         <div className="gold-panel p-6 sm:p-8 flex flex-col items-center text-center rounded bg-transparent border-2 border-[#d4af37]">
           <span className="text-[#6e1224] font-sans font-bold text-[9px] tracking-[0.25em] uppercase mb-1">MATHUMI BEAUTY SANCTUARY</span>
           <h2 className="text-lg sm:text-xl font-serif font-bold text-[#4a2511] mb-4 uppercase tracking-[0.1em] h-8 flex items-center justify-center">
-            BEAUTY SALON
+            HAIR & BEAUTY SALON
           </h2>
-          <div className="w-full h-[260px] relative mb-6 rounded overflow-hidden shadow-inner border border-[#c2a670]/20 bg-transparent">
-            <Image src="/imges/s12.webp" alt="Beauty Salon Facial" fill className="object-contain transition-transform duration-500 hover:scale-105" />
+          <div className="w-full h-[260px] relative mb-6">
+            <Image src="/imges/salon.webp" alt="Beauty Salon Facial" fill className="object-contain transition-transform duration-500 hover:scale-105" />
           </div>
           <div className="text-[#d4af37] text-md mb-2">✧</div>
           <p className="text-xs text-[#1c1512]/80 mb-6 flex-grow leading-relaxed font-semibold font-sans px-2">
@@ -199,8 +175,8 @@ export default async function Home() {
           <h2 className="text-lg sm:text-xl font-serif font-bold text-[#4a2511] mb-4 uppercase tracking-[0.1em] h-8 flex items-center justify-center">
             MATHUMI ACADEMY
           </h2>
-          <div className="w-full h-[260px] relative mb-6 rounded overflow-hidden shadow-inner border border-[#c2a670]/20 bg-transparent">
-            <Image src="/imges/sa1.webp" alt="Academy Training" fill className="object-contain transition-transform duration-500 hover:scale-105" />
+          <div className="w-full h-[260px] relative mb-6">
+            <Image src="/imges/s.webp" alt="Academy Training" fill className="object-contain transition-transform duration-500 hover:scale-105" />
           </div>
           <p className="text-xs text-[#1c1512]/80 mb-6 flex-grow leading-relaxed font-semibold font-sans px-2">
             Professional makeup instruction, saree draping masterclasses, and certified courses for upcoming wedding styling specialists.
@@ -218,8 +194,8 @@ export default async function Home() {
           <h2 className="text-lg sm:text-xl font-serif font-bold text-[#4a2511] mb-4 uppercase tracking-[0.1em] h-8 flex items-center justify-center">
             MATHUMI BRIDAL BOUTIQUE
           </h2>
-          <div className="w-full h-[260px] relative mb-6 rounded overflow-hidden shadow-inner border border-[#c2a670]/20 bg-transparent">
-            <img src="/imges/sa6.webp" alt="Mathumi Bridal Styling" className="absolute inset-0 w-full h-full object-contain object-top transition-transform duration-500 hover:scale-105" />
+          <div className="w-full h-[260px] relative mb-6">
+            <img src="/imges/img.webp" alt="Mathumi Bridal Styling" className="absolute inset-0 w-full h-full object-contain object-top transition-transform duration-500 hover:scale-105" />
           </div>
           <p className="text-xs text-[#1c1512]/80 mb-6 flex-grow leading-relaxed font-semibold font-sans px-2">
             Our pure Kanchipuram fabric of fine gold zari threads, hand-worked designer blouses, and lehengas are created and curated.
@@ -228,156 +204,6 @@ export default async function Home() {
             <Link href="/boutique" className="gold-button w-full py-3 rounded-full text-center block text-[10px] tracking-widest font-sans font-bold">
               LEARN MORE
             </Link>
-          </div>
-        </div>
-
-      </div>
-
-
-      {/* ----------------- SECTION 2: EXTENSIVE ACADEMY & SALON MENU (Mockup 1) ----------------- */}
-      <div className="w-full mb-10 flex flex-col items-center text-center">
-        <span className="text-[#6e1224] font-sans font-bold text-[10px] tracking-[0.25em] uppercase mb-2">
-          EXPERIENCE RADIANCE
-        </span>
-        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-[#4a2511] uppercase tracking-[0.08em] leading-tight">
-          MATHUMI BEAUTY SALON & ACADEMY
-        </h2>
-        
-        <div className="kolam-separator my-6 max-w-xl">
-          <div className="kolam-line"></div>
-          <div className="kolam-ornament">✧</div>
-          <div className="kolam-line"></div>
-        </div>
-      </div>
-
-      {/* Split Section Layout (Left Discover/Training + Right Portrait Card) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 w-full mb-24 items-stretch">
-        
-        {/* Left Columns (Discover Panel & Training Cards) */}
-        <div className="lg:col-span-8 flex flex-col justify-between gap-8">
-          
-          {/* Discover Radiance Horizontal Panel */}
-          <div className="gold-panel p-6 sm:p-8 rounded border-2 border-[#d4af37] w-full flex flex-col md:flex-row items-center gap-6 justify-between shadow-sm bg-transparent">
-            <div className="flex flex-col items-start text-left md:max-w-[55%]">
-              <h3 className="text-xl font-serif font-bold text-[#4a2511] mb-4 tracking-wide">
-                Discover your Radiance, Learn the Art of Beauty.
-              </h3>
-              
-              {/* Three Thumbnails Row */}
-              <div className="flex items-center gap-3 mt-2">
-                <div className="relative w-16 h-16 rounded overflow-hidden border border-[#d4af37]/40">
-                  <Image src="/imges/sa11.webp" alt="Mehndi Thumb" fill className="object-contain" />
-                </div>
-                <div className="relative w-16 h-16 rounded overflow-hidden border border-[#d4af37]/40">
-                  <Image src="/imges/sa1.webp" alt="Hair Thumb" fill className="object-contain" />
-                </div>
-                <div className="relative w-16 h-16 rounded overflow-hidden border border-[#d4af37]/40">
-                  <Image src="/imges/s10.webp" alt="Skincare Thumb" fill className="object-contain" />
-                </div>
-              </div>
-            </div>
-
-            {/* Quick Links on the Right of Discover Box */}
-            <div className="flex flex-col gap-2.5 w-full md:w-[40%] items-stretch">
-              <Link href="/booking?service=bridal" className="text-left font-sans font-bold text-[10px] tracking-wider uppercase bg-[#6e1224]/5 border border-[#d4af37]/50 rounded-lg py-2.5 px-4 text-[#4a2511] hover:bg-[#6e1224] hover:text-white hover:border-[#6e1224] transition-all flex justify-between items-center">
-                <span>Bridal Makeup</span> <span>➔</span>
-              </Link>
-              <Link href="/booking?service=skin" className="text-left font-sans font-bold text-[10px] tracking-wider uppercase bg-[#6e1224]/5 border border-[#d4af37]/50 rounded-lg py-2.5 px-4 text-[#4a2511] hover:bg-[#6e1224] hover:text-white hover:border-[#6e1224] transition-all flex justify-between items-center">
-                <span>Skin Services</span> <span>➔</span>
-              </Link>
-              <Link href="/booking?service=hair" className="text-left font-sans font-bold text-[10px] tracking-wider uppercase bg-[#6e1224]/5 border border-[#d4af37]/50 rounded-lg py-2.5 px-4 text-[#4a2511] hover:bg-[#6e1224] hover:text-white hover:border-[#6e1224] transition-all flex justify-between items-center">
-                <span>Hair Artistry</span> <span>➔</span>
-              </Link>
-            </div>
-          </div>
-
-          {/* Sub-cards Row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-            
-            {/* Card Left: Mathumi Beauty Salon */}
-            <div className="gold-panel p-6 rounded border-2 border-[#d4af37] flex flex-col justify-between items-stretch shadow-sm bg-transparent">
-              <div>
-                <h3 className="text-base sm:text-lg font-serif font-bold text-[#4a2511] mb-4 uppercase tracking-wider text-center border-b border-[#d4af37]/20 pb-2">
-                  MATHUMI BEAUTY SALON
-                </h3>
-                <div className="flex justify-center mb-4">
-                  <img src="/imges/sa11.webp" alt="Salon Services" className="h-40 w-auto rounded border border-[#d4af37]/20 object-contain block" />
-                </div>
-                <ul className="text-xs text-[#1c1512]/80 space-y-3 font-semibold font-sans mb-6 px-1">
-                  {services.length > 0 ? (
-                    [...services]
-                      .sort((a: any, b: any) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
-                      .slice(0, 3)
-                      .map((service: any) => (
-                        <li key={service._id} className="flex items-center truncate">
-                          <span className="text-[#c2a670] mr-2">✦</span> {service.title}
-                        </li>
-                      ))
-                  ) : (
-                    <>
-                      <li className="flex items-center"><span className="text-[#c2a670] mr-2">✦</span> Hair Styling & Cuts</li>
-                      <li className="flex items-center"><span className="text-[#c2a670] mr-2">✦</span> Organic Skin Care</li>
-                    </>
-                  )}
-                </ul>
-              </div>
-              <Link href="/salon" className="gold-button py-2.5 rounded-full text-center block text-[9px] tracking-widest font-sans font-bold">
-                LEARN MORE
-              </Link>
-            </div>
-
-            {/* Card Right: Academy & Training */}
-            <div className="gold-panel p-6 rounded border-2 border-[#d4af37] flex flex-col justify-between items-stretch shadow-sm bg-transparent">
-              <div>
-                <h3 className="text-base sm:text-lg font-serif font-bold text-[#4a2511] mb-4 uppercase tracking-wider text-center border-b border-[#d4af37]/20 pb-2">
-                  ACADEMY & TRAINING
-                </h3>
-                <div className="flex justify-center mb-4">
-                  <img src="/imges/sa1.webp" alt="Academy Class" className="h-40 w-auto rounded border border-[#d4af37]/20 object-contain block" />
-                </div>
-                <ul className="text-xs text-[#1c1512]/80 space-y-3 font-semibold font-sans mb-6 px-1">
-                  {courses.length > 0 ? (
-                    [...courses]
-                      .sort((a: any, b: any) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
-                      .slice(0, 3)
-                      .map((course: any) => (
-                        <li key={course._id} className="flex items-center truncate">
-                          <span className="text-[#c2a670] mr-2">✦</span> {course.title}
-                        </li>
-                      ))
-                  ) : (
-                    <>
-                      <li className="flex items-center"><span className="text-[#c2a670] mr-2">✦</span> Saree Draping Masterclass</li>
-                      <li className="flex items-center"><span className="text-[#c2a670] mr-2">✦</span> Saree Draping Masterclass</li>
-                    </>
-                  )}
-                </ul>
-              </div>
-              <Link href="/academy" className="gold-button py-2.5 rounded-full text-center block text-[9px] tracking-widest font-sans font-bold">
-                LEARN MORE
-              </Link>
-            </div>
-
-          </div>
-
-        </div>
-
-        {/* Right Column (Big Vertical Bridalpamper card) */}
-        <div className="lg:col-span-4 flex flex-col items-stretch">
-          <div className="gold-panel p-5 rounded border-2 border-[#d4af37] h-full flex flex-col justify-between shadow-sm relative overflow-hidden bg-transparent">
-            {/* Border Accent Overlay */}
-            <div className="absolute inset-1.5 border border-[#d4af37]/35 pointer-events-none z-10 rounded"></div>
-            
-            <div className="flex justify-center mb-4 relative z-20">
-              <img src="/imges/s14.webp" alt="Bride Pampering Facial" className="h-[400px] md:h-[460px] lg:h-[500px] w-auto rounded border border-[#d4af37]/20 object-contain block transition-transform duration-700 hover:scale-105" />
-            </div>
-
-            <div className="text-center pt-2 flex flex-col items-center">
-              <div className="w-16 h-px bg-[#d4af37]/30 mb-2"></div>
-              <Link href="/booking" className="gold-button w-full py-3.5 rounded-full text-center block text-[10px] tracking-widest font-sans font-bold relative z-20">
-                LEARN MORE
-              </Link>
-            </div>
           </div>
         </div>
 
