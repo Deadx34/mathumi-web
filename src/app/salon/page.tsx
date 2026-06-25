@@ -153,7 +153,21 @@ export default function SalonPage() {
 
   const [activeRegion, setActiveRegion] = useState('batticaloa');
 
-  const regions = [
+  type SalonPackage = {
+    name: string;
+    price: string;
+    note?: string;
+    features: string[];
+    isPopular?: boolean;
+  };
+
+  type SalonRegionData = {
+    id: string;
+    label: string;
+    packages: SalonPackage[];
+  };
+
+  const regions: SalonRegionData[] = [
     {
       id: 'batticaloa',
       label: 'Batticaloa Area',
