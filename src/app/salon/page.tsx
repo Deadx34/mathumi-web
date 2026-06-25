@@ -449,12 +449,7 @@ export default function SalonPage() {
               ))}
             </div>
 
-            {/* WITH LOVE Accent */}
-            <div className="text-center mt-6">
-              <div className="font-cursive text-xl text-[#4a2511] italic font-normal tracking-wide">
-                With Love — Mathumi Thayaparan
-              </div>
-            </div>
+
           </div>
 
           {/* Level 1 Services Grid */}

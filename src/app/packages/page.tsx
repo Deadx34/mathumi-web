@@ -269,15 +269,7 @@ export default function PackagesPage() {
         </Link>
       </div>
 
-      {/* "WITH LOVE - Mathumi Thayaparan" Accent */}
-      <div className="text-center mt-12 mb-6">
-        <span className="text-[10px] tracking-[0.4em] font-sans font-semibold text-[#6e1224]/70 uppercase block mb-1">
-          Crafted For Royal Elegance
-        </span>
-        <div className="font-cursive text-2xl sm:text-3xl text-[#4a2511] italic font-normal tracking-wide mt-2">
-          With Love — Mathumi Thayaparan
-        </div>
-      </div>
+
 
     </div>
   );
