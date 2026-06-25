@@ -78,9 +78,9 @@ export default function Footer() {
         </div>
 
         {/* Copyright Bar */}
-        <div className="pt-8 border-t border-[#c2a670]/10 text-center text-[9px] font-sans font-bold uppercase tracking-[0.2em] text-[#1c1512]/50 flex flex-col gap-1 items-center">
+        <div className="pt-8 border-t border-[#c2a670]/10 text-center text-[11px] sm:text-xs font-sans font-bold uppercase tracking-[0.2em] text-[#1c1512]/60 flex flex-col gap-1 items-center">
           <span>© 2026 Mathumi Hair and Beauty. Crafted for Royal Elegance.</span>
-          <a href="https://kingsparrowgroups.com/" target="_blank" rel="noopener noreferrer" className="text-[8px] text-[#6e1224]/70 font-semibold tracking-wider normal-case mt-1 hover:text-[#800020] hover:underline transition-all">
+          <a href="https://kingsparrowgroups.com/" target="_blank" rel="noopener noreferrer" className="text-[10px] sm:text-[10.5px] text-[#6e1224]/80 font-semibold tracking-wider normal-case mt-1 hover:text-[#800020] hover:underline transition-all">
             Designed by King Sparrow Group of Companies (Pvt) Ltd.
           </a>
         </div>
