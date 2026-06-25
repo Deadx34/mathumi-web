@@ -275,7 +275,7 @@ export default async function Home() {
           Makeup, Designer Saree Pleating, and Luxury Jewelry Rental with Exclusive Combo Discounts! Let us curate your perfect traditional wedding appearance.
         </p>
         <Link href="/booking" className="gold-button rounded-full font-bold px-8 py-3.5 text-xs font-sans">
-          BOOKING
+          BRIDAL BOOKING
         </Link>
       </div>
 
