@@ -260,7 +260,7 @@ export default function BookingPage() {
                 <span className="mr-3 text-[#6e1224] font-bold text-sm">✉</span>
                 <div>
                   <p className="font-bold text-[#1c1512] mb-0.5">Email Support</p>
-                  <p className="font-medium text-[#1c1512]/75 text-wrap">info@mathumi.lk</p>
+                  <p className="font-medium text-[#1c1512]/75 text-wrap">mathumibridal.com</p>
                 </div>
               </div>
 

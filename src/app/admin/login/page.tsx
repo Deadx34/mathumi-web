@@ -36,7 +36,7 @@ export default function AdminLogin() {
       <div className="gold-panel p-6 sm:p-8 w-full max-w-sm sm:max-w-md shadow-2xl relative z-10 border-2 border-[#d4af37]">
         <div className="flex justify-center mb-4">
           <img 
-            src="/logo.jpeg" 
+            src="/logo.png" 
             alt="Mathumi Logo" 
             className="object-cover h-20 w-20 rounded-full border-2 border-[#d4af37] shadow-md" 
           />

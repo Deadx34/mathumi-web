@@ -21,5 +21,16 @@
     "photo": "https://api.mathumibridal.com/uploads/1780646118799-930455448.png",
     "role": "Nail Technician",
     "_id": "qjvtoi7mq0mq3s0"
+  },
+  {
+    "name": "Hasitha Thilakarathna",
+    "address": "test",
+    "mobile": "7777",
+    "whatsapp": "8888",
+    "nic": "6666",
+    "dob": "2026-06-27",
+    "photo": "http://localhost:5000/uploads/1781848690129-766198101.png",
+    "role": "Nail Technician",
+    "_id": "wlwkgnymqkipdvc"
   }
 ]

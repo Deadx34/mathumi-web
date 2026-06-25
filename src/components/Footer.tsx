@@ -11,7 +11,7 @@ export default function Footer() {
           <div className="flex flex-col items-start">
             <div className="flex items-center gap-4 mb-4">
               <Image 
-                src="/logo.jpeg" 
+                src="/logo.png" 
                 alt="Mathumi Boutique & Salon Logo" 
                 width={80} 
                 height={80} 
@@ -23,7 +23,7 @@ export default function Footer() {
               </div>
             </div>
             <p className="text-xs font-sans font-medium text-[#1c1512]/70 leading-relaxed max-w-xs">
-              Colombo and Batticaloa's premier destination for luxury Kanchipuram silks, professional beauty styling, and accredited education.
+              Batticaloa's premier destination for luxury Kanchipuram silks, professional beauty styling, and accredited education.
             </p>
           </div>
 
@@ -33,7 +33,7 @@ export default function Footer() {
             <div className="flex flex-col space-y-3 text-xs font-bold tracking-wider">
               <Link href="/" className="hover:text-[#6e1224] transition-colors">HOME</Link>
               <Link href="/salon" className="hover:text-[#6e1224] transition-colors">BEAUTY CARE</Link>
-              <Link href="/boutique" className="hover:text-[#6e1224] transition-colors">BRIDAL BOUTIQUE</Link>
+              <Link href="/gallery" className="hover:text-[#6e1224] transition-colors">GALLERY</Link>
               <Link href="/academy" className="hover:text-[#6e1224] transition-colors">ACADEMY</Link>
             </div>
           </div>
@@ -57,10 +57,10 @@ export default function Footer() {
           <div className="flex flex-col">
             <h4 className="font-sans font-bold text-[10px] tracking-[0.25em] text-[#6e1224] mb-5 uppercase">CONTACT</h4>
             <div className="flex flex-col space-y-2 text-xs font-medium text-[#1c1512]/80 mb-6">
-              <p><span className="font-bold">Phone:</span> +94 77 123 4567</p>
-              <p><span className="font-bold">WhatsApp:</span> +94 77 123 4567</p>
-              <p><span className="font-bold">Email:</span> info@mathumi.lk</p>
-              <p><span className="font-bold">Hours:</span> Mon - Sat | 9 AM - 7 PM</p>
+              <p><span className="font-bold">Phone:</span> 0767510906</p>
+              <p><span className="font-bold">WhatsApp:</span> 0767510906</p>
+              <p><span className="font-bold">Email:</span> mathumibridal.com</p>
+              <p><span className="font-bold">Hours:</span> Everyday | 8:30 AM - 6:00 PM</p>
             </div>
             <div className="flex gap-3">
               <a href="https://www.instagram.com/mathumi_bridal_boutique/" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full border border-[#d4af37] bg-[#fdf5eb] flex items-center justify-center text-[#4a2511] hover:bg-[#6e1224] hover:text-white hover:border-[#6e1224] transition-all duration-300" title="Instagram">

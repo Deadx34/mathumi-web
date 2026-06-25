@@ -217,7 +217,7 @@ export default function BoutiquePage() {
             <div>
               <span className="text-[#6e1224] font-sans font-bold text-[9px] tracking-[0.2em] uppercase block mb-1">ATELIER LOCATION</span>
               <p className="font-serif text-lg font-medium text-[#1c1512]">St. Anthoniyar Road, Batticaloa</p>
-              <p className="text-xs text-[#1c1512]/60 mt-1">Near Design Jewelry | Open Mon - Sat, 9:00 AM - 7:00 PM</p>
+              <p className="text-xs text-[#1c1512]/60 mt-1">Near Design Jewelry | Open Everyday, 8:30 AM - 6:00 PM</p>
             </div>
             <button 
               onClick={() => {

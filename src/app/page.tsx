@@ -101,7 +101,7 @@ export default async function Home() {
           
           <div className="w-full flex justify-center lg:justify-start mt-6">
             <Link href="/booking" className="gold-button rounded-full text-center py-4.5 px-10 text-xs sm:text-sm tracking-[0.25em] font-sans font-bold shadow-[0_4px_20px_rgba(212,175,55,0.3)] uppercase block w-[280px] sm:w-auto mx-auto lg:mx-0 transition-all duration-300 hover:scale-105 hover:shadow-[0_8px_30px_rgba(212,175,55,0.5)] active:scale-95">
-              BOOKING FOR BRIDAL
+              BOOKING
             </Link>
           </div>
         </div>
@@ -201,7 +201,7 @@ export default async function Home() {
             Our pure Kanchipuram fabric of fine gold zari threads, hand-worked designer blouses, and lehengas are created and curated.
           </p>
           <div className="w-full border-t border-dashed border-[#c2a670]/20 pt-4 mt-auto">
-            <Link href="/boutique" className="gold-button w-full py-3 rounded-full text-center block text-[10px] tracking-widest font-sans font-bold">
+            <Link href="/gallery" className="gold-button w-full py-3 rounded-full text-center block text-[10px] tracking-widest font-sans font-bold">
               LEARN MORE
             </Link>
           </div>
@@ -275,7 +275,7 @@ export default async function Home() {
           Makeup, Designer Saree Pleating, and Luxury Jewelry Rental with Exclusive Combo Discounts! Let us curate your perfect traditional wedding appearance.
         </p>
         <Link href="/booking" className="gold-button rounded-full font-bold px-8 py-3.5 text-xs font-sans">
-          CLAIM YOUR BRIDAL DISCOUNT
+          BOOKING
         </Link>
       </div>
 

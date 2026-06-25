@@ -151,6 +151,148 @@ export default function SalonPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const [activeRegion, setActiveRegion] = useState('batticaloa');
+
+  const regions = [
+    {
+      id: 'batticaloa',
+      label: 'Batticaloa Area',
+      packages: [
+        {
+          name: 'SILVER PACKAGE',
+          price: '138,000/-',
+          features: [
+            'Natural Stable Makeup Look',
+            '02 Dressing (Sarees pleating, ironing, and draping)',
+            '02 Hairstyling (with natural flowers/Headdress)',
+            'Jewellery Collections (02 premium sets)',
+            '02 Floral Bouquets (01 Natural & 01 Artificial)',
+            'Services: Classic Facial, Threading, Nail Extensions & Polish'
+          ]
+        },
+        {
+          name: 'GOLDEN PACKAGE',
+          price: '158,000/-',
+          isPopular: true,
+          features: [
+            'Signature Bridal Makeup (Soft, radiant, premium cosmetics)',
+            'Couture Dressing (02 Grand Looks: saree pleating, ironing & draping)',
+            'Couture Hairstyling (02 latest styles with fresh natural flowers)',
+            'Designer Jewellery (02 premium designer sets)',
+            'Signature Floral Bouquets (01 Luxury Natural, 01 Artificial)',
+            'Bridal Care (Glow luxury facial, full body treatment, mani, pedi, threading, nails)'
+          ]
+        },
+        {
+          name: 'PREMIUM STANDARD PACKAGE',
+          price: '198,000/-',
+          features: [
+            'Signature Bridal Makeup (Soft, radiant, premium cosmetics)',
+            'Couture Dressing (02 Grand Looks: saree pleating, ironing & draping)',
+            'Luxury Hairstyling (02 latest styles with fresh natural flowers)',
+            'Designer Jewellery (02 premium designer sets)',
+            'Signature Floral Bouquets (02 Luxury Natural bouquets)',
+            'VIP Bridal Care (Full Mehendi, facials, body treatment, luxury mani/pedi, threading, nails)'
+          ]
+        }
+      ]
+    },
+    {
+      id: 'out-of-batticaloa',
+      label: 'Out of Batticaloa Area',
+      packages: [
+        {
+          name: 'SILVER PACKAGE',
+          price: '138,000/-',
+          note: '+ Transport & Travel costs apply',
+          features: [
+            'Natural Stable Makeup Look',
+            '02 Dressing (Sarees pleating, ironing, and draping)',
+            '02 Hairstyling (with natural flowers/Headdress)',
+            'Jewellery Collections (02 premium sets)',
+            '02 Floral Bouquets (01 Natural & 01 Artificial)',
+            'Services: Classic Facial, Threading, Nail Extensions & Polish'
+          ]
+        },
+        {
+          name: 'GOLDEN PACKAGE',
+          price: '158,000/-',
+          note: '+ Transport & Travel costs apply',
+          isPopular: true,
+          features: [
+            'Signature Bridal Makeup (Soft, radiant, premium cosmetics)',
+            'Couture Dressing (02 Grand Looks: saree pleating, ironing & draping)',
+            'Couture Hairstyling (02 latest styles with fresh natural flowers)',
+            'Designer Jewellery (02 premium designer sets)',
+            'Signature Floral Bouquets (01 Luxury Natural, 01 Artificial)',
+            'Bridal Care (Glow luxury facial, full body treatment, mani, pedi, threading, nails)'
+          ]
+        },
+        {
+          name: 'PREMIUM STANDARD PACKAGE',
+          price: '198,000/-',
+          note: '+ Transport & Travel costs apply',
+          features: [
+            'Signature Bridal Makeup (Soft, radiant, premium cosmetics)',
+            'Couture Dressing (02 Grand Looks: saree pleating, ironing & draping)',
+            'Luxury Hairstyling (02 latest styles with fresh natural flowers)',
+            'Designer Jewellery (02 premium designer sets)',
+            'Signature Floral Bouquets (02 Luxury Natural bouquets)',
+            'VIP Bridal Care (Full Mehendi, facials, body treatment, luxury mani/pedi, threading, nails)'
+          ]
+        }
+      ]
+    },
+    {
+      id: 'out-of-sri-lanka',
+      label: 'Out of Sri Lanka',
+      packages: [
+        {
+          name: 'SILVER PACKAGE',
+          price: '138,000/-',
+          note: '+ Custom Destination Rates apply',
+          features: [
+            'Natural Stable Makeup Look',
+            '02 Dressing (Sarees pleating, ironing, and draping)',
+            '02 Hairstyling (with natural flowers/Headdress)',
+            'Jewellery Collections (02 premium sets)',
+            '02 Floral Bouquets (01 Natural & 01 Artificial)',
+            'Services: Classic Facial, Threading, Nail Extensions & Polish'
+          ]
+        },
+        {
+          name: 'GOLDEN PACKAGE',
+          price: '158,000/-',
+          note: '+ Custom Destination Rates apply',
+          isPopular: true,
+          features: [
+            'Signature Bridal Makeup (Soft, radiant, premium cosmetics)',
+            'Couture Dressing (02 Grand Looks: saree pleating, ironing & draping)',
+            'Couture Hairstyling (02 latest styles with fresh natural flowers)',
+            'Designer Jewellery (02 premium designer sets)',
+            'Signature Floral Bouquets (01 Luxury Natural, 01 Artificial)',
+            'Bridal Care (Glow luxury facial, full body treatment, mani, pedi, threading, nails)'
+          ]
+        },
+        {
+          name: 'PREMIUM STANDARD PACKAGE',
+          price: '198,000/-',
+          note: '+ Custom Destination Rates apply',
+          features: [
+            'Signature Bridal Makeup (Soft, radiant, premium cosmetics)',
+            'Couture Dressing (02 Grand Looks: saree pleating, ironing & draping)',
+            'Luxury Hairstyling (02 latest styles with fresh natural flowers)',
+            'Designer Jewellery (02 premium designer sets)',
+            'Signature Floral Bouquets (02 Luxury Natural bouquets)',
+            'VIP Bridal Care (Full Mehendi, facials, body treatment, luxury mani/pedi, threading, nails)'
+          ]
+        }
+      ]
+    }
+  ];
+
+  const activeData = regions.find(r => r.id === activeRegion) || regions[0];
+
   return (
     <>
       {ToastElement}
@@ -194,7 +336,7 @@ export default function SalonPage() {
             <div>
               <span className="text-[#6e1224] font-sans font-bold text-[9px] tracking-[0.2em] uppercase block mb-1">SALON LOCATION</span>
               <p className="font-serif text-lg font-medium text-[#1c1512]">Trinco Road, Near Signal Light, Batticaloa</p>
-              <p className="text-xs text-[#1c1512]/60 mt-1">Open Mon - Sat, 9:00 AM - 7:00 PM | Sunday by Appointment</p>
+              <p className="text-xs text-[#1c1512]/60 mt-1">Open Everyday, 8:30 AM - 6:00 PM</p>
             </div>
             <button 
               onClick={() => {
@@ -205,6 +347,100 @@ export default function SalonPage() {
             >
               CHAT ON WHATSAPP
             </button>
+          </div>
+
+          {/* Interactive Bridal Packages Section (Embedded) */}
+          <div className="w-full max-w-6xl mb-24 flex flex-col items-center">
+            <span className="text-[#6e1224] font-sans font-bold text-[10px] sm:text-xs tracking-[0.25em] uppercase mb-2">
+              PRICING & EXPERIENCES
+            </span>
+            <h2 className="text-3xl font-serif font-bold text-[#4a2511] mb-2 uppercase tracking-[0.08em] text-center">
+              OUR BRIDAL PACKAGES
+            </h2>
+            
+            <div className="kolam-separator mb-8 max-w-md">
+              <div className="kolam-line"></div>
+              <div className="kolam-ornament">✧</div>
+              <div className="kolam-line"></div>
+            </div>
+
+            {/* Region Tabs */}
+            <div className="flex flex-wrap justify-center gap-3 mb-12">
+              {regions.map((region) => (
+                <button
+                  key={region.id}
+                  onClick={() => setActiveRegion(region.id)}
+                  className={`px-5 py-2.5 rounded-full text-[10px] font-sans font-bold uppercase tracking-[0.2em] transition-all duration-300 border-2 cursor-pointer
+                    ${activeRegion === region.id
+                      ? 'bg-[#6e1224] text-white border-[#6e1224] shadow-md'
+                      : 'bg-white text-[#4a2511] border-[#d4af37]/50 hover:border-[#6e1224] hover:text-[#6e1224]'
+                    }`}
+                >
+                  {region.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Packages Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full items-stretch mb-10">
+              {activeData.packages.map((pkg, idx) => (
+                <div
+                  key={idx}
+                  className={`gold-panel p-6 sm:p-8 rounded bg-white flex flex-col hover:-translate-y-1 transition-all duration-500 border-2 relative
+                    ${pkg.isPopular ? 'border-[#6e1224] shadow-lg' : 'border-[#d4af37]'}`}
+                >
+                  {pkg.isPopular && (
+                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#6e1224] text-white px-3 py-0.5 rounded-full text-[8px] font-sans font-bold uppercase tracking-[0.2em] shadow-sm">
+                      MOST POPULAR
+                    </div>
+                  )}
+
+                  <h3 className="text-base font-bold text-[#6e1224] mb-1 font-serif text-center uppercase tracking-wider">
+                    {pkg.name}
+                  </h3>
+                  
+                  <div className="text-center mb-6 border-y border-[#c2a670]/15 py-3 bg-[#6e1224]/5 mt-2">
+                    <span className="text-xl font-serif font-bold text-[#4a2511] block">
+                      {pkg.price}
+                    </span>
+                    {pkg.note && (
+                      <span className="text-[8px] font-sans font-bold uppercase tracking-widest text-[#6e1224] block mt-1">
+                        {pkg.note}
+                      </span>
+                    )}
+                  </div>
+
+                  <ul className="space-y-3 text-xs text-[#1c1512]/85 font-semibold mb-6 flex-grow font-sans pr-1">
+                    {pkg.features.map((feature, fIdx) => (
+                      <li key={fIdx} className="flex items-start">
+                        <span className="text-[#0f5132] mr-2 mt-0.5 text-xs flex-shrink-0">🌿</span>
+                        <span className="leading-relaxed text-[11px]">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="mt-auto">
+                    <Link
+                      href={`/booking?service=bridal&package=${pkg.name.toLowerCase().replace(/\s+/g, '-')}`}
+                      className={`w-full py-2.5 rounded-full text-[9px] tracking-[0.2em] font-sans font-bold text-center block uppercase transition-all duration-300 shadow-sm
+                        ${pkg.isPopular
+                          ? 'gold-button hover:scale-105'
+                          : 'border border-[#c2a670]/40 text-[#1c1512] hover:bg-[#6e1224] hover:text-white hover:border-[#6e1224]'
+                        }`}
+                    >
+                      BOOK YOUR DATE
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* WITH LOVE Accent */}
+            <div className="text-center mt-6">
+              <div className="font-cursive text-xl text-[#4a2511] italic font-normal tracking-wide">
+                With Love — Mathumi Thayaparan
+              </div>
+            </div>
           </div>
 
           {/* Level 1 Services Grid */}
@@ -221,11 +457,7 @@ export default function SalonPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
               
-              {!loading && (salonCategories.length > 0 ? salonCategories : [
-                { name: 'Hair Styling', description: 'Precision cuts, botanical oil massages, keratin repair, and gorgeous bridal styling designed for exquisite bounce.', image: '/imges/sa10.webp' },
-                { name: 'Skin Care', description: 'Herbal facials, deep cleansing, and anti-aging therapies customized to elevate your skin\'s organic radiance.', image: '/salon_facial.png' },
-                { name: 'Makeup Artistry', description: 'Professional bridal, party, and photoshoot makeup services by certified artists.', image: '/imges/s18.webp' }
-              ]).map((cat: any, idx: number) => {
+              {!loading && salonCategories.map((cat: any, idx: number) => {
                 const catName = cat.name;
                 const slug = catName === 'Hair Styling' ? 'hair-care' : catName.toLowerCase().replace(/\s+/g, '-');
                 const heroImage = cat.image || '/salon-service.png';

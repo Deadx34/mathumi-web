@@ -54,7 +54,7 @@ export default function Navbar() {
           {/* Logo Area */}
           <div className="relative flex-shrink-0 transition-all duration-300 hover:scale-105 z-20 flex items-center md:-ml-4">
             <Link href="/">
-              <Image src="/logo.jpeg" alt="Mathumi Bridal Boutique Logo" width={220} height={220} className="object-cover h-24 w-24 md:h-32 md:w-32 drop-shadow-md rounded-full border-2 border-[#d4af37]" />
+              <Image src="/logo.png" alt="Mathumi Bridal Boutique Logo" width={220} height={220} className="object-cover h-24 w-24 md:h-32 md:w-32 drop-shadow-md rounded-full border-2 border-[#d4af37]" />
             </Link>
           </div>
 
@@ -64,10 +64,7 @@ export default function Navbar() {
             <Link href="/salon" className="text-[#4a2511] text-sm md:text-lg lg:text-xl font-serif font-bold tracking-widest hover:text-[#800020] transition-colors">SERVICES</Link>
             <Link href="/academy" className="text-[#4a2511] text-sm md:text-lg lg:text-xl font-serif font-bold tracking-widest hover:text-[#800020] transition-colors">ACADEMY</Link>
             <Link href="/gallery" className="text-[#4a2511] text-sm md:text-lg lg:text-xl font-serif font-bold tracking-widest hover:text-[#800020] transition-colors">GALLERY</Link>
-            <Link href="/boutique" className="text-[#4a2511] text-sm md:text-lg lg:text-xl font-serif font-bold tracking-widest hover:text-[#800020] transition-colors">SAREE</Link>
             
-
-
             {/* Booking Button */}
             <Link href="/booking" className="gold-button px-4 py-1 md:px-6 md:py-1.5 lg:px-8 lg:py-2 text-xs md:text-lg lg:text-xl rounded-full shadow-md font-sans">
               BOOKING
@@ -179,7 +176,7 @@ export default function Navbar() {
 
             <div className="flex justify-center mb-8 mt-6">
               <Image 
-                src="/logo.jpeg" 
+                src="/logo.png" 
                 alt="Mathumi Logo" 
                 width={120} 
                 height={120} 
@@ -216,13 +213,7 @@ export default function Navbar() {
               >
                 GALLERY
               </Link>
-              <Link 
-                href="/boutique" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-[#4a2511] text-lg font-serif font-bold tracking-widest hover:text-[#800020] transition-colors border-b border-[#d4af37]/20 pb-2"
-              >
-                SAREE
-              </Link>
+
               
               <Link 
                 href="/booking" 

@@ -56,7 +56,6 @@ const REAL_IMAGES = [
   { file: 'img8',  title: 'Skin Glow Treatment',       category: 'Skin Care', color: '#4a2511' },
   { file: 'img9',  title: 'Couture Silk Style',        category: 'Boutique',  color: '#6e1224' },
   { file: 'img10', title: 'Academy Workshop Session',  category: 'Academy',   color: '#4a2511' },
-  { file: 'img11', title: 'Portfolio Signature Shot',   category: 'Gallery',   color: '#6e1224' },
 ];
 
 const STATIC_IMAGES = REAL_IMAGES.map(img => ({
@@ -71,7 +70,7 @@ const CATEGORIES = ['All', 'Bridal', 'Salon', 'Makeup', 'Skin Care', 'Boutique',
 export default function GalleryPage() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-  const [galleryList, setGalleryList] = useState<any[]>(STATIC_IMAGES);
+  const [galleryList, setGalleryList] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedMobile, setExpandedMobile] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -102,17 +101,13 @@ export default function GalleryPage() {
           title: img.title,
           category: img.category
         }));
-        // Filter out static images that are already in the database
-        const dbIds = new Set(formattedDbImages.map((img: any) => img._id));
-        const filteredStatic = STATIC_IMAGES.filter(img => !dbIds.has(img._id));
         
-        setGalleryList([...formattedDbImages, ...filteredStatic]);
+        setGalleryList(formattedDbImages);
         setLoading(false);
       })
       .catch(err => {
         console.error("Error loading gallery API:", err);
-        // Fallback to static images only
-        setGalleryList(STATIC_IMAGES);
+        setGalleryList([]);
         setLoading(false);
       });
   }, []);
@@ -181,9 +176,6 @@ export default function GalleryPage() {
             <Link href="/booking" className="gold-button rounded-full text-center py-3 px-8 text-[11px] sm:text-xs tracking-[0.2em] font-sans font-bold shadow-md uppercase block w-full sm:w-auto">
               BOOK YOUR SESSION
             </Link>
-            <Link href="/boutique" className="px-8 py-3 border-2 border-[#c2a670]/40 text-[#1c1512] font-sans font-bold text-[11px] sm:text-xs tracking-[0.2em] uppercase hover:bg-[#6e1224] hover:text-white hover:border-[#6e1224] transition-all rounded-full text-center cursor-pointer block w-full sm:w-auto">
-              THE COLLECTION
-            </Link>
           </div>
         </div>
 
@@ -225,29 +217,7 @@ export default function GalleryPage() {
         </div>
       </div>
 
-      {/* Gold divider before filters */}
-      <div className="flex items-center justify-center mb-8 w-full max-w-2xl">
-        <div className="h-px bg-[#d4af37] flex-grow"></div>
-        <div className="mx-4 text-[#d4af37] text-xl">✧</div>
-        <div className="h-px bg-[#d4af37] flex-grow"></div>
-      </div>
 
-      {/* Category Filter Pills */}
-      <div className="flex flex-wrap gap-2 justify-center mb-10">
-        {CATEGORIES.map(cat => (
-          <button
-            key={cat}
-            onClick={() => setActiveCategory(cat)}
-            className={`px-5 py-2 rounded-full text-[10px] font-sans font-bold tracking-[0.18em] uppercase transition-all duration-300 border-2 cursor-pointer
-              ${activeCategory === cat
-                ? 'bg-[#6e1224] text-white border-[#6e1224] shadow-md'
-                : 'bg-white text-[#4a2511] border-[#d4af37]/50 hover:border-[#6e1224] hover:text-[#6e1224]'
-              }`}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
 
       {/* Masonry Gallery Grid */}
       <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 [column-gap:1rem] w-full">

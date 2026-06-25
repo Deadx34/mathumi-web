@@ -63,10 +63,10 @@ export function CourseProvider({ children }: { children: ReactNode }) {
         throw new Error(`Failed to fetch courses: ${res.statusText}`);
       }
       const data = await res.json();
-      setCourses(data && data.length > 0 ? data : DEFAULT_COURSES);
+      setCourses(data || []);
     } catch (err) {
-      console.warn('Error fetching courses, using fallback data:', err);
-      setCourses(DEFAULT_COURSES);
+      console.warn('Error fetching courses:', err);
+      setCourses([]);
     } finally {
       setLoading(false);
     }
