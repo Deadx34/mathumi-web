@@ -100,8 +100,8 @@ export default async function Home() {
           </span>
           
           <div className="w-full flex justify-center lg:justify-start mt-6">
-            <Link href="/booking" className="gold-button rounded-full text-center py-4.5 px-10 text-xs sm:text-sm tracking-[0.25em] font-sans font-bold shadow-[0_4px_20px_rgba(212,175,55,0.3)] uppercase block w-[280px] sm:w-auto mx-auto lg:mx-0 transition-all duration-300 hover:scale-105 hover:shadow-[0_8px_30px_rgba(212,175,55,0.5)] active:scale-95">
-              BOOKING
+            <Link href="/booking" className="gold-button rounded-full text-center py-5 px-12 text-sm sm:text-base tracking-[0.25em] font-sans font-bold shadow-[0_4px_25px_rgba(212,175,55,0.35)] uppercase block w-[320px] sm:w-auto mx-auto lg:mx-0 transition-all duration-300 hover:scale-105 hover:shadow-[0_8px_35px_rgba(212,175,55,0.55)] active:scale-95">
+              BOOKING FOR BRIDAL
             </Link>
           </div>
         </div>
