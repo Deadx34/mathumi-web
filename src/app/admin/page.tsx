@@ -2449,7 +2449,7 @@ export default function AdminDashboard() {
                                   onClick={() => { setOpenJewelleryMenuId(null); handleToggleHideJewellery(item); }}
                                   className={`block w-full text-left px-4 py-2 text-sm font-semibold hover:bg-stone-50 ${item.hidden ? 'text-green-700' : 'text-stone-700'}`}
                                 >
-                                  {item.hidden ? 'Unhide / Publish' : 'Hide / Draft'}
+                                  {item.hidden ? 'Unhide' : 'Hide'}
                                 </button>
                                 <button
                                   onClick={() => { setOpenJewelleryMenuId(null); handleDeleteJewellery(item._id); }}
