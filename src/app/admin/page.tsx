@@ -26,6 +26,8 @@ export default function AdminDashboard() {
     hidden: false
   });
   const [isEditingJewellery, setIsEditingJewellery] = useState(false);
+  const [selectedJewellery, setSelectedJewellery] = useState<any>(null);
+  const [isJewelleryViewModalOpen, setIsJewelleryViewModalOpen] = useState(false);
   const [openJewelleryMenuId, setOpenJewelleryMenuId] = useState<string | null>(null);
   const [searchJewellery, setSearchJewellery] = useState('');
   const [statusFilterJewellery, setStatusFilterJewellery] = useState<'all' | 'visible' | 'hidden'>('all');
@@ -2440,6 +2442,12 @@ export default function AdminDashboard() {
                               <div className="fixed inset-0 z-10" onClick={() => setOpenJewelleryMenuId(null)}></div>
                               <div className="absolute right-full mr-2 top-0 w-36 bg-white rounded-md shadow-lg z-20 border border-gray-200 py-1 overflow-hidden text-left menu-popup">
                                 <button
+                                  onClick={() => { setOpenJewelleryMenuId(null); setSelectedJewellery(item); setIsJewelleryViewModalOpen(true); }}
+                                  className="block w-full text-left px-4 py-2 text-sm text-[#4a2511] font-semibold hover:bg-[#fdf5eb]"
+                                >
+                                  View
+                                </button>
+                                <button
                                   onClick={() => { setOpenJewelleryMenuId(null); openEditJewelleryModal(item); }}
                                   className="block w-full text-left px-4 py-2 text-sm text-[#4a2511] font-semibold hover:bg-[#fdf5eb]"
                                 >
@@ -4283,6 +4291,64 @@ export default function AdminDashboard() {
                 {isEditingJewellery ? 'Save Changes' : 'Publish Jewellery Set'}
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Jewellery View Details Modal */}
+      {isJewelleryViewModalOpen && selectedJewellery && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center" onClick={() => setIsJewelleryViewModalOpen(false)}>
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+          <div className="relative bg-white rounded-2xl shadow-2xl border border-[#d4af37]/40 w-full max-w-md mx-4 overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-gradient-to-r from-[#4a2511] to-[#800020] px-6 py-4 flex items-center justify-between">
+              <h3 className="text-white font-serif font-bold text-lg tracking-wide">💎 Jewellery Set Details</h3>
+              <button onClick={() => setIsJewelleryViewModalOpen(false)} className="text-white/80 hover:text-white text-2xl transition-colors">×</button>
+            </div>
+            <div className="px-6 py-5 space-y-4 max-h-[70vh] overflow-y-auto text-[#4a2511]">
+              <div className="space-y-3">
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Jewellery Name</p>
+                  <p className="font-bold text-base">{selectedJewellery.name}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Jewellery Number (Unique ID)</p>
+                  <p className="font-mono font-bold text-base text-[#800020]">{selectedJewellery.jewelleryNumber}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Status</p>
+                  <span className={`inline-block text-[10px] font-bold px-2.5 py-0.5 rounded-full border mt-1 ${
+                    selectedJewellery.hidden 
+                      ? 'bg-gray-100 text-gray-800 border-gray-300' 
+                      : 'bg-green-50 text-green-700 border-green-300'
+                  }`}>
+                    {selectedJewellery.hidden ? 'Hidden' : 'Visible'}
+                  </span>
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Description</p>
+                  <p className="text-sm font-medium whitespace-pre-wrap">{selectedJewellery.description || '—'}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold mb-2">Images ({Array.isArray(selectedJewellery.images) ? selectedJewellery.images.length : (selectedJewellery.image ? 1 : 0)})</p>
+                  <div className="flex flex-wrap gap-2">
+                    {(Array.isArray(selectedJewellery.images) && selectedJewellery.images.length > 0 
+                      ? selectedJewellery.images 
+                      : (selectedJewellery.image ? [selectedJewellery.image] : ['/hero-saree.png'])
+                    ).map((img: string, idx: number) => (
+                      <div key={idx} className="relative border border-[#d4af37]/30 rounded overflow-hidden">
+                        <img src={img} alt="" className="w-20 h-20 object-cover bg-white" />
+                        {idx === 0 && (
+                          <div className="absolute bottom-0 left-0 right-0 bg-[#d4af37]/90 text-[8px] text-white font-bold text-center py-0.5">MAIN</div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="px-6 py-4 bg-[#fdf5eb] border-t border-[#d4af37]/20 flex justify-end">
+              <button onClick={() => setIsJewelleryViewModalOpen(false)} className="px-6 py-2 bg-gradient-to-r from-[#4a2511] to-[#800020] text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity shadow-md">Close</button>
+            </div>
           </div>
         </div>
       )}
