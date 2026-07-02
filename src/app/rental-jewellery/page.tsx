@@ -26,6 +26,7 @@ export default function RentalJewelleryPage() {
   const [clientName, setClientName] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
+  const [needDate, setNeedDate] = useState("");
   const [notes, setNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -78,6 +79,7 @@ export default function RentalJewelleryPage() {
     setClientName("");
     setAddress("");
     setPhone("");
+    setNeedDate("");
     setNotes("");
   };
 
@@ -100,6 +102,7 @@ export default function RentalJewelleryPage() {
           customerName: clientName,
           address,
           phone,
+          needDate,
           description: notes,
           jewelleryName: selectedItem.name,
           jewelleryNumber: selectedItem.jewelleryNumber,
@@ -415,7 +418,7 @@ export default function RentalJewelleryPage() {
 
                       <div>
                         <label className="block text-[#4a2511] font-sans font-bold text-[10px] tracking-wider uppercase mb-1">
-                          Delivery/Contact Address *
+                          Address *
                         </label>
                         <textarea
                           required
@@ -424,6 +427,19 @@ export default function RentalJewelleryPage() {
                           onChange={(e) => setAddress(e.target.value)}
                           placeholder="Your Complete Address"
                           className="w-full p-2.5 border border-[#c2a670]/20 rounded bg-white text-xs text-[#4a2511] font-medium focus:outline-none focus:border-[#800020] resize-none"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[#4a2511] font-sans font-bold text-[10px] tracking-wider uppercase mb-1">
+                          Need Date / Event Date *
+                        </label>
+                        <input
+                          type="date"
+                          required
+                          value={needDate}
+                          onChange={(e) => setNeedDate(e.target.value)}
+                          className="w-full p-2.5 border border-[#c2a670]/20 rounded bg-white text-xs text-[#4a2511] font-medium focus:outline-none focus:border-[#800020]"
                         />
                       </div>
 
