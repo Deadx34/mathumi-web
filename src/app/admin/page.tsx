@@ -2551,7 +2551,6 @@ export default function AdminDashboard() {
                     <th className="p-3 text-xs">Phone</th>
                     <th className="p-3 text-xs">Special Notes</th>
                     <th className="p-3 text-xs">Need Date</th>
-                    <th className="p-3 text-xs">Date Received</th>
                     <th className="p-3 text-xs">Status</th>
                   </tr>
                 </thead>
@@ -2588,9 +2587,6 @@ export default function AdminDashboard() {
                         <td className="p-3 text-xs text-stone-500 max-w-xs truncate" title={b.description}>{b.description || '—'}</td>
                          <td className="p-3 text-xs font-bold text-[#800020] whitespace-nowrap">
                           {b.needDate ? new Date(b.needDate).toLocaleDateString('en-GB') : '—'}
-                        </td>
-                        <td className="p-3 text-xs whitespace-nowrap">
-                          {b.createdAt ? new Date(b.createdAt).toLocaleDateString('en-GB') : '—'}
                         </td>
                         <td className="p-3">
                           <select
