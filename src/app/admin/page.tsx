@@ -1148,6 +1148,21 @@ export default function AdminDashboard() {
       : `${API_BASE}/api/rental-jewellery`;
     const method = isEditingJewellery ? 'PUT' : 'POST';
 
+    // Validation: Check if Jewellery Number is unique in the catalog
+    const enteredNumber = jewelleryForm.jewelleryNumber.trim().toLowerCase();
+    const isDuplicate = rentalJewellery.some(item => {
+      // Skip check against self if editing
+      if (isEditingJewellery && item._id === jewelleryForm._id) {
+        return false;
+      }
+      return item.jewelleryNumber?.trim().toLowerCase() === enteredNumber;
+    });
+
+    if (isDuplicate) {
+      showToast(`Jewellery ID "${jewelleryForm.jewelleryNumber}" is already in use. Please enter a unique ID.`, 'error');
+      return;
+    }
+
     const payload: any = { ...jewelleryForm };
     if (!payload._id) delete payload._id;
 
