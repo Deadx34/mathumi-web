@@ -35,6 +35,7 @@ export default function AdminDashboard() {
   const [rentalBookings, setRentalBookings] = useState<any[]>([]);
   const [searchRentalBooking, setSearchRentalBooking] = useState('');
   const [statusFilterRentalBooking, setStatusFilterRentalBooking] = useState<'all' | 'Pending' | 'Contacted' | 'Confirmed' | 'Cancelled'>('all');
+  const [dateFilterRentalBooking, setDateFilterRentalBooking] = useState('');
   const [selectedRentalBooking, setSelectedRentalBooking] = useState<any>(null);
   const [isRentalBookingModalOpen, setIsRentalBookingModalOpen] = useState(false);
 
@@ -2481,6 +2482,27 @@ export default function AdminDashboard() {
                   </select>
                 </div>
                 <div className="flex items-center gap-1.5">
+                  <label className="text-xs font-semibold text-stone-600">Need Date</label>
+                  <div className="relative flex items-center gap-1.5">
+                    <input
+                      type="date"
+                      value={dateFilterRentalBooking}
+                      onChange={e => setDateFilterRentalBooking(e.target.value)}
+                      className="p-1.5 border border-[#d4af37]/40 rounded bg-white text-xs outline-none focus:border-[#d4af37] font-semibold text-[#4a2511]"
+                    />
+                    {dateFilterRentalBooking && (
+                      <button
+                        type="button"
+                        onClick={() => setDateFilterRentalBooking('')}
+                        className="text-red-700 hover:text-red-900 text-[10px] font-bold px-2 py-1 bg-red-50 hover:bg-red-100 rounded border border-red-200 transition-colors"
+                        title="Clear calendar date filter"
+                      >
+                        Clear
+                      </button>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5">
                   <label className="text-xs font-semibold text-stone-600">Search</label>
                   <input
                     type="text"
@@ -2514,6 +2536,9 @@ export default function AdminDashboard() {
                   {rentalBookings
                     .filter(b => {
                       if (statusFilterRentalBooking !== 'all' && (b.status || 'Pending') !== statusFilterRentalBooking) {
+                        return false;
+                      }
+                      if (dateFilterRentalBooking && b.needDate !== dateFilterRentalBooking) {
                         return false;
                       }
                       const query = searchRentalBooking.toLowerCase();
