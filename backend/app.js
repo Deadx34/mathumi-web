@@ -225,6 +225,7 @@ generateCRUDRoutes('staff');
 generateCRUDRoutes('billing-categories');
 generateCRUDRoutes('billing-services');
 generateCRUDRoutes('customers');
+generateCRUDRoutes('rental-jewellery');
 
 // ======================== BOOKINGS & INQUIRIES ========================
 
@@ -291,6 +292,41 @@ app.put('/api/inquiries/:id/status', verifyToken, (req, res) => {
   list[index].status = req.body.status || list[index].status;
   list[index].updatedAt = new Date().toISOString();
   writeData('inquiries', list);
+  res.json(list[index]);
+});
+
+// ======================== RENTAL JEWELLERY BOOKINGS ========================
+
+// GET Rental Bookings (Admin Only)
+app.get('/api/rental-bookings', verifyToken, (req, res) => {
+  const list = readData('rental-bookings');
+  res.json(list);
+});
+
+// POST Create Rental Booking (Public)
+app.post('/api/rental-bookings', (req, res) => {
+  const list = readData('rental-bookings');
+  const newBooking = { 
+    ...req.body, 
+    _id: generateId(),
+    status: 'Pending',
+    createdAt: new Date().toISOString()
+  };
+  list.push(newBooking);
+  writeData('rental-bookings', list);
+  res.status(201).json(newBooking);
+});
+
+// PUT Update Rental Booking Status (Admin Only)
+app.put('/api/rental-bookings/:id/status', verifyToken, (req, res) => {
+  const list = readData('rental-bookings');
+  const index = list.findIndex(item => item._id === req.params.id);
+  if (index === -1) {
+    return res.status(404).json({ message: 'Rental booking not found' });
+  }
+  list[index].status = req.body.status || list[index].status;
+  list[index].updatedAt = new Date().toISOString();
+  writeData('rental-bookings', list);
   res.json(list[index]);
 });
 

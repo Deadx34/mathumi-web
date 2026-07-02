@@ -9,9 +9,34 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL ||
 
 export default function AdminDashboard() {
   const { showToast, ToastElement } = useToast();
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'bookings' | 'inquiries' | 'manageSarees' | 'manageAcademy' | 'manageSalon' | 'manageCategories' | 'manageGallery' | 'manageStaff' | 'billingCategories' | 'billingServices' | 'billingCustomers' | 'billingPOS'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'bookings' | 'inquiries' | 'manageSarees' | 'manageAcademy' | 'manageSalon' | 'manageCategories' | 'manageGallery' | 'manageStaff' | 'billingCategories' | 'billingServices' | 'billingCustomers' | 'billingPOS' | 'manageJewellery' | 'jewelleryBookings'>('dashboard');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isPOSExpanded, setIsPOSExpanded] = useState(false);
+
+  // Rental Jewellery state
+  const [rentalJewellery, setRentalJewellery] = useState<any[]>([]);
+  const [isJewelleryModalOpen, setIsJewelleryModalOpen] = useState(false);
+  const [jewelleryForm, setJewelleryForm] = useState({
+    _id: '',
+    name: '',
+    jewelleryNumber: '',
+    image: '',
+    images: [] as string[],
+    description: '',
+    hidden: false
+  });
+  const [isEditingJewellery, setIsEditingJewellery] = useState(false);
+  const [openJewelleryMenuId, setOpenJewelleryMenuId] = useState<string | null>(null);
+  const [searchJewellery, setSearchJewellery] = useState('');
+  const [statusFilterJewellery, setStatusFilterJewellery] = useState<'all' | 'visible' | 'hidden'>('all');
+  const [sortJewellery, setSortJewellery] = useState<'name-asc' | 'name-desc' | 'number-asc' | 'number-desc'>('name-asc');
+
+  // Rental Bookings state
+  const [rentalBookings, setRentalBookings] = useState<any[]>([]);
+  const [searchRentalBooking, setSearchRentalBooking] = useState('');
+  const [statusFilterRentalBooking, setStatusFilterRentalBooking] = useState<'all' | 'Pending' | 'Contacted' | 'Confirmed' | 'Cancelled'>('all');
+  const [selectedRentalBooking, setSelectedRentalBooking] = useState<any>(null);
+  const [isRentalBookingModalOpen, setIsRentalBookingModalOpen] = useState(false);
 
   // Billing Categories POS
   const [billingCategories, setBillingCategories] = useState<any[]>([]);
@@ -296,6 +321,23 @@ export default function AdminDashboard() {
     const url = await uploadImage(files[0]);
     if (url) setStaffForm(p => ({ ...p, photo: url }));
   };
+  const onDropJewellery = async (files: File[]) => {
+    if (!files || files.length === 0) {
+      showToast("Invalid file format. Please upload a valid image (JPG, PNG, WebP)!", "error");
+      return;
+    }
+    const uploadedUrls: string[] = [];
+    for (const file of files) {
+      const url = await uploadImage(file);
+      if (url) uploadedUrls.push(url);
+    }
+    if (uploadedUrls.length > 0) {
+      setJewelleryForm(p => {
+        const newImages = [...(p.images || []), ...uploadedUrls];
+        return { ...p, image: p.image || uploadedUrls[0], images: newImages };
+      });
+    }
+  };
 
   const { getRootProps: getSareeProps, getInputProps: getSareeInput, isDragActive: isSareeDrag } = useDropzone({ 
     onDrop: onDropSaree, 
@@ -327,6 +369,12 @@ export default function AdminDashboard() {
     onDrop: onDropStaff,
     accept: { 'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.webp'] },
     useFsAccessApi: false
+  });
+  const { getRootProps: getJewelleryProps, getInputProps: getJewelleryInput, isDragActive: isJewelleryDrag } = useDropzone({
+    onDrop: onDropJewellery,
+    accept: { 'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.webp'] },
+    useFsAccessApi: false,
+    multiple: true
   });
 
   useEffect(() => {
@@ -373,7 +421,10 @@ export default function AdminDashboard() {
         }
       };
 
-      const [bRes, iRes, sRes, aRes, salonRes, gRes, catRes, staffRes, billingCatRes, billingServRes, customerRes] = await Promise.all([
+      const [
+        bRes, iRes, sRes, aRes, salonRes, gRes, catRes, staffRes, billingCatRes, billingServRes, customerRes,
+        jewRes, jewBookRes
+      ] = await Promise.all([
         safeFetch(`${API}/api/bookings`, { headers: authHeaders }),
         safeFetch(`${API}/api/inquiries`, { headers: authHeaders }),
         safeFetch(`${API}/api/sarees`),
@@ -384,7 +435,9 @@ export default function AdminDashboard() {
         safeFetch(`${API}/api/staff`, { headers: authHeaders }),
         safeFetch(`${API}/api/billing-categories`, { headers: authHeaders }),
         safeFetch(`${API}/api/billing-services`, { headers: authHeaders }),
-        safeFetch(`${API}/api/customers`, { headers: authHeaders })
+        safeFetch(`${API}/api/customers`, { headers: authHeaders }),
+        safeFetch(`${API}/api/rental-jewellery`),
+        safeFetch(`${API}/api/rental-bookings`, { headers: authHeaders })
       ]);
 
       if (bRes.status === 401 || bRes.status === 400) {
@@ -393,21 +446,45 @@ export default function AdminDashboard() {
         return;
       }
 
-      if (!bRes.ok || !iRes.ok || !sRes.ok || !aRes.ok || !salonRes.ok || !gRes.ok || !catRes.ok) {
-        throw new Error(`Server returned error status.`);
-      }
+      // Gracefully handle each endpoint — only auth failures redirect to login
+      if (bRes.ok) setBookings(await safeJson(bRes, []));
+      else console.warn('Bookings endpoint error:', bRes.status);
 
-      setBookings(await safeJson(bRes, []));
-      setInquiries(await safeJson(iRes, []));
-      setSarees(await safeJson(sRes, []));
-      setAcademyCourses(await safeJson(aRes, []));
-      setSalonServices(await safeJson(salonRes, []));
-      setGallery(await safeJson(gRes, []));
-      setSalonCategories(await safeJson(catRes, []));
+      if (iRes.ok) setInquiries(await safeJson(iRes, []));
+      else console.warn('Inquiries endpoint error:', iRes.status);
+
+      if (sRes.ok) setSarees(await safeJson(sRes, []));
+      else console.warn('Sarees endpoint error:', sRes.status);
+
+      if (aRes.ok) setAcademyCourses(await safeJson(aRes, []));
+      else console.warn('Academy-courses endpoint error:', aRes.status);
+
+      if (salonRes.ok) setSalonServices(await safeJson(salonRes, []));
+      else console.warn('Salon-services endpoint error:', salonRes.status);
+
+      if (gRes.ok) setGallery(await safeJson(gRes, []));
+      else console.warn('Gallery endpoint error:', gRes.status);
+
+      if (catRes.ok) setSalonCategories(await safeJson(catRes, []));
+      else console.warn('Salon-categories endpoint error:', catRes.status);
+
       if (staffRes.ok) setStaffList(await safeJson(staffRes, []));
-      setBillingCategories(await safeJson(billingCatRes, []));
-      setBillingServices(await safeJson(billingServRes, []));
-      setBillingCustomers(await safeJson(customerRes, []));
+      else console.warn('Staff endpoint error:', staffRes.status);
+
+      if (billingCatRes.ok) setBillingCategories(await safeJson(billingCatRes, []));
+      else console.warn('Billing-categories endpoint error:', billingCatRes.status);
+
+      if (billingServRes.ok) setBillingServices(await safeJson(billingServRes, []));
+      else console.warn('Billing-services endpoint error:', billingServRes.status);
+
+      if (customerRes.ok) setBillingCustomers(await safeJson(customerRes, []));
+      else console.warn('Customers endpoint error:', customerRes.status);
+
+      if (jewRes.ok) setRentalJewellery(await safeJson(jewRes, []));
+      else console.warn('Rental Jewellery endpoint error:', jewRes.status);
+
+      if (jewBookRes.ok) setRentalBookings(await safeJson(jewBookRes, []));
+      else console.warn('Rental Bookings endpoint error:', jewBookRes.status);
     } catch (err: any) {
       console.error("Dashboard connection error:", err);
       setError(err.message || 'Failed to connect to the backend server. Please make sure the backend is running.');
@@ -1061,6 +1138,130 @@ export default function AdminDashboard() {
     setIsCustomerModalOpen(true);
   };
 
+  // --- RENTAL JEWELLERY HANDLERS ---
+  const handleSaveJewellery = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const token = localStorage.getItem('adminToken');
+    const url = isEditingJewellery 
+      ? `${API_BASE}/api/rental-jewellery/${jewelleryForm._id}` 
+      : `${API_BASE}/api/rental-jewellery`;
+    const method = isEditingJewellery ? 'PUT' : 'POST';
+
+    const payload: any = { ...jewelleryForm };
+    if (!payload._id) delete payload._id;
+
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        showToast(isEditingJewellery ? "Jewellery updated successfully!" : "Jewellery added successfully!", 'success');
+        setIsJewelleryModalOpen(false);
+        fetchAllData(token!);
+      } else {
+        const errorData = await res.json().catch(() => ({}));
+        showToast("Failed to save jewellery: " + (errorData.message || `Status ${res.status}`), 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("Network error while saving jewellery", 'error');
+    }
+  };
+
+  const handleDeleteJewellery = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this jewellery item?")) return;
+    const token = localStorage.getItem('adminToken');
+    try {
+      const res = await fetch(`${API_BASE}/api/rental-jewellery/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        showToast("Jewellery item deleted successfully!", 'success');
+        fetchAllData(token!);
+      } else {
+        showToast("Failed to delete jewellery item", 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("Network error while deleting jewellery item", 'error');
+    }
+  };
+
+  const handleToggleHideJewellery = async (item: any) => {
+    const token = localStorage.getItem('adminToken');
+    try {
+      const res = await fetch(`${API_BASE}/api/rental-jewellery/${item._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ ...item, hidden: !item.hidden })
+      });
+      if (res.ok) {
+        showToast(item.hidden ? "Jewellery item is now visible!" : "Jewellery item is now hidden!", 'success');
+        fetchAllData(token!);
+      } else {
+        showToast("Failed to update status", 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("Network error while updating status", 'error');
+    }
+  };
+
+  const openAddJewelleryModal = () => {
+    setJewelleryForm({
+      _id: '',
+      name: '',
+      jewelleryNumber: '',
+      image: '',
+      images: [],
+      description: '',
+      hidden: false
+    });
+    setIsEditingJewellery(false);
+    setIsJewelleryModalOpen(true);
+  };
+
+  const openEditJewelleryModal = (item: any) => {
+    const imgs: string[] = Array.isArray(item.images) && item.images.length > 0
+      ? item.images
+      : (item.image ? [item.image] : []);
+    setJewelleryForm({
+      _id: item._id || '',
+      name: item.name || '',
+      jewelleryNumber: item.jewelleryNumber || '',
+      image: item.image || (imgs[0] || ''),
+      images: imgs,
+      description: item.description || '',
+      hidden: !!item.hidden
+    });
+    setIsEditingJewellery(true);
+    setIsJewelleryModalOpen(true);
+  };
+
+  const handleUpdateRentalBookingStatus = async (id: string, status: string) => {
+    const token = localStorage.getItem('adminToken');
+    try {
+      const res = await fetch(`${API_BASE}/api/rental-bookings/${id}/status`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ status })
+      });
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        showToast('Failed to update rental booking status: ' + (errorData.message || 'Unknown error'), 'error');
+      } else {
+        showToast('Rental booking status updated successfully!', 'success');
+        fetchAllData(token!);
+      }
+    } catch (err) {
+      console.error(err);
+      showToast('Network error while updating booking status.', 'error');
+    }
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('adminToken');
     router.push('/admin/login');
@@ -1117,6 +1318,8 @@ export default function AdminDashboard() {
             { key: 'manageCategories', label: '🏷️ Salon Categories' },
             { key: 'manageGallery', label: '🖼️ Gallery' },
             { key: 'manageStaff', label: '👤 Staff Members' },
+            { key: 'manageJewellery', label: '💎 Rental Jewellery' },
+            { key: 'jewelleryBookings', label: '📿 Jewellery Bookings' },
           ] as { key: string; label: string }[]).map(({ key, label }) => (
             <button 
               key={key}
@@ -1386,6 +1589,92 @@ export default function AdminDashboard() {
                     <p className="text-4xl font-light text-[#4a2511] font-serif">{academyCourses.length}</p>
                   </div>
                   <div className="text-[10px] text-gray-500 mt-3 border-t border-[#c2a670]/10 pt-2 font-medium">Active curriculums</div>
+                </div>
+
+              </div>
+            </div>
+
+            {/* Rental Jewellery Section */}
+            <div>
+              <h2 className="text-md font-serif font-bold text-[#4a2511] uppercase tracking-wider mb-4 border-b border-[#d4af37]/25 pb-2">Rental Jewellery Overview</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6">
+
+                {/* Total Jewellery Items */}
+                <div 
+                  onClick={() => setActiveTab('manageJewellery')}
+                  className="gold-panel p-6 text-center bg-white border border-[#c2a670]/15 shadow-sm hover:shadow-md hover:border-[#6e1224]/40 hover:-translate-y-0.5 cursor-pointer transition-all duration-300 relative flex flex-col justify-between min-h-[140px]"
+                >
+                  <div className="absolute top-2 right-2 bg-blue-100 text-blue-800 text-[9px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Total</div>
+                  <div>
+                    <h3 className="text-[10px] font-bold text-[#1c1512]/60 uppercase tracking-widest mb-1.5 mt-2">Total Jewellery</h3>
+                    <p className="text-4xl font-light text-[#4a2511] font-serif">{rentalJewellery.length}</p>
+                  </div>
+                  <div className="text-[10px] text-gray-500 mt-3 border-t border-[#c2a670]/10 pt-2 font-medium">All items in inventory</div>
+                </div>
+
+                {/* Active/Visible Jewellery */}
+                <div 
+                  onClick={() => setActiveTab('manageJewellery')}
+                  className="gold-panel p-6 text-center bg-white border border-[#c2a670]/15 shadow-sm hover:shadow-md hover:border-[#6e1224]/40 hover:-translate-y-0.5 cursor-pointer transition-all duration-300 relative flex flex-col justify-between min-h-[140px]"
+                >
+                  <div className="absolute top-2 right-2 bg-green-100 text-green-800 text-[9px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Active</div>
+                  <div>
+                    <h3 className="text-[10px] font-bold text-[#1c1512]/60 uppercase tracking-widest mb-1.5 mt-2">Active</h3>
+                    <p className="text-4xl font-light text-green-700 font-serif">{rentalJewellery.filter(j => !j.hidden).length}</p>
+                  </div>
+                  <div className="text-[10px] text-gray-500 mt-3 border-t border-[#c2a670]/10 pt-2 font-medium">Visible to customers</div>
+                </div>
+
+                {/* Hidden Jewellery */}
+                <div 
+                  onClick={() => setActiveTab('manageJewellery')}
+                  className="gold-panel p-6 text-center bg-white border border-[#c2a670]/15 shadow-sm hover:shadow-md hover:border-[#6e1224]/40 hover:-translate-y-0.5 cursor-pointer transition-all duration-300 relative flex flex-col justify-between min-h-[140px]"
+                >
+                  <div className="absolute top-2 right-2 bg-gray-100 text-gray-800 text-[9px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Hidden</div>
+                  <div>
+                    <h3 className="text-[10px] font-bold text-[#1c1512]/60 uppercase tracking-widest mb-1.5 mt-2">Hidden</h3>
+                    <p className="text-4xl font-light text-gray-600 font-serif">{rentalJewellery.filter(j => j.hidden).length}</p>
+                  </div>
+                  <div className="text-[10px] text-gray-500 mt-3 border-t border-[#c2a670]/10 pt-2 font-medium">Unpublished items</div>
+                </div>
+
+                {/* Total Booking Requests */}
+                <div 
+                  onClick={() => setActiveTab('jewelleryBookings')}
+                  className="gold-panel p-6 text-center bg-white border border-[#c2a670]/15 shadow-sm hover:shadow-md hover:border-[#6e1224]/40 hover:-translate-y-0.5 cursor-pointer transition-all duration-300 relative flex flex-col justify-between min-h-[140px]"
+                >
+                  <div className="absolute top-2 right-2 bg-[#6e1224]/10 text-[#6e1224] text-[9px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">All</div>
+                  <div>
+                    <h3 className="text-[10px] font-bold text-[#1c1512]/60 uppercase tracking-widest mb-1.5 mt-2">Total Bookings</h3>
+                    <p className="text-4xl font-light text-[#800020] font-serif">{rentalBookings.length}</p>
+                  </div>
+                  <div className="text-[10px] text-gray-500 mt-3 border-t border-[#c2a670]/10 pt-2 font-medium">Rental requests</div>
+                </div>
+
+                {/* Pending Bookings */}
+                <div 
+                  onClick={() => setActiveTab('jewelleryBookings')}
+                  className="gold-panel p-6 text-center bg-white border border-[#c2a670]/15 shadow-sm hover:shadow-md hover:border-[#6e1224]/40 hover:-translate-y-0.5 cursor-pointer transition-all duration-300 relative flex flex-col justify-between min-h-[140px]"
+                >
+                  <div className="absolute top-2 right-2 bg-yellow-100 text-yellow-800 text-[9px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Pending</div>
+                  <div>
+                    <h3 className="text-[10px] font-bold text-[#1c1512]/60 uppercase tracking-widest mb-1.5 mt-2">Pending</h3>
+                    <p className="text-4xl font-light text-[#b45309] font-serif">{rentalBookings.filter(b => b.status === 'Pending' || !b.status).length}</p>
+                  </div>
+                  <div className="text-[10px] text-gray-500 mt-3 border-t border-[#c2a670]/10 pt-2 font-medium">Awaiting action</div>
+                </div>
+
+                {/* Confirmed Bookings */}
+                <div 
+                  onClick={() => setActiveTab('jewelleryBookings')}
+                  className="gold-panel p-6 text-center bg-white border border-[#c2a670]/15 shadow-sm hover:shadow-md hover:border-[#6e1224]/40 hover:-translate-y-0.5 cursor-pointer transition-all duration-300 relative flex flex-col justify-between min-h-[140px]"
+                >
+                  <div className="absolute top-2 right-2 bg-blue-100 text-blue-800 text-[9px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Confirmed</div>
+                  <div>
+                    <h3 className="text-[10px] font-bold text-[#1c1512]/60 uppercase tracking-widest mb-1.5 mt-2">Confirmed</h3>
+                    <p className="text-4xl font-light text-blue-700 font-serif">{rentalBookings.filter(b => b.status === 'Confirmed').length}</p>
+                  </div>
+                  <div className="text-[10px] text-gray-500 mt-3 border-t border-[#c2a670]/10 pt-2 font-medium">Approved hires</div>
                 </div>
 
               </div>
@@ -2002,6 +2291,278 @@ export default function AdminDashboard() {
                     <tr>
                       <td colSpan={8} className="p-6 text-center text-sm text-gray-500">
                         No staff members found. Add your first member using the button above!
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ) : activeTab === 'manageJewellery' ? (
+          <div>
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+              <div>
+                <h2 className="text-2xl font-bold font-serif text-[#4a2511]">Rental Jewellery Catalog</h2>
+                <p className="text-xs text-gray-500 mt-0.5">Manage rental sets, status visibility, and unique jewellery codes</p>
+              </div>
+              <button onClick={openAddJewelleryModal} className="gold-button px-4 py-2 text-sm shadow">
+                + Add Jewellery Item
+              </button>
+            </div>
+
+            {/* Search, Filter, Sort Controls */}
+            <div className="bg-[#fdf5eb]/50 p-4 rounded-xl border border-[#d4af37]/35 mb-6 flex flex-col md:flex-row gap-4 items-center justify-between text-xs">
+              <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                <div className="flex flex-col gap-1 w-full sm:w-60">
+                  <label className="font-semibold text-stone-600">Search Jewellery</label>
+                  <input
+                    type="text"
+                    placeholder="Search by Name or Number..."
+                    value={searchJewellery}
+                    onChange={e => setSearchJewellery(e.target.value)}
+                    className="p-2 border border-[#d4af37]/40 rounded bg-white outline-none focus:border-[#d4af37]"
+                  />
+                </div>
+                <div className="flex flex-col gap-1 w-full sm:w-40">
+                  <label className="font-semibold text-stone-600">Filter Status</label>
+                  <select
+                    value={statusFilterJewellery}
+                    onChange={e => setStatusFilterJewellery(e.target.value as any)}
+                    className="p-2 border border-[#d4af37]/40 rounded bg-white outline-none focus:border-[#d4af37]"
+                  >
+                    <option value="all">All Items</option>
+                    <option value="visible">Visible Only</option>
+                    <option value="hidden">Hidden Only</option>
+                  </select>
+                </div>
+              </div>
+              <div className="flex flex-col gap-1 w-full md:w-auto sm:w-48">
+                <label className="font-semibold text-stone-600">Sort By</label>
+                <select
+                  value={sortJewellery}
+                  onChange={e => setSortJewellery(e.target.value as any)}
+                  className="p-2 border border-[#d4af37]/40 rounded bg-white outline-none focus:border-[#d4af37]"
+                >
+                  <option value="name-asc">Name (A - Z)</option>
+                  <option value="name-desc">Name (Z - A)</option>
+                  <option value="number-asc">Code (Ascending)</option>
+                  <option value="number-desc">Code (Descending)</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Catalogue Table */}
+            <div className="overflow-x-auto pb-32">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-[#f4e8d3] text-[#4a2511] border-b border-[#d4af37]">
+                    <th className="p-3 text-xs">Image</th>
+                    <th className="p-3 text-xs">Name</th>
+                    <th className="p-3 text-xs">Code / Unique ID</th>
+                    <th className="p-3 text-xs">Description</th>
+                    <th className="p-3 text-xs">Status</th>
+                    <th className="p-3 text-xs text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rentalJewellery
+                    .filter(item => {
+                      const query = searchJewellery.toLowerCase();
+                      const matchesSearch = 
+                        item.name?.toLowerCase().includes(query) || 
+                        item.jewelleryNumber?.toLowerCase().includes(query);
+                      
+                      const matchesStatus = 
+                        statusFilterJewellery === 'all' ? true :
+                        statusFilterJewellery === 'visible' ? !item.hidden :
+                        item.hidden;
+
+                      return matchesSearch && matchesStatus;
+                    })
+                    .sort((a, b) => {
+                      if (sortJewellery === 'name-asc') return (a.name || '').localeCompare(b.name || '');
+                      if (sortJewellery === 'name-desc') return (b.name || '').localeCompare(a.name || '');
+                      if (sortJewellery === 'number-asc') return (a.jewelleryNumber || '').localeCompare(b.jewelleryNumber || '');
+                      return (b.jewelleryNumber || '').localeCompare(a.jewelleryNumber || '');
+                    })
+                    .map(item => (
+                      <tr key={item._id} className="border-b border-[#eacda3] hover:bg-[#fdf5eb] text-sm">
+                        <td className="p-3">
+                          <div className="flex items-center gap-1">
+                            {(Array.isArray(item.images) && item.images.length > 0 ? item.images : (item.image ? [item.image] : [])).slice(0, 3).map((img: string, idx: number) => (
+                              <img key={idx} src={img} alt="" className="w-10 h-10 object-cover rounded border border-[#d4af37]/35 bg-white shadow-sm" />
+                            ))}
+                            {(Array.isArray(item.images) ? item.images.length : (item.image ? 1 : 0)) > 3 && (
+                              <span className="text-[10px] font-bold text-[#800020] ml-0.5">+{(Array.isArray(item.images) ? item.images.length : 1) - 3}</span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="p-3 font-semibold text-[#4a2511]">{item.name}</td>
+                        <td className="p-3 font-mono text-xs font-bold text-[#800020]">{item.jewelleryNumber}</td>
+                        <td className="p-3 text-xs text-gray-600 max-w-xs truncate" title={item.description}>{item.description || '—'}</td>
+                        <td className="p-3">
+                          <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${
+                            item.hidden 
+                              ? 'bg-gray-100 text-gray-800 border-gray-300' 
+                              : 'bg-green-50 text-green-700 border-green-300'
+                          }`}>
+                            {item.hidden ? 'Hidden' : 'Visible'}
+                          </span>
+                        </td>
+                        <td className="p-3 text-right whitespace-nowrap relative">
+                          <button
+                            onClick={() => setOpenJewelleryMenuId(openJewelleryMenuId === item._id ? null : item._id)}
+                            className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#fdf5eb] hover:bg-[#d4af37]/20 text-[#4a2511] hover:text-[#800020] transition-all duration-200 border border-[#d4af37]/30 hover:border-[#d4af37] shadow-sm flex-shrink-0"
+                            title="Actions"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                              <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                            </svg>
+                          </button>
+                          {openJewelleryMenuId === item._id && (
+                            <>
+                              <div className="fixed inset-0 z-10" onClick={() => setOpenJewelleryMenuId(null)}></div>
+                              <div className="absolute right-full mr-2 top-0 w-36 bg-white rounded-md shadow-lg z-20 border border-gray-200 py-1 overflow-hidden text-left menu-popup">
+                                <button
+                                  onClick={() => { setOpenJewelleryMenuId(null); openEditJewelleryModal(item); }}
+                                  className="block w-full text-left px-4 py-2 text-sm text-[#4a2511] font-semibold hover:bg-[#fdf5eb]"
+                                >
+                                  Edit Info
+                                </button>
+                                <button
+                                  onClick={() => { setOpenJewelleryMenuId(null); handleToggleHideJewellery(item); }}
+                                  className={`block w-full text-left px-4 py-2 text-sm font-semibold hover:bg-stone-50 ${item.hidden ? 'text-green-700' : 'text-stone-700'}`}
+                                >
+                                  {item.hidden ? 'Unhide / Publish' : 'Hide / Draft'}
+                                </button>
+                                <button
+                                  onClick={() => { setOpenJewelleryMenuId(null); handleDeleteJewellery(item._id); }}
+                                  className="block w-full text-left px-4 py-2 text-sm text-red-600 font-semibold hover:bg-red-50"
+                                >
+                                  Delete Set
+                                </button>
+                              </div>
+                            </>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  {rentalJewellery.length === 0 && (
+                    <tr>
+                      <td colSpan={6} className="p-6 text-center text-sm text-gray-500">
+                        No jewellery items in the catalog. Add one to start renting!
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ) : activeTab === 'jewelleryBookings' ? (
+          <div>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+              <div>
+                <h2 className="text-2xl font-bold font-serif text-[#4a2511]">Rental Jewellery Bookings</h2>
+                <p className="text-xs text-gray-500 mt-0.5">Manage rental booking requests and hire status options</p>
+              </div>
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="flex items-center gap-1.5">
+                  <label className="text-xs font-semibold text-stone-600">Filter Status</label>
+                  <select
+                    value={statusFilterRentalBooking}
+                    onChange={e => setStatusFilterRentalBooking(e.target.value as any)}
+                    className="p-2 border border-[#d4af37]/40 rounded bg-white text-xs outline-none focus:border-[#d4af37] font-semibold text-[#4a2511]"
+                  >
+                    <option value="all">All Bookings</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Contacted">Contacted</option>
+                    <option value="Confirmed">Confirmed</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <label className="text-xs font-semibold text-stone-600">Search</label>
+                  <input
+                    type="text"
+                    placeholder="Search name, code, phone..."
+                    value={searchRentalBooking}
+                    onChange={e => setSearchRentalBooking(e.target.value)}
+                    className="p-2 border border-[#d4af37]/40 rounded bg-white text-xs outline-none w-60 focus:border-[#d4af37]"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Bookings Table */}
+            <div className="overflow-x-auto pb-32">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-[#f4e8d3] text-[#4a2511] border-b border-[#d4af37]">
+                    <th className="p-3 text-xs">Booking ID</th>
+                    <th className="p-3 text-xs">Jewellery Set</th>
+                    <th className="p-3 text-xs">Code</th>
+                    <th className="p-3 text-xs">Customer Name</th>
+                    <th className="p-3 text-xs">Address</th>
+                    <th className="p-3 text-xs">Phone</th>
+                    <th className="p-3 text-xs">Special Notes</th>
+                    <th className="p-3 text-xs">Date Received</th>
+                    <th className="p-3 text-xs">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rentalBookings
+                    .filter(b => {
+                      if (statusFilterRentalBooking !== 'all' && (b.status || 'Pending') !== statusFilterRentalBooking) {
+                        return false;
+                      }
+                      const query = searchRentalBooking.toLowerCase();
+                      return (
+                        b.customerName?.toLowerCase().includes(query) ||
+                        b.jewelleryName?.toLowerCase().includes(query) ||
+                        b.jewelleryNumber?.toLowerCase().includes(query) ||
+                        b.phone?.toLowerCase().includes(query)
+                      );
+                    })
+                    .map(b => (
+                      <tr key={b._id} className="border-b border-[#eacda3] hover:bg-[#fdf5eb] text-sm">
+                        <td className="p-3 font-mono text-[11px] font-bold text-stone-500">#{b._id?.substring(0, 6)}</td>
+                        <td className="p-3">
+                          <div className="flex items-center gap-2">
+                            <img src={b.jewelleryImage || '/hero-saree.png'} alt="" className="w-8 h-8 object-cover rounded shadow-sm border border-[#d4af37]/20" />
+                            <span className="font-semibold">{b.jewelleryName}</span>
+                          </div>
+                        </td>
+                        <td className="p-3 font-mono text-xs font-bold text-[#800020]">{b.jewelleryNumber}</td>
+                        <td className="p-3 font-medium">{b.customerName}</td>
+                        <td className="p-3 text-xs text-gray-700 max-w-xs truncate" title={b.address}>{b.address}</td>
+                        <td className="p-3 font-medium text-xs whitespace-nowrap">{b.phone}</td>
+                        <td className="p-3 text-xs text-stone-500 max-w-xs truncate" title={b.description}>{b.description || '—'}</td>
+                        <td className="p-3 text-xs whitespace-nowrap">
+                          {b.createdAt ? new Date(b.createdAt).toLocaleDateString('en-GB') : '—'}
+                        </td>
+                        <td className="p-3">
+                          <select
+                            value={b.status || 'Pending'}
+                            onChange={e => handleUpdateRentalBookingStatus(b._id, e.target.value)}
+                            className={`p-1.5 text-xs rounded font-bold border outline-none focus:ring-1 focus:ring-[#d4af37] ${
+                              b.status === 'Confirmed' ? 'bg-blue-100 text-blue-800 border-blue-300' :
+                              b.status === 'Contacted' ? 'bg-indigo-100 text-indigo-800 border-indigo-300' :
+                              b.status === 'Cancelled' ? 'bg-red-100 text-red-800 border-red-300' :
+                              'bg-yellow-100 text-yellow-800 border-yellow-300'
+                            }`}
+                          >
+                            <option value="Pending">Pending</option>
+                            <option value="Contacted">Contacted</option>
+                            <option value="Confirmed">Confirmed</option>
+                            <option value="Cancelled">Cancelled</option>
+                          </select>
+                        </td>
+                      </tr>
+                    ))}
+                  {rentalBookings.length === 0 && (
+                    <tr>
+                      <td colSpan={9} className="p-6 text-center text-sm text-gray-500">
+                        No rental bookings found.
                       </td>
                     </tr>
                   )}
@@ -3566,6 +4127,118 @@ export default function AdminDashboard() {
             <div className="px-6 py-4 bg-[#fdf5eb] border-t border-[#d4af37]/20 flex justify-end">
               <button onClick={() => setIsCustomerViewModalOpen(false)} className="px-6 py-2 bg-gradient-to-r from-[#4a2511] to-[#800020] text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity shadow-md">Close</button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Rental Jewellery Add/Edit Modal */}
+      {isJewelleryModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-[1000] p-4">
+          <div className="gold-panel p-8 w-full max-w-md relative max-h-[90vh] overflow-y-auto">
+            <button onClick={() => setIsJewelleryModalOpen(false)} className="absolute top-4 right-4 text-2xl font-bold text-[#4a2511] hover:text-[#800020] transition-colors">&times;</button>
+            <h2 className="text-2xl font-bold text-[#4a2511] mb-6 uppercase text-center border-b border-[#d4af37] pb-2 font-serif tracking-wider">
+              {isEditingJewellery ? 'Edit Jewellery Set' : 'Add New Jewellery Set'}
+            </h2>
+            <form onSubmit={handleSaveJewellery} className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold mb-1 text-[#4a2511]">Jewellery Name *</label>
+                <input 
+                  required 
+                  type="text" 
+                  className="w-full p-2.5 border border-[#d4af37] rounded bg-[#fdf5eb] text-sm focus:outline-none focus:ring-1 focus:ring-[#cba135] text-[#4a2511] font-semibold" 
+                  value={jewelleryForm.name} 
+                  onChange={e => setJewelleryForm({...jewelleryForm, name: e.target.value})} 
+                  placeholder="e.g. Royal Antique Ruby Choker Set"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold mb-1 text-[#4a2511]">Jewellery Number (Unique ID) *</label>
+                <input 
+                  required 
+                  type="text" 
+                  className="w-full p-2.5 border border-[#d4af37] rounded bg-[#fdf5eb] text-sm focus:outline-none focus:ring-1 focus:ring-[#cba135] text-[#4a2511] font-mono font-bold" 
+                  value={jewelleryForm.jewelleryNumber} 
+                  onChange={e => setJewelleryForm({...jewelleryForm, jewelleryNumber: e.target.value})} 
+                  placeholder="e.g. JW-381"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold mb-1 text-[#4a2511]">Description</label>
+                <textarea 
+                  rows={3}
+                  className="w-full p-2.5 border border-[#d4af37] rounded bg-[#fdf5eb] text-sm focus:outline-none focus:ring-1 focus:ring-[#cba135] text-[#4a2511] font-medium resize-none" 
+                  value={jewelleryForm.description} 
+                  onChange={e => setJewelleryForm({...jewelleryForm, description: e.target.value})} 
+                  placeholder="Brief description about the gems, style, and set contents..."
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold mb-1 text-[#4a2511]">Jewellery Images *</label>
+                <p className="text-[10px] text-gray-400 mb-2">Upload multiple images — first image will be the thumbnail. You can add more anytime.</p>
+                <div {...getJewelleryProps()} className={`border-2 border-dashed p-6 text-center cursor-pointer rounded bg-[#fdf5eb] transition ${isJewelleryDrag ? 'border-[#800020] bg-red-50' : 'border-[#d4af37] hover:border-[#800020]'}`}>
+                  <input {...getJewelleryInput()} />
+                  <p className="text-[#4a2511] text-xs font-semibold">{isJewelleryDrag ? 'Drop files here...' : '📷  Drag & drop images, or click to select'}</p>
+                  <p className="text-[10px] text-gray-500 mt-1">Supports JPG, PNG, WEBP · Multiple files allowed</p>
+                </div>
+                {jewelleryForm.images && jewelleryForm.images.length > 0 && (
+                  <div className="mt-4">
+                    <p className="text-[10px] uppercase font-bold text-gray-400 mb-2">{jewelleryForm.images.length} Image{jewelleryForm.images.length > 1 ? 's' : ''} Added — First is thumbnail</p>
+                    <div className="flex flex-wrap gap-2">
+                      {jewelleryForm.images.map((img, idx) => (
+                        <div key={idx} className="relative border-2 rounded overflow-hidden group" style={{ borderColor: idx === 0 ? '#d4af37' : '#e5e7eb' }}>
+                          <img src={img} alt={`img-${idx}`} className="h-20 w-20 object-cover bg-white" />
+                          {idx === 0 && (
+                            <div className="absolute bottom-0 left-0 right-0 bg-[#d4af37]/90 text-[8px] text-white font-bold text-center py-0.5">MAIN</div>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => setJewelleryForm(p => {
+                              const newImgs = p.images.filter((_, i) => i !== idx);
+                              return { ...p, images: newImgs, image: newImgs[0] || '' };
+                            })}
+                            className="absolute top-1 right-1 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] shadow opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            &times;
+                          </button>
+                          {idx > 0 && (
+                            <button
+                              type="button"
+                              title="Set as main thumbnail"
+                              onClick={() => setJewelleryForm(p => {
+                                const reordered = [p.images[idx], ...p.images.filter((_, i) => i !== idx)];
+                                return { ...p, images: reordered, image: reordered[0] };
+                              })}
+                              className="absolute top-1 left-1 bg-[#4a2511] text-white rounded-full w-5 h-5 flex items-center justify-center text-[8px] shadow opacity-0 group-hover:opacity-100 transition-opacity">
+                              ★
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2 pt-2">
+                <input
+                  type="checkbox"
+                  id="jewellery_hidden"
+                  checked={jewelleryForm.hidden}
+                  onChange={e => setJewelleryForm({...jewelleryForm, hidden: e.target.checked})}
+                  className="rounded border-[#d4af37] text-[#800020] focus:ring-[#cba135]"
+                />
+                <label htmlFor="jewellery_hidden" className="text-xs font-bold text-[#4a2511] cursor-pointer selection:bg-transparent">
+                  Hide this item from the public website
+                </label>
+              </div>
+
+              <button type="submit" className="gold-button w-full mt-6 text-sm py-3.5 uppercase tracking-wider font-bold">
+                {isEditingJewellery ? 'Save Changes' : 'Publish Jewellery Set'}
+              </button>
+            </form>
           </div>
         </div>
       )}
